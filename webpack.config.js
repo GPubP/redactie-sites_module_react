@@ -21,7 +21,8 @@ module.exports = {
 	plugins: [
 		// clean dist folder before every build
 		new CleanWebpackPlugin(),
-		new BundleAnalyzerPlugin(),
+		// Uncomment this line to analyse your bundle
+		// new BundleAnalyzerPlugin(),
 	],
 	externals: {
 		'react': 'react',
