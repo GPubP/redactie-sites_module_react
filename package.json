@@ -5,7 +5,7 @@
   "main": "dist/redactie-boilerplate-module.umd.js",
   "module": "dist/redactie-boilerplate-module.umd.js",
   "types": "dist/index.d.ts",
-  "jsnext:main": "dist/redactie-form-renderer.umd.js",
+  "jsnext:main": "dist/redactie-boilerplate-module.umd.js",
   "scripts": {
     "build:types": "tsc --emitDeclarationOnly",
     "build": "npm run build:types && webpack --env.prod",
