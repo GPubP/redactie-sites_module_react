@@ -1,8 +1,8 @@
 const path = require('path');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const RedactionWebpackPlugin = require('@redactie/module-webpack-plugin');
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const RedactionWebpackPlugin = require('@redactie/module-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 module.exports = env => {
 	const defaultConfig = {
 		mode: 'production',
