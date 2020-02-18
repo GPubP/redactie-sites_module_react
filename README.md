@@ -1,4 +1,4 @@
-# Redactie boilerplate module (React)
+# Redactie Sites module (React)
 
 ## How to start?
 
