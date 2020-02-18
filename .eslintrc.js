@@ -6,26 +6,30 @@ module.exports = {
 		'react',
 		'import',
 		'react-hooks',
+		'prettier',
 	],
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/eslint-recommended',
 		'plugin:@typescript-eslint/recommended',
-		"plugin:react/recommended",
+		'plugin:react/recommended',
 		'plugin:import/errors',
 		'plugin:import/warnings',
 		'plugin:import/typescript',
+		'plugin:prettier/recommended',
+		'prettier/@typescript-eslint',
+		'prettier/react',
 	],
 	env: {
-		"browser": true,
-		"amd": true,
-		"node": true
+		'browser': true,
+		'amd': true,
+		'node': true
 	},
 	rules: {
 		'@typescript-eslint/no-var-requires': 0,
 		'@typescript-eslint/no-explicit-any': 0,
-		"react-hooks/rules-of-hooks": "error",
-		"react-hooks/exhaustive-deps": "warn",
+		'react-hooks/rules-of-hooks': 'error',
+		'react-hooks/exhaustive-deps': 'warn',
 		'import/order': 2,
 		'import/first': 2,
 		'import/exports-last': 2,
@@ -33,12 +37,14 @@ module.exports = {
 		'quotes': [2, 'single'],
 		'indent': [2, 'tab'],
 		'react/prop-types': 0,
-		"comma-dangle": ["error", {
-			"arrays": "always-multiline",
-			"objects": "always-multiline",
-			"imports": "always-multiline",
-			"exports": "always-multiline",
-			"functions": "never"
-		}]
+		'comma-dangle': ['error', {
+			'arrays': 'always-multiline',
+			'objects': 'always-multiline',
+			'imports': 'always-multiline',
+			'exports': 'always-multiline',
+			'functions': 'never'
+		}],
+		'semi': 'off',
+		'@typescript-eslint/semi': ['error', 'always', { 'omitLastInOneLineBlock': true}]
 	}
 };

@@ -1,15 +1,20 @@
 {
   "name": "redactie-boilerplate-module",
   "version": "1.0.0",
-  "description": "ckeditor react wrapper",
+  "description": "redactie boilerplate module",
   "main": "dist/redactie-boilerplate-module.umd.js",
-  "module": "dist/redactie-ckeditor-modul.umd.js",
+  "module": "dist/redactie-boilerplate-module.umd.js",
+  "types": "dist/index.d.ts",
+  "jsnext:main": "dist/redactie-form-renderer.umd.js",
   "scripts": {
     "build:types": "tsc --emitDeclarationOnly",
-    "build": "npm run build:types && webpack",
-    "build:w": "npm run build:types && webpack -w",
+    "build": "npm run build:types && webpack --env.prod",
+    "build:w": "npm run build:types && webpack -w --env",
+    "build:analyse": "npm run build:types && webpack --env.analyse",
     "start": "concurrently --kill-others \"npm run build:w\" \"cd demo && npm run start\"",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:scss": "stylelint public/**/*.scss --allow-empty-input",
+    "lint:ts": "eslint --cache --cache-location .eslintcache --ext .ts,.tsx public",
+    "lint": "npm run lint:scss && npm run lint:ts",
     "test": "jest ./public"
   },
   "repository": {
@@ -18,8 +23,8 @@
   },
   "keywords": [
     "Redactie",
-    "ckeditor5",
     "React",
+    "Boilerplate",
     "Module"
   ],
   "devDependencies": {
@@ -27,6 +32,10 @@
     "@babel/preset-env": "7.8.3",
     "@babel/preset-react": "7.8.3",
     "@babel/preset-typescript": "7.8.3",
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4",
+    "@redactie/module-webpack-plugin": "2.0.0",
+    "@redactie/redactie-core": "1.0.0",
     "@testing-library/jest-dom": "5.0.2",
     "@testing-library/react": "9.4.0",
     "@types/jest": "24.9.1",
@@ -36,17 +45,24 @@
     "@typescript-eslint/parser": "2.17.0",
     "babel-jest": "25.1.0",
     "clean-webpack-plugin": "3.0.0",
-    "concurrently": "^5.1.0",
+    "concurrently": "5.1.0",
     "eslint": "6.8.0",
+    "eslint-config-prettier": "6.10.0",
     "eslint-plugin-flowtype": "4.6.0",
     "eslint-plugin-import": "2.20.0",
     "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-prettier": "3.1.2",
     "eslint-plugin-react": "7.18.0",
     "eslint-plugin-react-hooks": "2.3.0",
+    "husky": "3.1.0",
     "install": "0.13.0",
     "jest": "25.1.0",
+    "node-sass": "4.13.1",
     "npm": "6.13.7",
+    "prettier": "1.19.1",
     "react": "16.12.0",
+    "stylelint": "13.0.0",
+    "stylelint-config-standard": "19.0.0",
     "ts-loader": "6.2.1",
     "typescript": "3.7.5",
     "webpack": "4.41.5",
@@ -54,8 +70,5 @@
     "webpack-cli": "3.3.10"
   },
   "author": "Glenn Verschooren",
-  "license": "ISC",
-  "dependencies": {
-    "@ckeditor/ckeditor5-engine": "^16.0.0"
-  }
+  "license": "ISC"
 }

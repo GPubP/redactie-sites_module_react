@@ -13,13 +13,8 @@ indent_style = tab
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# 2 space indentation for package.json and package-lock.json
-[{package,package-lock}.json]
-indent_style = space
-indent_size = 2
-
-# 2 space indentation for all yml/yml files.
-[*.yml,*.yaml]
+# 2 space indentation for all json and yml/yaml files
+[*.json,*.yml,*.yaml]
 indent_style = space
 indent_size = 2
 

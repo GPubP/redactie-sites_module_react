@@ -1,36 +1,61 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const RedactionWebpackPlugin = require('@redactie/module-webpack-plugin');
 
-module.exports = {
-	mode: 'production',
-	devtool: 'source-map',
-	entry: './public/index.ts',
-	module: {
-		rules: [
-			{
-				test: /\.ts(x)?$/,
-				use: 'ts-loader',
-				exclude: /node_modules/,
-			},
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+module.exports = env => {
+	const defaultConfig = {
+		mode: 'production',
+		devtool: 'source-map',
+		entry: './public/index.ts',
+		performance: {
+			hints: false,
+		},
+		module: {
+			rules: [
+				{
+					test: /\.ts(x)?$/,
+					use: 'ts-loader',
+					exclude: /node_modules/,
+				},
+			],
+		},
+		resolve: {
+			extensions: ['.tsx', '.ts', '.js'],
+		},
+		plugins: [
+			// add default plugins here
 		],
-	},
-	resolve: {
-		extensions: [ '.tsx', '.ts', '.js' ],
-	},
-	plugins: [
-		// clean dist folder before every build
-		new CleanWebpackPlugin(),
-		// Uncomment this line to analyse your bundle
-		// new BundleAnalyzerPlugin(),
-	],
-	externals: {
-		'react': 'react',
-		'react-dom': 'react-dom',
-	},
-	output: {
-		filename: 'redactie-boilerplate-module.umd.js',
-		path: path.resolve(__dirname, 'dist'),
-		libraryTarget: 'umd',
-	},
-}
+		externals: {
+			react: 'react',
+			'react-dom': 'react-dom',
+			'@redactie/redactie-core': '@redactie/redactie-core',
+		},
+		output: {
+			filename: 'redactie-boilerplate-module.umd.js',
+			path: path.resolve(__dirname, 'dist'),
+			libraryTarget: 'umd',
+		},
+	};
+
+	if (env.analyse) {
+		return {
+			...defaultConfig,
+			plugins: [...defaultConfig.plugins, new BundleAnalyzerPlugin()],
+		};
+	}
+
+	if (env.prod) {
+		return {
+			...defaultConfig,
+			plugins: [
+				...defaultConfig.plugins,
+				new RedactionWebpackPlugin({
+					moduleName: 'redactie-boilerplate',
+				}),
+			],
+		};
+	}
+
+	return defaultConfig;
+};
