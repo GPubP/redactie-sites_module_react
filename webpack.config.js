@@ -32,7 +32,7 @@ module.exports = env => {
 			'@redactie/redactie-core': '@redactie/redactie-core',
 		},
 		output: {
-			filename: 'redactie-boilerplate-module.umd.js',
+			filename: 'redactie-sites-module.umd.js',
 			path: path.resolve(__dirname, 'dist'),
 			libraryTarget: 'umd',
 		},
@@ -51,7 +51,7 @@ module.exports = env => {
 			plugins: [
 				...defaultConfig.plugins,
 				new RedactionWebpackPlugin({
-					moduleName: 'redactie-boilerplate',
+					moduleName: 'redactie-sites',
 				}),
 			],
 		};

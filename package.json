@@ -1,11 +1,11 @@
 {
-  "name": "redactie-boilerplate-module",
+  "name": "redactie-sites-module",
   "version": "1.0.0",
-  "description": "redactie boilerplate module",
-  "main": "dist/redactie-boilerplate-module.umd.js",
-  "module": "dist/redactie-boilerplate-module.umd.js",
+  "description": "redactie sites module",
+  "main": "dist/redactie-sites-module.umd.js",
+  "module": "dist/redactie-sites-module.umd.js",
   "types": "dist/index.d.ts",
-  "jsnext:main": "dist/redactie-boilerplate-module.umd.js",
+  "jsnext:main": "dist/redactie-sites-module.umd.js",
   "scripts": {
     "build:types": "tsc --emitDeclarationOnly",
     "build": "npm run build:types && webpack --env.prod",
@@ -19,12 +19,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://ex02131@bitbucket.antwerpen.be/scm/wcm/redactie-boilerplate_module.git"
+    "url": "https://ex02131@bitbucket.antwerpen.be/scm/wcm/redactie-sites_module.git"
   },
   "keywords": [
     "Redactie",
     "React",
-    "Boilerplate",
+    "Sites",
     "Module"
   ],
   "devDependencies": {
