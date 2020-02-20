@@ -1,5 +1,5 @@
 {
-  "name": "redactie-sites-module",
+  "name": "@redactie/sites-module",
   "version": "1.0.0",
   "description": "redactie sites module",
   "main": "dist/redactie-sites-module.umd.js",

@@ -7,7 +7,7 @@ module.exports = env => {
 	const defaultConfig = {
 		mode: 'production',
 		devtool: 'source-map',
-		entry: './public/index.ts',
+		entry: './public/index.tsx',
 		performance: {
 			hints: false,
 		},
