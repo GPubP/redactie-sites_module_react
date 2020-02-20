@@ -21,6 +21,9 @@
     "type": "git",
     "url": "https://ex02131@bitbucket.antwerpen.be/scm/wcm/redactie-sites_module.git"
   },
+  "publishConfig": {
+    "@redactie:registry": "https://nexusrepo.antwerpen.be/repository/npm-private"
+  },
   "keywords": [
     "Redactie",
     "React",
