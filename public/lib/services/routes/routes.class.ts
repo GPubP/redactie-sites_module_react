@@ -13,14 +13,14 @@ const prefixRoute = (routeConfig: ModuleRouteConfig): ModuleRouteConfig => {
 };
 
 class Routes {
-	private registeredSites: ModuleRouteConfig[] = [];
+	private registeredRoutes: ModuleRouteConfig[] = [];
 
 	register(routeConfig: ModuleRouteConfig): void {
 		const updatedRouteConfig = prefixRoute(routeConfig);
-		this.registeredSites.push(updatedRouteConfig);
+		this.registeredRoutes.push(updatedRouteConfig);
 	}
 	getAll(): ModuleRouteConfig[] {
-		return this.registeredSites;
+		return this.registeredRoutes;
 	}
 }
 
