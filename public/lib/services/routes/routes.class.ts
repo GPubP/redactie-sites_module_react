@@ -15,9 +15,9 @@ const prefixRoute = (routeConfig: ModuleRouteConfig): ModuleRouteConfig => {
 class Routes {
 	private registeredSites: ModuleRouteConfig[] = [];
 
-	register(siteConfig: ModuleRouteConfig): void {
-		const updatedSiteConfig = prefixRoute(siteConfig);
-		this.registeredSites.push(updatedSiteConfig);
+	register(routeConfig: ModuleRouteConfig): void {
+		const updatedRouteConfig = prefixRoute(routeConfig);
+		this.registeredSites.push(updatedRouteConfig);
 	}
 	getAll(): ModuleRouteConfig[] {
 		return this.registeredSites;
