@@ -12,6 +12,12 @@ describe('Routes', () => {
 		component: () => React.createElement('div', { displayName: 'dummyComponent' }),
 	};
 
+	const dummyChildRouteConfig: ModuleRouteConfig = {
+		path: '/external/child',
+		label: 'external child',
+		component: () => React.createElement('div', { displayName: 'dummyComponentChild' }),
+	};
+
 	beforeEach(() => {
 		sites = new Sites();
 	});
@@ -20,5 +26,16 @@ describe('Routes', () => {
 		expect(sites).toBeInstanceOf(Sites);
 		sites.register(dummySiteConfig);
 		expect(sites.getAll()[0]).toEqual({ path: '/sites/external', ...dummySiteConfig });
+	});
+
+	it('Should be able to register a childroute', () => {
+		expect(sites).toBeInstanceOf(Sites);
+		sites.register({ routes: [dummyChildRouteConfig], ...dummySiteConfig });
+		expect(sites.getAll()[0].routes).toEqual([
+			{
+				path: '/sites/external/child',
+				...dummyChildRouteConfig,
+			},
+		]);
 	});
 });
