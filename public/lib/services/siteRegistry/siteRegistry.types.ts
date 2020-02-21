@@ -18,5 +18,4 @@ export interface SiteConfig {
 export default interface Sites {
 	register: (siteConfig: SiteConfig) => void;
 	getAll: () => SiteConfig[];
-	render: (siteConfig: SiteConfig[]) => object;
 }

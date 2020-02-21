@@ -1,4 +1,5 @@
 module.exports = {
+	parser: '@typescript-eslint/parser',
 	plugins: [
 		'@typescript-eslint',
 		'react',
@@ -8,13 +9,13 @@ module.exports = {
 	],
 	extends: [
 		'eslint:recommended',
+		'plugin:react/recommended',
 		'plugin:@typescript-eslint/eslint-recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:import/errors',
 		'plugin:import/warnings',
 		'plugin:import/typescript',
 		'plugin:prettier/recommended',
-		'plugin:react/recommended',
 		'prettier/@typescript-eslint',
 		'prettier/react',
 	],
@@ -42,4 +43,12 @@ module.exports = {
 			ignoreDeclarationSort: true,
 		}],
 	},
+	"overrides": [
+		{
+				"files": ["**/*.tsx"],
+				"rules": {
+						"react/prop-types": "off"
+				}
+		}
+	]
 };
