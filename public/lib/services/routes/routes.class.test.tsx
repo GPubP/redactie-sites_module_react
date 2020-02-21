@@ -1,9 +1,9 @@
 import { ModuleRouteConfig } from '@redactie/redactie-core';
 import React from 'react';
 
-import Sites from './siteRegistry.class';
+import Sites from './routes.class';
 
-describe('Sites', () => {
+describe('Routes', () => {
 	let sites: Sites;
 
 	const dummySiteConfig: ModuleRouteConfig = {

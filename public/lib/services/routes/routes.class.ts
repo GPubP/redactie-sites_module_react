@@ -1,5 +1,9 @@
 import { ModuleRouteConfig } from '@redactie/redactie-core';
 
+/**
+ * Helper function to prefix all routes with /sites
+ * @param routeConfig single route of type ModuleRouteConfig, may include subroutes
+ */
 const prefixRoute = (routeConfig: ModuleRouteConfig): ModuleRouteConfig => {
 	const updatedRouteConfig = routeConfig;
 	updatedRouteConfig.path = `/sites${updatedRouteConfig.path}`;
@@ -8,7 +12,7 @@ const prefixRoute = (routeConfig: ModuleRouteConfig): ModuleRouteConfig => {
 	return updatedRouteConfig;
 };
 
-class SiteRegistry {
+class Routes {
 	private registeredSites: ModuleRouteConfig[] = [];
 
 	register(siteConfig: ModuleRouteConfig): void {
@@ -20,6 +24,6 @@ class SiteRegistry {
 	}
 }
 
-export const siteRegistry = new SiteRegistry();
+export const routes = new Routes();
 
-export default SiteRegistry;
+export default Routes;

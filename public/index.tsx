@@ -2,10 +2,10 @@ import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-import { siteRegistry } from './lib/services/siteRegistry/siteRegistry.class';
+import { routes } from './lib/services/routes/routes.class';
 
 const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
-	const sites = siteRegistry.getAll();
+	const sites = routes.getAll();
 	return (
 		<div>
 			<h1>Sites</h1>
@@ -26,12 +26,12 @@ Core.routes.register({
 	path: '/sites',
 	component: SitesComponent,
 	label: 'Sites',
-	routes: siteRegistry.getAll(),
+	routes: routes.getAll(),
 });
 
 // expose module
 Core.modules.exposeModuleApi('sites-module', {
-	siteRegistry: siteRegistry,
+	routes: routes,
 });
 
 export { SitesComponent };
