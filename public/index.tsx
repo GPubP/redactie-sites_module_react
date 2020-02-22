@@ -5,16 +5,16 @@ import { Link } from 'react-router-dom';
 import { routes } from './lib/services/routes/routes.class';
 
 const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
-	const sites = routes.getAll();
 	return (
 		<div>
 			<h1>Sites</h1>
 			<nav>
-				{sites.map(site => (
-					<Link key={site.path} to={`${site.path}`}>
-						<p>{site.label}</p>
-					</Link>
-				))}
+				{route.routes &&
+					route.routes.map(r => (
+						<Link key={r.path} to={`${r.path}`}>
+							<p>{r.label}</p>
+						</Link>
+					))}
 			</nav>
 			<div>{Core.routes.render(route.routes as ModuleRouteConfig[])}</div>
 		</div>
