@@ -1,10 +1,10 @@
-import { ModuleRouteConfig } from '@redactie/redactie-core';
+import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React from 'react';
 
-import Sites from './routes.class';
+import Routes from './routes.class';
 
 describe('Routes', () => {
-	let sites: Sites;
+	let routes: Routes;
 
 	const dummySiteConfig: ModuleRouteConfig = {
 		path: '/external',
@@ -19,19 +19,22 @@ describe('Routes', () => {
 	};
 
 	beforeEach(() => {
-		sites = new Sites();
+		routes = new Routes();
 	});
 
 	it('Should be able to register a route', () => {
-		expect(sites).toBeInstanceOf(Sites);
-		sites.register(dummySiteConfig);
-		expect(sites.getAll()[0]).toEqual({ path: '/sites/external', ...dummySiteConfig });
+		const updateChildRoutesSpy = spyOn(Core.routes, 'updateChildRoutes');
+
+		expect(routes).toBeInstanceOf(Routes);
+		routes.register(dummySiteConfig);
+		expect(routes.getAll()[0]).toEqual({ path: '/routes/external', ...dummySiteConfig });
+		expect(updateChildRoutesSpy).toHaveBeenCalledWith('/sites', routes.getAll());
 	});
 
 	it('Should be able to register a childroute', () => {
-		expect(sites).toBeInstanceOf(Sites);
-		sites.register({ routes: [dummyChildRouteConfig], ...dummySiteConfig });
-		expect(sites.getAll()[0].routes).toEqual([
+		expect(routes).toBeInstanceOf(Routes);
+		routes.register({ routes: [dummyChildRouteConfig], ...dummySiteConfig });
+		expect(routes.getAll()[0].routes).toEqual([
 			{
 				path: '/sites/external/child',
 				...dummyChildRouteConfig,

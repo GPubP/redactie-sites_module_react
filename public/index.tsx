@@ -26,7 +26,7 @@ Core.routes.register({
 	path: '/sites',
 	component: SitesComponent,
 	label: 'Sites',
-	routes: routes.getAll(),
+	routes: [],
 });
 
 // expose module

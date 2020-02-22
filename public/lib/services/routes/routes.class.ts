@@ -1,4 +1,4 @@
-import { ModuleRouteConfig } from '@redactie/redactie-core';
+import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 
 /**
  * Helper function to prefix all routes with /sites
@@ -18,7 +18,9 @@ class Routes {
 	register(routeConfig: ModuleRouteConfig): void {
 		const updatedRouteConfig = prefixRoute(routeConfig);
 		this.registeredRoutes.push(updatedRouteConfig);
+		Core.routes.updateChildRoutes('/sites', this.registeredRoutes);
 	}
+
 	getAll(): ModuleRouteConfig[] {
 		return this.registeredRoutes;
 	}
