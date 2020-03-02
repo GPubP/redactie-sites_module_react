@@ -3,6 +3,8 @@ const path = require('path');
 const RedactionWebpackPlugin = require('@redactie/module-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
+const packageJSON = require('./package.json');
+
 module.exports = env => {
 	const defaultConfig = {
 		mode: 'production',
@@ -52,7 +54,7 @@ module.exports = env => {
 			plugins: [
 				...defaultConfig.plugins,
 				new RedactionWebpackPlugin({
-					moduleName: 'redactie-sites',
+					moduleName: packageJSON.name,
 				}),
 			],
 		};
