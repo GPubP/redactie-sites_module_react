@@ -1,1 +1,1 @@
-declare module 'redactie-boilerplate-module';
+declare module '@redactie/sites-module';

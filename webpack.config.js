@@ -1,6 +1,7 @@
 const path = require('path');
 
 const RedactionWebpackPlugin = require('@redactie/module-webpack-plugin');
+const postcssPresetEnv = require('postcss-preset-env');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const packageJSON = require('./package.json');
@@ -20,6 +21,27 @@ module.exports = env => {
 					use: 'ts-loader',
 					exclude: /node_modules/,
 				},
+				{
+					test: /\.s[ac]ss$/i,
+					use: [
+						'style-loader',
+						{
+							loader: 'css-loader',
+							options: {
+								modules: true,
+								importLoaders: 1,
+							},
+						},
+						{
+							loader: 'postcss-loader',
+							options: {
+								ident: 'postcss',
+								plugins: () => [postcssPresetEnv()],
+							},
+						},
+						'sass-loader',
+					],
+				},
 			],
 		},
 		resolve: {
@@ -33,6 +55,7 @@ module.exports = env => {
 			'react-dom': 'react-dom',
 			'react-router-dom': 'react-router-dom',
 			'@redactie/redactie-core': '@redactie/redactie-core',
+			'@acpaas-ui/react-components': '@acpaas-ui/react-components',
 		},
 		output: {
 			filename: 'redactie-sites-module.umd.js',
