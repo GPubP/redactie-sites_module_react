@@ -1,3 +1,4 @@
+import Button from '@acpaas-ui/react-components/packages/button';
 import { Table } from 'editorial-ui_react';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
@@ -48,6 +49,16 @@ const SitesOverview: FC = () => {
 			{
 				label: 'Omschrijving',
 				value: 'description',
+			},
+			{
+				label: '',
+				component: (value: any, rowData: any) => {
+					const { id } = rowData;
+
+					return (
+						<Button icon="edit" ariaLabel="Edit" type="primary" size="tiny"></Button>
+					);
+				},
 			},
 		];
 
