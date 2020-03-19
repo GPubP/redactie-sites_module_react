@@ -10,7 +10,7 @@ const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 
 // expose route
 Core.routes.register({
-	path: '/sites',
+	path: '/sites/beheer',
 	component: SitesComponent,
 	label: 'Sites',
 	routes: [],
