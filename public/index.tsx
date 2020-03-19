@@ -5,15 +5,14 @@ import { routes } from './lib/services/routes/routes.class';
 import { sitesRoutes } from './lib/sites.routes';
 
 const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
-	return <div className="u-container">{sitesRoutes}</div>;
+	return <>{...sitesRoutes(route)}</>;
 };
 
 // expose route
 Core.routes.register({
-	path: '/sites/beheer',
+	path: '/sites',
 	component: SitesComponent,
 	label: 'Sites',
-	routes: [],
 });
 
 // expose module
