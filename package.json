@@ -1,6 +1,6 @@
 {
   "name": "@redactie/sites-module",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "redactie sites module",
   "main": "dist/redactie-sites-module.umd.js",
   "module": "dist/redactie-sites-module.umd.js",
@@ -33,7 +33,7 @@
   ],
   "devDependencies": {
     "@acpaas-ui/react-components": "^3.4.1",
-    "@acpaas-ui/react-editorial-components": "0.0.1-4",
+    "@acpaas-ui/react-editorial-components": "0.0.1-5",
     "@babel/core": "7.8.3",
     "@babel/preset-env": "7.8.3",
     "@babel/preset-react": "7.8.3",
