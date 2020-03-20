@@ -1,3 +1,7 @@
+export interface SitesRouteProps {
+	basePath: string;
+}
+
 export interface SiteSchema {
 	uuid: string;
 	data: {

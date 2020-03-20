@@ -1,30 +1,39 @@
-import { TextField } from '@acpaas-ui/react-components';
+import { Button, TextField } from '@acpaas-ui/react-components';
 import { ContextHeader } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
-import React, { FC, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import kebabCase from 'lodash.kebabcase';
+import React, { FC } from 'react';
+import { useHistory } from 'react-router-dom';
 
+import { createSite } from '../../sites.service';
+import { SitesRouteProps } from '../../sites.types';
 import { Tab } from '../../types';
 
 import { SitesCreateFormState } from './SitesCreate.types';
 
-const SitesCreate: FC = () => {
+const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
+
+const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	/**
 	 * Hooks
 	 */
-	const { tabId } = useParams();
-	console.log(tabId);
-
-	const tabs = useMemo<Tab[]>(
-		() => [{ name: 'Instellingen', target: 'instellingen', active: tabId === 'instellingen' }],
-		[tabId]
-	);
+	const history = useHistory();
 
 	/**
-	 * Methodq
+	 * Methods
 	 */
-	const onSubmit = (values: SitesCreateFormState): void => {
-		console.log(values);
+	const navigateToOverview = (): void => {
+		history.push(`${basePath}/beheer`);
+	};
+
+	const onSubmit = ({ name }: SitesCreateFormState): void => {
+		const request = { name, description: name };
+		const response = createSite(request);
+
+		if (response) {
+			// Create was succesful, go back to the overview
+			navigateToOverview();
+		}
 	};
 
 	/**
@@ -32,15 +41,31 @@ const SitesCreate: FC = () => {
 	 */
 	return (
 		<>
-			<ContextHeader tabs={tabs} title="Site aanmaken" />
-			<p>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Architecto maiores minus
-				laborum necessitatibus dolore tempore aspernatur provident vel aliquid. Tenetur,
-				quod fugit! Quo provident dolore ratione placeat quae harum nihil?
-			</p>
-			<div className="u-container">
+			<ContextHeader tabs={TABS} title="Site aanmaken" />
+			<div className="u-margin-top">
+				{/* TODO: add validation scheme with yup */}
 				<Formik initialValues={{ name: '' }} onSubmit={onSubmit}>
-					<Field component={TextField} name="name" required />
+					{({ submitForm, values }) => (
+						<>
+							<Field as={TextField} label="Naam" name="name" required />
+							<p>
+								Systeemnaam: <b>{kebabCase(values.name)}</b>
+							</p>
+							{/* TODO: these should go in the action bar */}
+							<div className="u-margin-top">
+								<Button
+									className="u-margin-right-xs"
+									onClick={() => submitForm()}
+									type="success"
+								>
+									Bewaar en ga verder
+								</Button>
+								<Button onClick={navigateToOverview} outline>
+									Annuleer
+								</Button>
+							</div>
+						</>
+					)}
 				</Formik>
 			</div>
 		</>
