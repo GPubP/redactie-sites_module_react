@@ -1,11 +1,23 @@
-import Button from '@acpaas-ui/react-components/packages/button';
-import { Table } from '@acpaas-ui/react-editorial-components';
+import { Breadcrumbs, Button } from '@acpaas-ui/react-components';
+import {
+	ContextHeader,
+	ContextHeaderActionsSection,
+	ContextHeaderTopSection,
+	Table,
+} from '@acpaas-ui/react-editorial-components';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import { getSites } from '../../sites.service';
 import { SiteSchema } from '../../sites.types';
 import { LoadingState } from '../../types';
+
+const BREADCRUMB_ITEMS = [
+	{
+		name: 'Home',
+		target: '/',
+	},
+];
 
 const SitesOverview: FC = () => {
 	/**
@@ -64,7 +76,7 @@ const SitesOverview: FC = () => {
 
 		return (
 			<>
-				<h4>Resultaat ({sitesRows.length})</h4>
+				<h5>Resultaat ({sitesRows.length})</h5>
 				<Table rows={sitesRows} columns={sitesColumns} />
 			</>
 		);
@@ -72,11 +84,14 @@ const SitesOverview: FC = () => {
 
 	return (
 		<>
-			<div>
-				<p>breadcrumbs</p>
-				<p>Header</p>
-			</div>
-			<p>Filter</p>
+			<ContextHeader title="Sites">
+				<ContextHeaderTopSection>
+					<Breadcrumbs items={BREADCRUMB_ITEMS} />
+				</ContextHeaderTopSection>
+				<ContextHeaderActionsSection>
+					<Button iconLeft="plus">Nieuwe maken</Button>
+				</ContextHeaderActionsSection>
+			</ContextHeader>
 			<DataLoader loadingState={loadingState} render={renderOverview} />
 		</>
 	);
