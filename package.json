@@ -81,8 +81,7 @@
   },
   "dependencies": {
     "@acpaas-ui/react-components": "^3.4.1",
-		"ky": "^0.17.0",
-		"editorial-ui_react": "0.1.0"
+    "ky": "^0.17.0"
   },
   "author": "Maarten De Weerdt",
   "license": "ISC"
