@@ -2,6 +2,15 @@ export interface SitesRouteProps {
 	basePath: string;
 }
 
+export interface SitesDetailFormState {
+	name: string;
+}
+
+export interface SitesDetailRequestBody {
+	name: string;
+	description: string;
+}
+
 export interface SiteSchema {
 	uuid: string;
 	data: {
@@ -16,5 +25,5 @@ export interface SiteSchema {
 }
 
 export interface SitesSchema {
-	_embedded: SitesSchema[];
+	_embedded: SiteSchema[];
 }
