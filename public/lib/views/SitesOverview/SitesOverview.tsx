@@ -1,5 +1,5 @@
 import Button from '@acpaas-ui/react-components/packages/button';
-import { Table } from 'editorial-ui_react';
+import { Table } from '@acpaas-ui/react-editorial-components';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
