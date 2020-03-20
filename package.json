@@ -1,6 +1,6 @@
 {
   "name": "@redactie/sites-module",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "redactie sites module",
   "main": "dist/redactie-sites-module.umd.js",
   "module": "dist/redactie-sites-module.umd.js",
@@ -32,6 +32,8 @@
     "Module"
   ],
   "devDependencies": {
+    "@acpaas-ui/react-components": "^3.4.1",
+    "@acpaas-ui/react-editorial-components": "0.0.1-3",
     "@babel/core": "7.8.3",
     "@babel/preset-env": "7.8.3",
     "@babel/preset-react": "7.8.3",
@@ -80,8 +82,6 @@
     "webpack-cli": "3.3.10"
   },
   "dependencies": {
-    "@acpaas-ui/react-components": "^3.4.1",
-    "@acpaas-ui/react-editorial-components": "0.0.1-3",
     "ky": "^0.17.0"
   },
   "author": "Maarten De Weerdt",

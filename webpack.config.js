@@ -56,6 +56,7 @@ module.exports = env => {
 			'react-router-dom': 'react-router-dom',
 			'@redactie/redactie-core': '@redactie/redactie-core',
 			'@acpaas-ui/react-components': '@acpaas-ui/react-components',
+			'@acpaas-ui/react-editorial-components': '@acpaas-ui/react-editorial-components',
 		},
 		output: {
 			filename: 'redactie-sites-module.umd.js',
