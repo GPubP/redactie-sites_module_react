@@ -67,9 +67,17 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 			},
 			{
 				label: '',
-				component() {
+				component(value: unknown, rowData: unknown) {
+					// TODO: add types for rowData
+					const { id } = rowData as any;
+
 					return (
-						<Button icon="edit" ariaLabel="Edit" type="primary" size="tiny"></Button>
+						<Button
+							ariaLabel="Edit"
+							icon="edit"
+							onClick={() => history.push(`${basePath}/${id}/bewerken`)}
+							type="primary"
+						></Button>
 					);
 				},
 			},
