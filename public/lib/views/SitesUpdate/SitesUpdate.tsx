@@ -81,7 +81,7 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 
 	return (
 		<>
-			<ContextHeader tabs={TABS} title="Site aanmaken" />
+			<ContextHeader tabs={TABS} title="Site bewerken" />
 			<DataLoader loadingState={loadingState} render={renderSitesUpdate} />
 		</>
 	);
