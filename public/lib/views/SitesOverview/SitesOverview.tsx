@@ -75,10 +75,10 @@ const SitesOverview: FC = () => {
 		];
 
 		return (
-			<>
+			<div className="u-container">
 				<h5>Resultaat ({sitesRows.length})</h5>
 				<Table rows={sitesRows} columns={sitesColumns} />
-			</>
+			</div>
 		);
 	};
 
