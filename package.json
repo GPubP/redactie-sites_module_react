@@ -33,7 +33,7 @@
   ],
   "devDependencies": {
     "@acpaas-ui/react-components": "^3.4.1",
-    "@acpaas-ui/react-editorial-components": "0.0.1-3",
+    "@acpaas-ui/react-editorial-components": "0.0.1-4",
     "@babel/core": "7.8.3",
     "@babel/preset-env": "7.8.3",
     "@babel/preset-react": "7.8.3",
@@ -82,7 +82,9 @@
     "webpack-cli": "3.3.10"
   },
   "dependencies": {
-    "ky": "^0.17.0"
+    "formik": "^2.1.4",
+    "ky": "^0.17.0",
+    "yup": "^0.28.3"
   },
   "author": "Maarten De Weerdt",
   "license": "ISC"

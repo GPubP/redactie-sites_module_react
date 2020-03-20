@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 
 import { routes } from './lib/services/routes/routes.class';
-import { SitesOverview } from './lib/views';
+import { SitesCreate, SitesOverview } from './lib/views';
 
 const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	const location = useLocation();
@@ -27,7 +27,12 @@ Core.routes.register({
 		{
 			path: '/sites/beheer',
 			component: SitesOverview,
-			routes: [],
+			routes: [
+				{
+					path: '/sites/beheer/aanmaken',
+					component: SitesCreate,
+				},
+			],
 		},
 	],
 });
