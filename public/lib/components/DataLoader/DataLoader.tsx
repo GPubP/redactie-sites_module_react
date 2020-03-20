@@ -1,4 +1,4 @@
-import Spinner from '@acpaas-ui/react-components/packages/spinner';
+import { Spinner } from '@acpaas-ui/react-components';
 import React, { FC } from 'react';
 
 import { LoadingState } from '../../types';
