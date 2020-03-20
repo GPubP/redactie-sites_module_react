@@ -6,7 +6,6 @@ import { routes } from './lib/services/routes/routes.class';
 import { SitesOverview } from './lib/views';
 
 const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
-	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const location = useLocation();
 
 	// if path is /sites, redirect to /sites/beheer
