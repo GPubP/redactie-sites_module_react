@@ -9,8 +9,8 @@ const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	const location = useLocation();
 
 	// if path is /sites, redirect to /sites/beheer
-	if (location.pathname === route.path) {
-		return <Redirect from={route.path} to={`${route.path}/beheer`} />;
+	if (/\/sites$/.test(location.pathname)) {
+		return <Redirect to={`${route.path}/beheer`} />;
 	}
 
 	return <>{Core.routes.render(route.routes as ModuleRouteConfig[])}</>;
