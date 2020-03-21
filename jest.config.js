@@ -3,6 +3,11 @@ module.exports = {
 	// extended assertions to Jest
 	setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
 
+	transform: {
+		'^.+\\.jsx?$': 'babel-jest', // Adding this line solved the issue
+		'^.+\\.tsx?$': 'ts-jest',
+	},
+
 	// Module file extensions for importing
 	moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 };
