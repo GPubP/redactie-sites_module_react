@@ -7,3 +7,10 @@ export enum LoadingState {
 export interface DefaultComponentProps {
 	className?: string;
 }
+
+export interface Tab {
+	name: string;
+	target: string;
+	active: boolean;
+	disabled?: boolean;
+}

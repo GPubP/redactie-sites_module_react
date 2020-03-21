@@ -6,10 +6,11 @@ import {
 	Table,
 } from '@acpaas-ui/react-editorial-components';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
 import { getSites } from '../../sites.service';
-import { SiteSchema } from '../../sites.types';
+import { SiteSchema, SitesRouteProps } from '../../sites.types';
 import { LoadingState } from '../../types';
 
 const BREADCRUMB_ITEMS = [
@@ -19,12 +20,14 @@ const BREADCRUMB_ITEMS = [
 	},
 ];
 
-const SitesOverview: FC = () => {
+const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 	/**
 	 * Hooks
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [sites, setSites] = useState<SiteSchema[] | null>(null);
+
+	const history = useHistory();
 
 	useEffect(() => {
 		getSites()
@@ -64,11 +67,17 @@ const SitesOverview: FC = () => {
 			},
 			{
 				label: '',
-				component: (value: any, rowData: any) => {
-					const { id } = rowData;
+				component(value: unknown, rowData: unknown) {
+					// TODO: add types for rowData
+					const { id } = rowData as any;
 
 					return (
-						<Button icon="edit" ariaLabel="Edit" type="primary" size="tiny"></Button>
+						<Button
+							ariaLabel="Edit"
+							icon="edit"
+							onClick={() => history.push(`${basePath}/${id}/bewerken`)}
+							type="primary"
+						></Button>
 					);
 				},
 			},
@@ -89,7 +98,9 @@ const SitesOverview: FC = () => {
 					<Breadcrumbs items={BREADCRUMB_ITEMS} />
 				</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus">Nieuwe maken</Button>
+					<Button iconLeft="plus" onClick={() => history.push(`${basePath}/aanmaken`)}>
+						Nieuwe maken
+					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<DataLoader loadingState={loadingState} render={renderOverview} />
