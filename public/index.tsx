@@ -3,10 +3,9 @@ import React, { FC } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 
 import { routes } from './lib/services/routes/routes.class';
-import { Dashboard, SitesOverview } from './lib/views';
+import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 
 const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
-	// eslint-disable-next-line react-hooks/rules-of-hooks
 	const location = useLocation();
 
 	// if path is /sites, redirect to /sites/beheer
@@ -14,7 +13,7 @@ const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 		return <Redirect to={`${route.path}/beheer`} />;
 	}
 
-	return <>{Core.routes.render(route.routes as ModuleRouteConfig[])}</>;
+	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
 };
 
 // expose route
@@ -33,8 +32,19 @@ Core.routes.register({
 	routes: [
 		{
 			path: '/sites/beheer',
-			component: SitesOverview,
+			// TODO: fix this in core package/routes.register types
+			component: SitesOverview as any,
 			routes: [],
+		},
+		{
+			path: '/sites/aanmaken',
+			// TODO: fix this in core package/routes.register types
+			component: SitesCreate as any,
+		},
+		{
+			path: '/sites/:siteId/bewerken',
+			// TODO: fix this in core package/routes.register types
+			component: SitesUpdate as any,
 		},
 	],
 });
