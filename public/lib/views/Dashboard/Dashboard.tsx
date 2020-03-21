@@ -9,8 +9,7 @@ import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { DataLoader } from '../../components';
-import Status from '../../components/Status/Status';
+import { DataLoader, Status } from '../../components';
 import { getSites } from '../../sites.service';
 import { SiteSchema } from '../../sites.types';
 import { LoadingState } from '../../types';
