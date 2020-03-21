@@ -64,6 +64,8 @@ const SitesOverview: FC = () => {
 			},
 			{
 				label: '',
+				classList: ['u-text-right'],
+				disableSorting: true,
 				component: (value: any, rowData: any) => {
 					const { id } = rowData;
 
