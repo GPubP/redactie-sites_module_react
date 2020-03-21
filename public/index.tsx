@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 
 import { routes } from './lib/services/routes/routes.class';
-import { SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
+import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 
 const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	const location = useLocation();
@@ -18,11 +18,17 @@ const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 
 // expose route
 Core.routes.register({
+	path: '/dashboard',
+	component: Dashboard,
+	label: 'Dashboard',
+	isDefaultRoute: true,
+});
+
+Core.routes.register({
 	path: '/sites',
 	exact: true,
 	component: SitesComponent,
 	label: 'Sites',
-	isDefaultRoute: true,
 	routes: [
 		{
 			path: '/sites/beheer',

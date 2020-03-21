@@ -1,33 +1,32 @@
-import { Breadcrumbs, Button } from '@acpaas-ui/react-components';
+import { Link as AUILink, Breadcrumbs, Button } from '@acpaas-ui/react-components';
 import {
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
 	Table,
 } from '@acpaas-ui/react-editorial-components';
+import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import { DataLoader } from '../../components';
+import { DataLoader, Status } from '../../components';
 import { getSites } from '../../sites.service';
-import { SiteSchema, SitesRouteProps } from '../../sites.types';
+import { SiteSchema } from '../../sites.types';
 import { LoadingState } from '../../types';
 
 const BREADCRUMB_ITEMS = [
 	{
-		name: 'Home',
+		name: 'Dashboard',
 		target: '/',
 	},
 ];
 
-const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
+const Dashboard: FC = () => {
 	/**
 	 * Hooks
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [sites, setSites] = useState<SiteSchema[] | null>(null);
-
-	const history = useHistory();
 
 	useEffect(() => {
 		getSites()
@@ -59,35 +58,35 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 		const sitesColumns = [
 			{
 				label: 'Naam',
-				value: 'name',
+				component: (value: any, rowData: any) => {
+					return (
+						<>
+							<AUILink to={`sites/${prop('id')(rowData)}`} component={Link}>
+								{prop('name')(rowData)}
+							</AUILink>
+							<p className="u-text-light u-margin-top-xs">
+								{prop('description')(rowData)}
+							</p>
+						</>
+					);
+				},
 			},
 			{
-				label: 'Omschrijving',
-				value: 'description',
+				label: 'Status',
+				component: (value: any, rowData: any) => {
+					return <Status label="Actief" type="ACTIVE" />;
+				},
 			},
 			{
 				label: '',
-				classList: ['u-text-right'],
 				disableSorting: true,
-				component(value: unknown, rowData: unknown) {
-					// TODO: add types for rowData
-					const { id } = rowData as any;
-
-					return (
-						<Button
-							ariaLabel="Edit"
-							icon="edit"
-							onClick={() => history.push(`${basePath}/${id}/bewerken`)}
-							type="primary"
-						></Button>
-					);
-				},
+				component: () => '',
 			},
 		];
 
 		return (
 			<div className="u-container">
-				<h5 className="u-margin-top">Resultaat ({sitesRows.length})</h5>
+				<h5 className="u-margin-top">Sites ({sitesRows.length})</h5>
 				<Table className="u-margin-top" rows={sitesRows} columns={sitesColumns} />
 			</div>
 		);
@@ -95,14 +94,12 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 
 	return (
 		<>
-			<ContextHeader title="Sites">
+			<ContextHeader title="Dashboard">
 				<ContextHeaderTopSection>
 					<Breadcrumbs items={BREADCRUMB_ITEMS} />
 				</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus" onClick={() => history.push(`${basePath}/aanmaken`)}>
-						Nieuwe maken
-					</Button>
+					<Button iconLeft="plus">Nieuwe maken</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<DataLoader loadingState={loadingState} render={renderOverview} />
@@ -110,4 +107,4 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 	);
 };
 
-export default SitesOverview;
+export default Dashboard;
