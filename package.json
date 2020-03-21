@@ -41,10 +41,11 @@
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
     "@redactie/module-webpack-plugin": "2.0.0",
-    "@redactie/redactie-core": "^1.0.2",
+    "@redactie/redactie-core": "^1.0.5-alpha.3",
     "@testing-library/jest-dom": "5.0.2",
     "@testing-library/react": "9.4.0",
     "@types/jest": "24.9.1",
+    "@types/ramda": "^0.26.44",
     "@types/react": "16.9.19",
     "@types/react-router-dom": "5.1.3",
     "@types/webpack-env": "^1.15.1",
@@ -82,7 +83,8 @@
     "webpack-cli": "3.3.10"
   },
   "dependencies": {
-    "ky": "^0.17.0"
+    "ky": "^0.17.0",
+    "ramda": "^0.27.0"
   },
   "author": "Maarten De Weerdt",
   "license": "ISC"
