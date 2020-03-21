@@ -13,7 +13,11 @@ const DataLoader: FC<DataLoaderProps> = ({
 }) => {
 	switch (loadingState) {
 		case LoadingState.Loading:
-			return <Spinner />;
+			return (
+				<div className="u-text-center u-margin-top">
+					<Spinner />
+				</div>
+			);
 
 		case LoadingState.Loaded:
 			return render() || <p>{notFoundMessage}</p>;
