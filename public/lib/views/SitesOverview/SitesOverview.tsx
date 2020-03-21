@@ -76,8 +76,8 @@ const SitesOverview: FC = () => {
 
 		return (
 			<div className="u-container">
-				<h5>Resultaat ({sitesRows.length})</h5>
-				<Table rows={sitesRows} columns={sitesColumns} />
+				<h5 className="u-margin-top">Resultaat ({sitesRows.length})</h5>
+				<Table className="u-margin-top" rows={sitesRows} columns={sitesColumns} />
 			</div>
 		);
 	};
