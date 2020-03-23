@@ -79,6 +79,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 							icon="edit"
 							onClick={() => history.push(`${basePath}/${id}/bewerken`)}
 							type="primary"
+							transparent
 						></Button>
 					);
 				},
@@ -86,7 +87,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 		];
 
 		return (
-			<div className="u-container">
+			<div className="u-container u-wrapper">
 				<h5 className="u-margin-top">Resultaat ({sitesRows.length})</h5>
 				<Table className="u-margin-top" rows={sitesRows} columns={sitesColumns} />
 			</div>

@@ -7,11 +7,11 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { DataLoader, Status } from '../../components';
 import { getSites } from '../../sites.service';
-import { SiteSchema } from '../../sites.types';
+import { SiteSchema, SitesRouteProps } from '../../sites.types';
 import { LoadingState } from '../../types';
 
 const BREADCRUMB_ITEMS = [
@@ -21,12 +21,14 @@ const BREADCRUMB_ITEMS = [
 	},
 ];
 
-const Dashboard: FC = () => {
+const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 	/**
 	 * Hooks
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [sites, setSites] = useState<SiteSchema[] | null>(null);
+
+	const history = useHistory();
 
 	useEffect(() => {
 		getSites()
@@ -85,7 +87,7 @@ const Dashboard: FC = () => {
 		];
 
 		return (
-			<div className="u-container">
+			<div className="u-container u-wrapper">
 				<h5 className="u-margin-top">Sites ({sitesRows.length})</h5>
 				<Table className="u-margin-top" rows={sitesRows} columns={sitesColumns} />
 			</div>
@@ -99,7 +101,9 @@ const Dashboard: FC = () => {
 					<Breadcrumbs items={BREADCRUMB_ITEMS} />
 				</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus">Nieuwe maken</Button>
+					<Button iconLeft="plus" onClick={() => history.push(`${basePath}/aanmaken`)}>
+						Nieuwe maken
+					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<DataLoader loadingState={loadingState} render={renderOverview} />

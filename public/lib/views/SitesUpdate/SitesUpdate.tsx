@@ -60,6 +60,10 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 		}
 	};
 
+	const onActiveToggle = (): void => {
+		// Todo: handle onActiveTogle
+	};
+
 	/**
 	 * Render
 	 */
@@ -69,11 +73,12 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 		}
 
 		return (
-			<div className="u-margin-top">
+			<div className="u-margin-top u-container u-wrapper">
 				<SitesDetailForm
 					initialState={formState}
 					onCancel={navigateToOverview}
 					onSubmit={onSubmit}
+					onActiveToggle={onActiveToggle}
 				/>
 			</div>
 		);

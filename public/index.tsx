@@ -19,7 +19,7 @@ const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 // expose route
 Core.routes.register({
 	path: '/dashboard',
-	component: Dashboard,
+	component: Dashboard as any,
 	label: 'Dashboard',
 	isDefaultRoute: true,
 });

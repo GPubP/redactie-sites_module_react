@@ -39,7 +39,7 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	return (
 		<>
 			<ContextHeader tabs={TABS} title="Site aanmaken" />
-			<div className="u-margin-top">
+			<div className="u-margin-top u-container u-wrapper">
 				<SitesDetailForm
 					initialState={generateDetailFormState()}
 					onCancel={navigateToOverview}
