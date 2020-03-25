@@ -6,6 +6,7 @@ import {
 	CardTitle,
 	TextField,
 } from '@acpaas-ui/react-components';
+import Core from '@redactie/redactie-core';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement } from 'react';
@@ -61,20 +62,21 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							</div>
 						</div>
 					</div>
-					{/* TODO: these should go in the action bar */}
-					<div className="u-margin-top">
-						<Button
-							className="u-margin-right-xs"
-							onClick={() => submitForm()}
-							type="success"
-						>
-							Bewaar en ga verder
-						</Button>
-						<Button onClick={onCancel} outline>
-							Annuleer
-						</Button>
-					</div>
 					{onActiveToggle ? renderArchive() : null}
+					{Core.actionBar.setContent(
+						<div className="u-margin-top">
+							<Button
+								className="u-margin-right-xs"
+								onClick={() => submitForm()}
+								type="success"
+							>
+								Bewaar en ga verder
+							</Button>
+							<Button onClick={onCancel} outline>
+								Annuleer
+							</Button>
+						</div>
+					)}
 				</>
 			)}
 		</Formik>
