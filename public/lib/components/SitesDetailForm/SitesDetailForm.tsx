@@ -8,17 +8,12 @@ import {
 } from '@acpaas-ui/react-components';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import React, { FC } from 'react';
+import React, { FC, ReactElement } from 'react';
 
-import { SitesDetailFormState } from '../../sites.types';
 import Status from '../Status/Status';
 
-interface SitesDetailFormProps {
-	initialState: SitesDetailFormState;
-	onCancel: () => void;
-	onSubmit: (values: SitesDetailFormState) => void;
-	onActiveToggle?: () => void;
-}
+import { SITES_DETAIL_VALIDATION_SCHEMA } from './SitesDetailForm.const';
+import { SitesDetailFormProps } from './SitesDetailForm.types';
 
 const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	initialState,
@@ -26,7 +21,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	onSubmit,
 	onActiveToggle,
 }) => {
-	const renderArchive = (): any => {
+	const renderArchive = (): ReactElement => {
 		return (
 			<Card className="u-margin-top">
 				<CardBody>
@@ -44,9 +39,13 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 			</Card>
 		);
 	};
-	// TODO: add validation scheme with yup
+
 	return (
-		<Formik initialValues={initialState} onSubmit={onSubmit}>
+		<Formik
+			initialValues={initialState}
+			onSubmit={onSubmit}
+			validationSchema={SITES_DETAIL_VALIDATION_SCHEMA}
+		>
 			{({ submitForm, values }) => (
 				<>
 					<div className="row">
@@ -62,7 +61,6 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							</div>
 						</div>
 					</div>
-					{onActiveToggle ? renderArchive() : ''}
 					{/* TODO: these should go in the action bar */}
 					<div className="u-margin-top">
 						<Button
@@ -76,6 +74,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							Annuleer
 						</Button>
 					</div>
+					{onActiveToggle ? renderArchive() : null}
 				</>
 			)}
 		</Formik>
