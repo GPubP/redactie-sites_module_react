@@ -60,7 +60,7 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 		const sitesColumns = [
 			{
 				label: 'Naam',
-				component: (value: any, rowData: any) => {
+				component(value: any, rowData: any) {
 					return (
 						<>
 							<AUILink to={`sites/${prop('id')(rowData)}`} component={Link}>
@@ -75,14 +75,13 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 			},
 			{
 				label: 'Status',
-				component: (value: any, rowData: any) => {
+				component() {
 					return <Status label="Actief" type="ACTIVE" />;
 				},
 			},
 			{
 				label: '',
 				disableSorting: true,
-				component: () => '',
 			},
 		];
 
