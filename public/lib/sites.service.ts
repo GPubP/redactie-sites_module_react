@@ -1,9 +1,13 @@
 import apiService from './services/api-service';
-import { SiteSchema, SitesDetailRequestBody, SitesSchema } from './sites.types';
+import { SiteSchema, SitesDetailRequestBody } from './sites.types';
 
 export const getSites = async (): Promise<SiteSchema[] | null> => {
 	try {
-		const response: SitesSchema = await apiService.get('sites').json();
+		const response = await apiService.get('sites').json();
+
+		if (!response._embedded) {
+			throw new Error('Failed to get sites');
+		}
 
 		return response._embedded;
 	} catch (err) {
@@ -14,8 +18,7 @@ export const getSites = async (): Promise<SiteSchema[] | null> => {
 
 export const createSite = async (body: SitesDetailRequestBody): Promise<any | null> => {
 	try {
-		// TODO: add typings for response
-		const response: any = await apiService.post('sites', { json: body }).json();
+		const response = await apiService.post('sites', { json: body }).json();
 
 		if (!response.data) {
 			throw new Error('Failed to create site');

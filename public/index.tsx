@@ -19,7 +19,7 @@ const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 // expose route
 Core.routes.register({
 	path: '/dashboard',
-	component: Dashboard as any,
+	component: Dashboard,
 	label: 'Dashboard',
 	isDefaultRoute: true,
 });
@@ -32,19 +32,17 @@ Core.routes.register({
 	routes: [
 		{
 			path: '/sites/beheer',
-			// TODO: fix this in core package/routes.register types
-			component: SitesOverview as any,
-			routes: [],
-		},
-		{
-			path: '/sites/aanmaken',
-			// TODO: fix this in core package/routes.register types
-			component: SitesCreate as any,
-		},
-		{
-			path: '/sites/:siteId/bewerken',
-			// TODO: fix this in core package/routes.register types
-			component: SitesUpdate as any,
+			component: SitesOverview,
+			routes: [
+				{
+					path: '/sites/beheer/aanmaken',
+					component: SitesCreate,
+				},
+				{
+					path: '/sites/beheer/:siteId/bewerken',
+					component: SitesUpdate,
+				},
+			],
 		},
 	],
 });

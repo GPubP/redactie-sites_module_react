@@ -13,6 +13,8 @@ import { getSites } from '../../sites.service';
 import { SiteSchema, SitesRouteProps } from '../../sites.types';
 import { LoadingState } from '../../types';
 
+import { SitesOverviewRowData } from './SitesOverview.types';
+
 const BREADCRUMB_ITEMS = [
 	{
 		name: 'Home',
@@ -50,7 +52,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 			return null;
 		}
 
-		const sitesRows = sites.map(site => ({
+		const sitesRows: SitesOverviewRowData[] = sites.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			description: site.data.description,
@@ -70,14 +72,13 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 				classList: ['u-text-right'],
 				disableSorting: true,
 				component(value: unknown, rowData: unknown) {
-					// TODO: add types for rowData
-					const { id } = rowData as any;
+					const { id } = rowData as SitesOverviewRowData;
 
 					return (
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() => history.push(`${basePath}/${id}/bewerken`)}
+							onClick={() => history.push(`${basePath}/beheer/${id}/bewerken`)}
 							type="primary"
 							transparent
 						></Button>
