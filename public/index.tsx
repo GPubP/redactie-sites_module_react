@@ -13,7 +13,13 @@ const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 		return <Redirect to={`${route.path}/beheer`} />;
 	}
 
-	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
+	return (
+		<>
+			{Core.routes.render(route.routes as ModuleRouteConfig[], {
+				basePath: route.path,
+			})}
+		</>
+	);
 };
 
 // expose route
@@ -34,7 +40,6 @@ Core.routes.register({
 			path: '/sites/beheer',
 			// TODO: fix this in core package/routes.register types
 			component: SitesOverview as any,
-			routes: [],
 		},
 		{
 			path: '/sites/aanmaken',

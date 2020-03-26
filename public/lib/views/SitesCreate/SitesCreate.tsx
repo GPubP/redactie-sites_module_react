@@ -1,8 +1,11 @@
-import { ContextHeader } from '@acpaas-ui/react-editorial-components';
+import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
+import useRoutes from '../../hooks/useRoutes/useRoutes';
+import { BREADCRUMB_OPTIONS } from '../../sites.const';
 import { generateDetailFormState } from '../../sites.helpers';
 import { createSite } from '../../sites.service';
 import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
@@ -15,6 +18,8 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	 * Hooks
 	 */
 	const history = useHistory();
+	const routes = useRoutes();
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 
 	/**
 	 * Methods
@@ -38,7 +43,9 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	 */
 	return (
 		<>
-			<ContextHeader tabs={TABS} title="Site aanmaken" />
+			<ContextHeader tabs={TABS} title="Site aanmaken">
+				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
+			</ContextHeader>
 			<div className="u-margin-top u-container u-wrapper">
 				<SitesDetailForm
 					initialState={generateDetailFormState()}
