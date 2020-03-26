@@ -1,5 +1,8 @@
+import { ModuleRouteConfig } from '@redactie/redactie-core';
+
 export interface SitesRouteProps {
 	basePath: string;
+	routes: ModuleRouteConfig[];
 }
 
 export interface SitesDetailFormState {

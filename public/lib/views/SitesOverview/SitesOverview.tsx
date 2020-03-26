@@ -1,26 +1,22 @@
-import { Breadcrumbs, Button } from '@acpaas-ui/react-components';
+import { Button } from '@acpaas-ui/react-components';
 import {
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
 	Table,
 } from '@acpaas-ui/react-editorial-components';
+import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
+import useRoutes from '../../hooks/useRoutes/useRoutes';
+import { BREADCRUMB_OPTIONS } from '../../sites.const';
 import { getSites } from '../../sites.service';
 import { SiteSchema, SitesRouteProps } from '../../sites.types';
 import { LoadingState } from '../../types';
 
 import { SitesOverviewRowData } from './SitesOverview.types';
-
-const BREADCRUMB_ITEMS = [
-	{
-		name: 'Home',
-		target: '/',
-	},
-];
 
 const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 	/**
@@ -28,7 +24,8 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 	 */
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
 	const [sites, setSites] = useState<SiteSchema[] | null>(null);
-
+	const routes = useRoutes();
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const history = useHistory();
 
 	useEffect(() => {
@@ -98,9 +95,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 	return (
 		<>
 			<ContextHeader title="Sites">
-				<ContextHeaderTopSection>
-					<Breadcrumbs items={BREADCRUMB_ITEMS} />
-				</ContextHeaderTopSection>
+				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
 					<Button iconLeft="plus" onClick={() => history.push(`${basePath}/aanmaken`)}>
 						Nieuwe maken
