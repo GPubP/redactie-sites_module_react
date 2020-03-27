@@ -63,16 +63,18 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 					</div>
 					{onActiveToggle ? renderArchive() : null}
 					{/* TODO: these should go in the action bar */}
-					<Button
-						className="u-margin-right-xs"
-						onClick={() => submitForm()}
-						type="success"
-					>
-						Bewaar en ga verder
-					</Button>
-					<Button onClick={onCancel} outline>
-						Annuleer
-					</Button>
+					<div className="u-margin-top">
+						<Button
+							className="u-margin-right-xs"
+							onClick={() => submitForm()}
+							type="success"
+						>
+							Bewaar en ga verder
+						</Button>
+						<Button onClick={onCancel} outline>
+							Annuleer
+						</Button>
+					</div>
 				</>
 			)}
 		</Formik>
