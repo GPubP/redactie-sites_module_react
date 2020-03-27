@@ -6,10 +6,9 @@ import {
 	CardTitle,
 	TextField,
 } from '@acpaas-ui/react-components';
-import Core from '@redactie/redactie-core';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import React, { FC, ReactElement, useEffect } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 import Status from '../Status/Status';
 
@@ -22,24 +21,6 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	onSubmit,
 	onActiveToggle,
 }) => {
-	useEffect(() => {
-		Core.actionBar.show();
-		return () => Core.actionBar.hide();
-	}, []);
-
-	const setActionBar = (submitForm: () => void): void => {
-		Core.actionBar.setContent(
-			<div key="form-actions" className="u-margin-top">
-				<Button className="u-margin-right-xs" onClick={() => submitForm()} type="success">
-					Bewaar en ga verder
-				</Button>
-				<Button onClick={onCancel} outline>
-					Annuleer
-				</Button>
-			</div>
-		);
-	};
-
 	const renderArchive = (): ReactElement => {
 		return (
 			<Card className="u-margin-top">
@@ -65,27 +46,35 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 			onSubmit={onSubmit}
 			validationSchema={SITES_DETAIL_VALIDATION_SCHEMA}
 		>
-			{({ submitForm, values }) => {
-				return (
-					<>
-						<div className="row">
-							<div className="col-xs-12 col-md-8 row middle-xs">
-								<div className="col-xs-12 col-md-8">
-									<Field as={TextField} label="Naam" name="name" required />
-								</div>
+			{({ submitForm, values }) => (
+				<>
+					<div className="row">
+						<div className="col-xs-12 col-md-8 row middle-xs">
+							<div className="col-xs-12 col-md-8">
+								<Field as={TextField} label="Naam" name="name" required />
+							</div>
 
-								<div className="col-xs-12 col-md-4">
-									<div className="u-margin-top">
-										Systeemnaam: <b>{kebabCase(values.name)}</b>
-									</div>
+							<div className="col-xs-12 col-md-4">
+								<div className="u-margin-top">
+									Systeemnaam: <b>{kebabCase(values.name)}</b>
 								</div>
 							</div>
 						</div>
-						{onActiveToggle ? renderArchive() : null}
-						{setActionBar(submitForm)}
-					</>
-				);
-			}}
+					</div>
+					{onActiveToggle ? renderArchive() : null}
+					{/* TODO: these should go in the action bar */}
+					<Button
+						className="u-margin-right-xs"
+						onClick={() => submitForm()}
+						type="success"
+					>
+						Bewaar en ga verder
+					</Button>
+					<Button onClick={onCancel} outline>
+						Annuleer
+					</Button>
+				</>
+			)}
 		</Formik>
 	);
 };
