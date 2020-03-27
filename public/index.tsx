@@ -33,16 +33,14 @@ Core.routes.register({
 		{
 			path: '/sites/beheer',
 			component: SitesOverview,
-			routes: [
-				{
-					path: '/sites/beheer/aanmaken',
-					component: SitesCreate,
-				},
-				{
-					path: '/sites/beheer/:siteId/bewerken',
-					component: SitesUpdate,
-				},
-			],
+		},
+		{
+			path: '/sites/aanmaken',
+			component: SitesCreate,
+		},
+		{
+			path: '/sites/:siteId/bewerken',
+			component: SitesUpdate,
 		},
 	],
 });

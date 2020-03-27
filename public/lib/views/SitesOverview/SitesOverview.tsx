@@ -75,7 +75,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() => history.push(`${basePath}/beheer/${id}/bewerken`)}
+							onClick={() => history.push(`${basePath}/${id}/bewerken`)}
 							type="primary"
 							transparent
 						></Button>
