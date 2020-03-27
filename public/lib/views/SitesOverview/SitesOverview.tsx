@@ -3,41 +3,62 @@ import {
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
-	Table,
+	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
-import useRoutes from '../../hooks/useRoutes/useRoutes';
-import { BREADCRUMB_OPTIONS } from '../../sites.const';
-import { getSites } from '../../sites.service';
-import { SiteSchema, SitesRouteProps } from '../../sites.types';
-import { LoadingState } from '../../types';
+import { useRoutes, useSites } from '../../hooks';
+import {
+	BREADCRUMB_OPTIONS,
+	DEFAULT_SITES_SEARCH_PARAMS,
+	DEFAULT_SITES_SORTING,
+} from '../../sites.const';
+import { parseOrderBy } from '../../sites.helpers';
+import { SitesRouteProps } from '../../sites.types';
+import { LoadingState, OrderBy } from '../../types';
 
 const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 	/**
 	 * Hooks
 	 */
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [sites, setSites] = useState<SiteSchema[] | null>(null);
+	const [currentPage, setCurrentPage] = useState(DEFAULT_SITES_SEARCH_PARAMS.page);
+	const [sitesSearchParams, setSitesSearchParams] = useState(DEFAULT_SITES_SEARCH_PARAMS);
+	const [sitesActiveSorting, setSitesActiveSorting] = useState(DEFAULT_SITES_SORTING);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const history = useHistory();
+	const [loadingState, sites] = useSites(sitesSearchParams);
+	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
 	useEffect(() => {
-		getSites()
-			.then(data => {
-				if (data?.length) {
-					setSites(data);
-				}
-				setLoadingState(LoadingState.Loaded);
-			})
-			.catch(() => {
-				setLoadingState(LoadingState.Error);
-			});
-	}, []);
+		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
+			setInitialLoading(LoadingState.Loaded);
+		}
+	}, [loadingState]);
+
+	/**
+	 * Functions
+	 */
+	const handlePageChange = (pageNumber: number): void => {
+		setCurrentPage(pageNumber);
+
+		setSitesSearchParams({
+			...sitesSearchParams,
+			page: pageNumber,
+		});
+	};
+
+	const handleOrderBy = (orderBy: OrderBy): void => {
+		setSitesActiveSorting(orderBy);
+
+		setSitesSearchParams({
+			...sitesSearchParams,
+			sort: parseOrderBy(orderBy),
+		});
+	};
 
 	/**
 	 * Render
@@ -47,7 +68,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 			return null;
 		}
 
-		const sitesRows = sites.map(site => ({
+		const sitesRows = sites.data.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			description: site.data.description,
@@ -85,8 +106,18 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 
 		return (
 			<div className="u-container u-wrapper">
-				<h5 className="u-margin-top">Resultaat ({sitesRows.length})</h5>
-				<Table className="u-margin-top" rows={sitesRows} columns={sitesColumns} />
+				<PaginatedTable
+					className="u-margin-top"
+					columns={sitesColumns}
+					rows={sitesRows}
+					currentPage={currentPage}
+					itemsPerPage={DEFAULT_SITES_SEARCH_PARAMS.pagesize}
+					onPageChange={handlePageChange}
+					orderBy={handleOrderBy}
+					activeSorting={sitesActiveSorting}
+					totalValues={sites.meta.totalElements}
+					loading={loadingState === LoadingState.Loading}
+				></PaginatedTable>
 			</div>
 		);
 	};
@@ -101,7 +132,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
-			<DataLoader loadingState={loadingState} render={renderOverview} />
+			<DataLoader loadingState={initialLoading} render={renderOverview} />
 		</>
 	);
 };
