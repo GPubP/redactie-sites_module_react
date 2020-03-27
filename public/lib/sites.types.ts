@@ -26,3 +26,7 @@ export interface SiteSchema {
 		updatedAt: string;
 	};
 }
+
+export interface SitesSchema {
+	_embedded: SiteSchema[];
+}

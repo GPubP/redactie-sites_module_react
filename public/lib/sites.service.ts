@@ -1,9 +1,9 @@
 import apiService from './services/api-service';
-import { SiteSchema, SitesDetailRequestBody } from './sites.types';
+import { SiteSchema, SitesDetailRequestBody, SitesSchema } from './sites.types';
 
 export const getSites = async (): Promise<SiteSchema[] | null> => {
 	try {
-		const response = await apiService.get('sites').json();
+		const response: SitesSchema = await apiService.get('sites').json();
 
 		if (!response._embedded) {
 			throw new Error('Failed to get sites');
@@ -18,7 +18,7 @@ export const getSites = async (): Promise<SiteSchema[] | null> => {
 
 export const createSite = async (body: SitesDetailRequestBody): Promise<any | null> => {
 	try {
-		const response = await apiService.post('sites', { json: body }).json();
+		const response: SiteSchema = await apiService.post('sites', { json: body }).json();
 
 		if (!response.data) {
 			throw new Error('Failed to create site');
@@ -33,7 +33,7 @@ export const createSite = async (body: SitesDetailRequestBody): Promise<any | nu
 
 export const getSiteById = async (id: string): Promise<SiteSchema | null> => {
 	try {
-		const response = await apiService.get(`sites/${id}`).json();
+		const response: SiteSchema = await apiService.get(`sites/${id}`).json();
 
 		if (!response.data) {
 			throw new Error(`Failed to get site with id: ${id}`);
@@ -48,7 +48,7 @@ export const getSiteById = async (id: string): Promise<SiteSchema | null> => {
 
 export const updateSite = async (id: string, body: SitesDetailRequestBody): Promise<any> => {
 	try {
-		const response = await apiService.put(`sites/${id}`, { json: body }).json();
+		const response: SiteSchema = await apiService.put(`sites/${id}`, { json: body }).json();
 
 		if (!response.data) {
 			throw new Error(`Failed to update site with id: ${id}`);
