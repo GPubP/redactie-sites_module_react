@@ -1,15 +1,26 @@
-import apiService from './services/api-service';
-import { SiteSchema, SitesDetailRequestBody, SitesSchema } from './sites.types';
+import apiService, { parseSearchParams } from './services/api-service';
+import { DEFAULT_SITES_SEARCH_PARAMS } from './sites.const';
+import { SiteSchema, SitesDataSchema, SitesDetailRequestBody, SitesSchema } from './sites.types';
+import { SearchParams } from './types';
 
-export const getSites = async (): Promise<SiteSchema[] | null> => {
+export const getSites = async (
+	searchParams: SearchParams = DEFAULT_SITES_SEARCH_PARAMS
+): Promise<SitesDataSchema | null> => {
 	try {
-		const response: SitesSchema = await apiService.get('sites').json();
+		const response: SitesSchema = await apiService
+			.get('sites', {
+				searchParams: parseSearchParams(searchParams),
+			})
+			.json();
 
 		if (!response._embedded) {
 			throw new Error('Failed to get sites');
 		}
 
-		return response._embedded;
+		return {
+			meta: response._page,
+			data: response._embedded,
+		};
 	} catch (err) {
 		console.error(err);
 		return null;
