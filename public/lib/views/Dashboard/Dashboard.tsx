@@ -20,6 +20,7 @@ import {
 import { parseOrderBy } from '../../sites.helpers';
 import { SitesRouteProps } from '../../sites.types';
 import { LoadingState, OrderBy } from '../../types';
+import { SitesOverviewRowData } from '../SitesOverview/SitesOverview.types';
 
 const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 	/**
@@ -69,7 +70,7 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 			return null;
 		}
 
-		const sitesRows = sites.data.map(site => ({
+		const sitesRows: SitesOverviewRowData[] = sites.data.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			description: site.data.description,
@@ -78,8 +79,7 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 		const sitesColumns = [
 			{
 				label: 'Naam',
-				value: 'name',
-				component(value: any, rowData: any) {
+				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<>
 							<AUILink to={`sites/${prop('id')(rowData)}`} component={Link}>
@@ -94,7 +94,6 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 			},
 			{
 				label: 'Status',
-				value: 'status',
 				component() {
 					return <Status label="Actief" type="ACTIVE" />;
 				},
@@ -102,7 +101,6 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 			{
 				label: '',
 				disableSorting: true,
-				component: () => '',
 			},
 		];
 

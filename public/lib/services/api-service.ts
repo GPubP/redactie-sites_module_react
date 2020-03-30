@@ -2,8 +2,10 @@ import ky from 'ky';
 
 import { SearchParams } from '../types';
 
+export type KyInstance = typeof ky;
+
 // Create ky instance with defaults
-const api: any = ky.create({
+const api: KyInstance = ky.create({
 	prefixUrl: '/v1/proxy/sites-engine',
 });
 

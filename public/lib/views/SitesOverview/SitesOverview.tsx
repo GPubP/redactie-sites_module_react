@@ -20,6 +20,8 @@ import { parseOrderBy } from '../../sites.helpers';
 import { SitesRouteProps } from '../../sites.types';
 import { LoadingState, OrderBy } from '../../types';
 
+import { SitesOverviewRowData } from './SitesOverview.types';
+
 const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 	/**
 	 * Hooks
@@ -68,7 +70,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 			return null;
 		}
 
-		const sitesRows = sites.data.map(site => ({
+		const sitesRows: SitesOverviewRowData[] = sites.data.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			description: site.data.description,
@@ -88,8 +90,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 				classList: ['u-text-right'],
 				disableSorting: true,
 				component(value: unknown, rowData: unknown) {
-					// TODO: add types for rowData
-					const { id } = rowData as any;
+					const { id } = rowData as SitesOverviewRowData;
 
 					return (
 						<Button

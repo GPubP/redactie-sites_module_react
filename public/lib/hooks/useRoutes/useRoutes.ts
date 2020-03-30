@@ -5,9 +5,9 @@ const useRoutes = (): ModuleRouteConfig[] | null => {
 	const [routes, setRoutes] = useState<ModuleRouteConfig[] | null>(null);
 
 	useEffect(() => {
-		const observable = Core.routes.routesChanges.subscribe(routes => {
-			if (routes) {
-				setRoutes(routes);
+		const observable = Core.routes.routesChanges.subscribe(newRoutes => {
+			if (newRoutes) {
+				setRoutes(newRoutes);
 			}
 		});
 
