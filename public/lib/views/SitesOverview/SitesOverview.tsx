@@ -73,6 +73,7 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 		const sitesRows: SitesOverviewRowData[] = sites.data.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
+			status: site.meta.active,
 			description: site.data.description,
 		}));
 

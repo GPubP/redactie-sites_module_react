@@ -3,8 +3,8 @@ import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react
 import { useHistory, useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
-import { getSiteById, updateSite } from '../../sites.service';
-import { SiteSchema, SitesDetailFormState, SitesRouteProps } from '../../sites.types';
+import { getSiteById, updateSite, updateSiteActivation } from '../../sites.service';
+import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
 import { LoadingState, Tab } from '../../types';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
@@ -16,7 +16,11 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	 * Hooks
 	 */
 	const [formState, setFormState] = useState<SitesDetailFormState | null>(null);
+	const [siteActivation, setSiteActivation] = useState<boolean>(false);
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
+	const [activeToggleLoadingState, setActiveToggleLoadingState] = useState<LoadingState>(
+		LoadingState.Loaded
+	);
 
 	const history = useHistory();
 
@@ -32,14 +36,16 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 
 			const response = await getSiteById(siteId as string);
 
-			if (!response) {
-				navigateToOverview();
+			if (response) {
+				setLoadingState(LoadingState.Loaded);
+				setFormState({
+					name: response.data.name,
+				});
+				setSiteActivation(response.meta.active);
+				return;
 			}
 
-			setLoadingState(LoadingState.Loaded);
-			setFormState({
-				name: (response as SiteSchema).data.name,
-			});
+			navigateToOverview();
 		};
 
 		fetchData();
@@ -61,7 +67,14 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	};
 
 	const onActiveToggle = (): void => {
-		// Todo: handle onActiveTogle
+		if (siteId) {
+			setActiveToggleLoadingState(LoadingState.Loading);
+			updateSiteActivation(siteId, !siteActivation)
+				.then(() => setSiteActivation(!siteActivation))
+				.finally(() => {
+					setActiveToggleLoadingState(LoadingState.Loaded);
+				});
+		}
 	};
 
 	/**
@@ -75,7 +88,9 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 		return (
 			<div className="u-margin-top u-container u-wrapper">
 				<SitesDetailForm
+					active={siteActivation}
 					initialState={formState}
+					activeLoading={activeToggleLoadingState === LoadingState.Loading}
 					onCancel={navigateToOverview}
 					onSubmit={onSubmit}
 					onActiveToggle={onActiveToggle}

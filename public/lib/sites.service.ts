@@ -71,3 +71,19 @@ export const updateSite = async (id: string, body: SitesDetailRequestBody): Prom
 		return null;
 	}
 };
+
+export const updateSiteActivation = async (id: string, activate: boolean): Promise<any> => {
+	try {
+		const updateType = activate ? 'activate' : 'deactivate';
+		const response: SiteSchema = await apiService.put(`sites/${id}/${updateType}`).json();
+
+		if (!response.data) {
+			throw new Error(`Failed to ${updateType} site with id: ${id}`);
+		}
+
+		return response;
+	} catch (err) {
+		console.error(err);
+		return null;
+	}
+};

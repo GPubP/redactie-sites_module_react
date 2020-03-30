@@ -10,7 +10,7 @@ import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement } from 'react';
 
-import Status from '../Status/Status';
+import SitesStatus from '../SiteStatus/SiteStatus';
 
 import { SITES_DETAIL_VALIDATION_SCHEMA } from './SitesDetailForm.const';
 import { SitesDetailFormProps } from './SitesDetailForm.types';
@@ -20,21 +20,47 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	onCancel,
 	onSubmit,
 	onActiveToggle,
+	activeLoading,
+	active,
 }) => {
 	const renderArchive = (): ReactElement => {
+		const loadingStateButtonProps = activeLoading
+			? {
+					iconLeft: 'circle-o-notch fa-spin',
+					disabled: true,
+			  }
+			: null;
 		return (
 			<Card className="u-margin-top">
 				<CardBody>
 					<CardTitle>
-						Status: <Status label="Actief" type="ACTIVE"></Status>
+						Status: <SitesStatus active={!!active} />
 					</CardTitle>
 					<CardDescription>
 						Bepaal of deze site actief is of niet. Het gevolg hiervan is of de site en
 						zijn content en/of content types al dan niet beschikbaar zijn.
 					</CardDescription>
-					<Button className="u-margin-top" type="danger" outline>
-						Deactiveren
-					</Button>
+					{active ? (
+						<Button
+							{...loadingStateButtonProps}
+							onClick={onActiveToggle}
+							className="u-margin-top"
+							type="danger"
+							outline
+						>
+							Deactiveren
+						</Button>
+					) : (
+						<Button
+							{...loadingStateButtonProps}
+							onClick={onActiveToggle}
+							className="u-margin-top"
+							type="success"
+							outline
+						>
+							Activeren
+						</Button>
+					)}
 				</CardBody>
 			</Card>
 		);

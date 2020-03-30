@@ -10,7 +10,7 @@ import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { DataLoader, Status } from '../../components';
+import { DataLoader, SiteStatus } from '../../components';
 import { useRoutes, useSites } from '../../hooks';
 import {
 	BREADCRUMB_OPTIONS,
@@ -73,12 +73,14 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 		const sitesRows: SitesOverviewRowData[] = sites.data.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
+			status: site.meta.active,
 			description: site.data.description,
 		}));
 
 		const sitesColumns = [
 			{
 				label: 'Naam',
+				value: 'name',
 				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<>
@@ -94,13 +96,11 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 			},
 			{
 				label: 'Status',
-				component() {
-					return <Status label="Actief" type="ACTIVE" />;
+				value: 'status',
+				component(value: string, rowData: SitesOverviewRowData) {
+					const isActive = !!rowData['status'];
+					return <SiteStatus active={isActive} />;
 				},
-			},
-			{
-				label: '',
-				disableSorting: true,
 			},
 		];
 

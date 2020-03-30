@@ -24,6 +24,7 @@ export interface SiteSchema {
 		tenant: string;
 		createdAt: string;
 		updatedAt: string;
+		active: boolean;
 	};
 }
 
