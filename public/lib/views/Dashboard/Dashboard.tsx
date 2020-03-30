@@ -16,6 +16,7 @@ import { BREADCRUMB_OPTIONS } from '../../sites.const';
 import { getSites } from '../../sites.service';
 import { SiteSchema, SitesRouteProps } from '../../sites.types';
 import { LoadingState } from '../../types';
+import { SitesOverviewRowData } from '../SitesOverview/SitesOverview.types';
 
 const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 	/**
@@ -49,7 +50,7 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 			return null;
 		}
 
-		const sitesRows = sites.map(site => ({
+		const sitesRows: SitesOverviewRowData[] = sites.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			description: site.data.description,
@@ -58,7 +59,7 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 		const sitesColumns = [
 			{
 				label: 'Naam',
-				component: (value: any, rowData: any) => {
+				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<>
 							<AUILink to={`sites/${prop('id')(rowData)}`} component={Link}>
@@ -73,14 +74,13 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 			},
 			{
 				label: 'Status',
-				component: (value: any, rowData: any) => {
+				component() {
 					return <Status label="Actief" type="ACTIVE" />;
 				},
 			},
 			{
 				label: '',
 				disableSorting: true,
-				component: () => '',
 			},
 		];
 
