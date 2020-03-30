@@ -3,9 +3,8 @@ import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react
 import { useHistory, useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
-import { getSiteById, updateSite, updateSiteActivation } from '../../sites.service';
-import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
-import { LoadingState, Tab } from '../../types';
+import { getSiteById, updateSite, updateSiteActivation } from '../../services/sites';
+import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 

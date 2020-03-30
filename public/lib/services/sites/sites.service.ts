@@ -1,7 +1,13 @@
-import apiService, { parseSearchParams } from './services/api-service';
-import { DEFAULT_SITES_SEARCH_PARAMS } from './sites.const';
-import { SiteSchema, SitesDataSchema, SitesDetailRequestBody, SitesSchema } from './sites.types';
-import { SearchParams } from './types';
+import apiService, { parseSearchParams } from '../api/api.service';
+import { SearchParams } from '../api/api.service.types';
+
+import { DEFAULT_SITES_SEARCH_PARAMS } from './sites.service.cont';
+import {
+	SiteSchema,
+	SitesDataSchema,
+	SitesDetailRequestBody,
+	SitesSchema,
+} from './sites.service.types';
 
 export const getSites = async (
 	searchParams: SearchParams = DEFAULT_SITES_SEARCH_PARAMS

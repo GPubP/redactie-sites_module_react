@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { getSites } from '../../sites.service';
-import { SitesDataSchema } from '../../sites.types';
-import { LoadingState, SearchParams } from '../../types';
+import { SearchParams } from '../../services/api';
+import { getSites, SitesDataSchema } from '../../services/sites';
+import { LoadingState } from '../../sites.types';
 
 const useSites = (searchParams: SearchParams): [LoadingState, SitesDataSchema | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
