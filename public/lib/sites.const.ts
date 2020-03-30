@@ -6,7 +6,7 @@ export const BREADCRUMB_OPTIONS = {
 
 export const DEFAULT_SITES_SEARCH_PARAMS: SearchParams = {
 	page: 1,
-	pagesize: 2,
+	pagesize: 20,
 };
 
 export const DEFAULT_SITES_SORTING: OrderBy = {
