@@ -16,6 +16,10 @@ const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
 };
 
+const SiteDetailComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
+	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
+};
+
 // expose route
 Core.routes.register({
 	path: '/dashboard',
@@ -39,8 +43,15 @@ Core.routes.register({
 			component: SitesCreate,
 		},
 		{
-			path: '/sites/:siteId/bewerken',
-			component: SitesUpdate,
+			path: '/sites/:siteId',
+			breadcrumb: null,
+			component: SiteDetailComponent,
+			routes: [
+				{
+					path: '/sites/:siteId/bewerken',
+					component: SitesUpdate,
+				},
+			],
 		},
 	],
 });
