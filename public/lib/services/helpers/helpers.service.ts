@@ -1,5 +1,5 @@
-import { SitesDetailFormState } from './sites.types';
-import { OrderBy } from './types';
+import { SitesDetailFormState } from '../../sites.types';
+import { OrderBy } from '../api';
 
 export const generateDetailFormState = (): SitesDetailFormState => ({
 	name: '',

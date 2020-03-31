@@ -5,11 +5,10 @@ import { useHistory } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
+import { generateDetailFormState } from '../../services/helpers';
+import { createSite } from '../../services/sites';
 import { BREADCRUMB_OPTIONS } from '../../sites.const';
-import { generateDetailFormState } from '../../sites.helpers';
-import { createSite } from '../../sites.service';
-import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
-import { Tab } from '../../types';
+import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 

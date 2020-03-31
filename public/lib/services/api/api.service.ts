@@ -1,6 +1,6 @@
 import ky from 'ky';
 
-import { SearchParams } from '../types';
+import { SearchParams } from './api.service.types';
 
 export type KyInstance = typeof ky;
 

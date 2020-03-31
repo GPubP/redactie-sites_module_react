@@ -1,11 +1,13 @@
-import { ContextHeader } from '@acpaas-ui/react-editorial-components';
+import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
-import { getSiteById, updateSite } from '../../sites.service';
-import { SiteSchema, SitesDetailFormState, SitesRouteProps } from '../../sites.types';
-import { LoadingState, Tab } from '../../types';
+import { useRoutes } from '../../hooks';
+import { getSiteById, updateSite, updateSiteActivation } from '../../services/sites';
+import { BREADCRUMB_OPTIONS } from '../../sites.const';
+import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
@@ -16,7 +18,13 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	 * Hooks
 	 */
 	const [formState, setFormState] = useState<SitesDetailFormState | null>(null);
+	const [siteActivation, setSiteActivation] = useState<boolean>(false);
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
+	const [activeToggleLoadingState, setActiveToggleLoadingState] = useState<LoadingState>(
+		LoadingState.Loaded
+	);
+	const routes = useRoutes();
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 
 	const history = useHistory();
 
@@ -32,14 +40,16 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 
 			const response = await getSiteById(siteId as string);
 
-			if (!response) {
-				navigateToOverview();
+			if (response) {
+				setLoadingState(LoadingState.Loaded);
+				setFormState({
+					name: response.data.name,
+				});
+				setSiteActivation(response.meta.active);
+				return;
 			}
 
-			setLoadingState(LoadingState.Loaded);
-			setFormState({
-				name: (response as SiteSchema).data.name,
-			});
+			navigateToOverview();
 		};
 
 		fetchData();
@@ -61,7 +71,14 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	};
 
 	const onActiveToggle = (): void => {
-		// Todo: handle onActiveTogle
+		if (siteId) {
+			setActiveToggleLoadingState(LoadingState.Loading);
+			updateSiteActivation(siteId, !siteActivation)
+				.then(() => setSiteActivation(!siteActivation))
+				.finally(() => {
+					setActiveToggleLoadingState(LoadingState.Loaded);
+				});
+		}
 	};
 
 	/**
@@ -75,7 +92,9 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 		return (
 			<div className="u-margin-top u-container u-wrapper">
 				<SitesDetailForm
+					active={siteActivation}
 					initialState={formState}
+					activeLoading={activeToggleLoadingState === LoadingState.Loading}
 					onCancel={navigateToOverview}
 					onSubmit={onSubmit}
 					onActiveToggle={onActiveToggle}
@@ -86,7 +105,9 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 
 	return (
 		<>
-			<ContextHeader tabs={TABS} title="Site bewerken" />
+			<ContextHeader tabs={TABS} title="Site bewerken">
+				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
+			</ContextHeader>
 			<DataLoader loadingState={loadingState} render={renderSitesUpdate} />
 		</>
 	);

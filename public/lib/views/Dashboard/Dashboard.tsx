@@ -10,16 +10,13 @@ import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { DataLoader, Status } from '../../components';
+import { DataLoader, SiteStatus } from '../../components';
 import { useRoutes, useSites } from '../../hooks';
-import {
-	BREADCRUMB_OPTIONS,
-	DEFAULT_SITES_SEARCH_PARAMS,
-	DEFAULT_SITES_SORTING,
-} from '../../sites.const';
-import { parseOrderBy } from '../../sites.helpers';
-import { SitesRouteProps } from '../../sites.types';
-import { LoadingState, OrderBy } from '../../types';
+import { OrderBy } from '../../services/api';
+import { parseOrderBy } from '../../services/helpers';
+import { DEFAULT_SITES_SEARCH_PARAMS } from '../../services/sites';
+import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING } from '../../sites.const';
+import { LoadingState, SitesRouteProps } from '../../sites.types';
 import { SitesOverviewRowData } from '../SitesOverview/SitesOverview.types';
 
 const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
@@ -73,16 +70,18 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 		const sitesRows: SitesOverviewRowData[] = sites.data.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
+			status: site.meta.active,
 			description: site.data.description,
 		}));
 
 		const sitesColumns = [
 			{
 				label: 'Naam',
+				value: 'name',
 				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<>
-							<AUILink to={`sites/${prop('id')(rowData)}`} component={Link}>
+							<AUILink to={`sites/${prop('id')(rowData)}/content`} component={Link}>
 								{prop('name')(rowData)}
 							</AUILink>
 							<p className="u-text-light u-margin-top-xs">
@@ -94,13 +93,11 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 			},
 			{
 				label: 'Status',
-				component() {
-					return <Status label="Actief" type="ACTIVE" />;
+				value: 'status',
+				component(value: string, rowData: SitesOverviewRowData) {
+					const isActive = !!rowData['status'];
+					return <SiteStatus active={isActive} />;
 				},
-			},
-			{
-				label: '',
-				disableSorting: true,
 			},
 		];
 

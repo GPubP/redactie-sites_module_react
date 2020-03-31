@@ -1,5 +1,7 @@
 import { ModuleRouteConfig } from '@redactie/redactie-core';
 
+// Global types
+
 export interface SitesRouteProps {
 	basePath: string;
 	routes: ModuleRouteConfig[];
@@ -9,37 +11,21 @@ export interface SitesDetailFormState {
 	name: string;
 }
 
-export interface SitesDetailRequestBody {
+export enum LoadingState {
+	Loading = 'loading',
+	Loaded = 'loaded',
+	Error = 'error',
+}
+
+export interface DefaultComponentProps {
+	className?: string;
+}
+
+// Acpaas UI Component types
+
+export interface Tab {
 	name: string;
-	description: string;
-}
-
-export interface SiteSchema {
-	uuid: string;
-	data: {
-		name: string;
-		description: string;
-	};
-	meta: {
-		tenant: string;
-		createdAt: string;
-		updatedAt: string;
-	};
-}
-
-export interface SitesDataSchema {
-	meta: SitesMetaSchema;
-	data: SiteSchema[];
-}
-
-export interface SitesMetaSchema {
-	size: string;
-	totalElements: number;
-	totalPages: number;
-	number: string;
-}
-
-export interface SitesSchema {
-	_embedded: SiteSchema[];
-	_page: SitesMetaSchema;
+	target: string;
+	active: boolean;
+	disabled?: boolean;
 }
