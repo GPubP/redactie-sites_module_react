@@ -16,6 +16,10 @@ const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
 };
 
+const SiteDetailComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
+	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
+};
+
 // expose route
 Core.routes.register({
 	path: '/dashboard',
@@ -29,21 +33,29 @@ Core.routes.register({
 	exact: true,
 	component: SitesComponent,
 	label: 'Sites',
-	routes: [
-		{
-			path: '/sites/beheer',
-			component: SitesOverview,
-		},
-		{
-			path: '/sites/aanmaken',
-			component: SitesCreate,
-		},
-		{
-			path: '/sites/:siteId/bewerken',
-			component: SitesUpdate,
-		},
-	],
 });
+
+routes.register([
+	{
+		path: '/beheer',
+		component: SitesOverview,
+	},
+	{
+		path: '/aanmaken',
+		component: SitesCreate,
+	},
+	{
+		path: '/:siteId',
+		breadcrumb: null,
+		component: SiteDetailComponent,
+		routes: [
+			{
+				path: '/:siteId/bewerken',
+				component: SitesUpdate,
+			},
+		],
+	},
+]);
 
 // expose module
 Core.modules.exposeModuleApi('sites-module', {
