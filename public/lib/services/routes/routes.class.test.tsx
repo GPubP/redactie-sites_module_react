@@ -27,17 +27,23 @@ describe('Routes', () => {
 
 		expect(routes).toBeInstanceOf(Routes);
 		routes.register(dummySiteConfig);
-		expect(routes.getAll()[0]).toEqual({ path: '/routes/external', ...dummySiteConfig });
+		expect(routes.getAll()[0]).toEqual({
+			...dummySiteConfig,
+			path: '/sites/external',
+		});
 		expect(updateChildRoutesSpy).toHaveBeenCalledWith('/sites', routes.getAll());
 	});
 
 	it('Should be able to register a childroute', () => {
 		expect(routes).toBeInstanceOf(Routes);
-		routes.register({ routes: [dummyChildRouteConfig], ...dummySiteConfig });
+		routes.register({
+			...dummySiteConfig,
+			routes: [dummyChildRouteConfig],
+		});
 		expect(routes.getAll()[0].routes).toEqual([
 			{
-				path: '/sites/external/child',
 				...dummyChildRouteConfig,
+				path: '/sites/external/child',
 			},
 		]);
 	});
