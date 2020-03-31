@@ -81,7 +81,7 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<>
-							<AUILink to={`sites/${prop('id')(rowData)}`} component={Link}>
+							<AUILink to={`sites/${prop('id')(rowData)}/content`} component={Link}>
 								{prop('name')(rowData)}
 							</AUILink>
 							<p className="u-text-light u-margin-top-xs">

@@ -33,28 +33,29 @@ Core.routes.register({
 	exact: true,
 	component: SitesComponent,
 	label: 'Sites',
-	routes: [
-		{
-			path: '/sites/beheer',
-			component: SitesOverview,
-		},
-		{
-			path: '/sites/aanmaken',
-			component: SitesCreate,
-		},
-		{
-			path: '/sites/:siteId',
-			breadcrumb: null,
-			component: SiteDetailComponent,
-			routes: [
-				{
-					path: '/sites/:siteId/bewerken',
-					component: SitesUpdate,
-				},
-			],
-		},
-	],
 });
+
+routes.register([
+	{
+		path: '/beheer',
+		component: SitesOverview,
+	},
+	{
+		path: '/aanmaken',
+		component: SitesCreate,
+	},
+	{
+		path: '/:siteId',
+		breadcrumb: null,
+		component: SiteDetailComponent,
+		routes: [
+			{
+				path: '/:siteId/bewerken',
+				component: SitesUpdate,
+			},
+		],
+	},
+]);
 
 // expose module
 Core.modules.exposeModuleApi('sites-module', {
