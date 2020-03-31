@@ -5,11 +5,6 @@ import { Redirect, useLocation } from 'react-router-dom';
 import { routes } from './lib/services/routes/routes.class';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 
-// expose module
-Core.modules.exposeModuleApi('sites-module', {
-	routes: routes,
-});
-
 const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
 	const location = useLocation();
 
@@ -61,5 +56,10 @@ routes.register([
 		],
 	},
 ]);
+
+// expose module
+Core.modules.exposeModuleApi('sites-module', {
+	routes: routes,
+});
 
 export { SitesComponent };
