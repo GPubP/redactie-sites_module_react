@@ -1,12 +1,7 @@
-import { OrderBy, SearchParams } from './types';
+import { OrderBy } from './services/api';
 
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId'],
-};
-
-export const DEFAULT_SITES_SEARCH_PARAMS: SearchParams = {
-	page: 1,
-	pagesize: 20,
 };
 
 export const DEFAULT_SITES_SORTING: OrderBy = {

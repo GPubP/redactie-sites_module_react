@@ -1,11 +1,13 @@
-import { ContextHeader } from '@acpaas-ui/react-editorial-components';
+import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
-import { getSiteById, updateSite, updateSiteActivation } from '../../sites.service';
-import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
-import { LoadingState, Tab } from '../../types';
+import { useRoutes } from '../../hooks';
+import { getSiteById, updateSite, updateSiteActivation } from '../../services/sites';
+import { BREADCRUMB_OPTIONS } from '../../sites.const';
+import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
@@ -21,6 +23,8 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	const [activeToggleLoadingState, setActiveToggleLoadingState] = useState<LoadingState>(
 		LoadingState.Loaded
 	);
+	const routes = useRoutes();
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 
 	const history = useHistory();
 
@@ -101,7 +105,9 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 
 	return (
 		<>
-			<ContextHeader tabs={TABS} title="Site bewerken" />
+			<ContextHeader tabs={TABS} title="Site bewerken">
+				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
+			</ContextHeader>
 			<DataLoader loadingState={loadingState} render={renderSitesUpdate} />
 		</>
 	);

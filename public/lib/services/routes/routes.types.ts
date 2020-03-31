@@ -1,6 +1,6 @@
 import { ModuleRouteConfig } from '@redactie/redactie-core';
 
-export default interface Routes {
+export interface RoutesAPI {
 	register: (routeConfig: ModuleRouteConfig) => void;
 	getAll: () => ModuleRouteConfig[];
 }

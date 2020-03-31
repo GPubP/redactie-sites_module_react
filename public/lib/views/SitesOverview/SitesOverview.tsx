@@ -11,14 +11,11 @@ import { useHistory } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
 import { useRoutes, useSites } from '../../hooks';
-import {
-	BREADCRUMB_OPTIONS,
-	DEFAULT_SITES_SEARCH_PARAMS,
-	DEFAULT_SITES_SORTING,
-} from '../../sites.const';
-import { parseOrderBy } from '../../sites.helpers';
-import { SitesRouteProps } from '../../sites.types';
-import { LoadingState, OrderBy } from '../../types';
+import { OrderBy } from '../../services/api';
+import { parseOrderBy } from '../../services/helpers';
+import { DEFAULT_SITES_SEARCH_PARAMS } from '../../services/sites';
+import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING } from '../../sites.const';
+import { LoadingState, SitesRouteProps } from '../../sites.types';
 
 import { SitesOverviewRowData } from './SitesOverview.types';
 
