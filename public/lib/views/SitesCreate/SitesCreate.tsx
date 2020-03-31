@@ -1,7 +1,6 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import useRoutes from '../../hooks/useRoutes/useRoutes';
@@ -12,11 +11,10 @@ import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
-const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
+const SitesCreate: FC<SitesRouteProps> = ({ basePath, history }) => {
 	/**
 	 * Hooks
 	 */
-	const history = useHistory();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 

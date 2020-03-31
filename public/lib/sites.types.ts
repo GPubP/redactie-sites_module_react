@@ -1,10 +1,11 @@
-import { ModuleRouteConfig } from '@redactie/redactie-core';
+import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
 // Global types
 
-export interface SitesRouteProps {
+export interface SitesRouteProps extends RouteConfigComponentProps {
 	basePath: string;
 	routes: ModuleRouteConfig[];
+	tenantId: string;
 }
 
 export interface SitesDetailFormState {

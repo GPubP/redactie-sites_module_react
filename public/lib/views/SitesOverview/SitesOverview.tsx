@@ -7,7 +7,6 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { DataLoader } from '../../components';
 import { useRoutes, useSites } from '../../hooks';
@@ -19,7 +18,7 @@ import { LoadingState, SitesRouteProps } from '../../sites.types';
 
 import { SitesOverviewRowData } from './SitesOverview.types';
 
-const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
+const SitesOverview: FC<SitesRouteProps> = ({ basePath, history }) => {
 	/**
 	 * Hooks
 	 */
@@ -28,7 +27,6 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath }) => {
 	const [sitesActiveSorting, setSitesActiveSorting] = useState(DEFAULT_SITES_SORTING);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
-	const history = useHistory();
 	const [loadingState, sites] = useSites(sitesSearchParams);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
