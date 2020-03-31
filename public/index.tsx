@@ -1,23 +1,36 @@
 import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import { routes } from './lib/services/routes/routes.class';
+import { SitesRouteProps } from './lib/sites.types';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 
-const SitesComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
-	const location = useLocation();
-
+const SitesComponent: FC<SitesRouteProps> = ({ route, match, location, tenantId }) => {
 	// if path is /sites, redirect to /sites/beheer
 	if (/\/sites$/.test(location.pathname)) {
 		return <Redirect to={`${route.path}/beheer`} />;
 	}
 
-	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
+	return (
+		<>
+			{Core.routes.render(route.routes as ModuleRouteConfig[], {
+				basePath: match.url,
+				tenantId,
+			})}
+		</>
+	);
 };
 
-const SiteDetailComponent: FC<{ route: ModuleRouteConfig }> = ({ route }) => {
-	return <>{Core.routes.render(route.routes as ModuleRouteConfig[], { basePath: route.path })}</>;
+const SiteDetailComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) => {
+	return (
+		<>
+			{Core.routes.render(route.routes as ModuleRouteConfig[], {
+				basePath: match.url,
+				tenantId,
+			})}
+		</>
+	);
 };
 
 // expose route

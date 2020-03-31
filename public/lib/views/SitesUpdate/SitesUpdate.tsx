@@ -1,7 +1,7 @@
 import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
 import { useRoutes } from '../../hooks';
@@ -11,7 +11,7 @@ import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
-const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
+const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
 	const { siteId } = useParams();
 
 	/**
@@ -26,11 +26,9 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath }) => {
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 
-	const history = useHistory();
-
 	const navigateToOverview = useCallback(() => {
-		history.push(`${basePath}/beheer`);
-	}, [basePath, history]);
+		history.push(`/${tenantId}/sites/beheer`);
+	}, [tenantId, history]);
 
 	useEffect(() => {
 		const fetchData = async (): Promise<void> => {

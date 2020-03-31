@@ -5,10 +5,14 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import {
+	ModuleRouteConfig,
+	RouteConfigComponentProps,
+	useBreadcrumbs,
+} from '@redactie/redactie-core';
 import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { DataLoader, SiteStatus } from '../../components';
 import { useRoutes, useSites } from '../../hooks';
@@ -19,7 +23,7 @@ import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING } from '../../sites.const';
 import { LoadingState, SitesRouteProps } from '../../sites.types';
 import { SitesOverviewRowData } from '../SitesOverview/SitesOverview.types';
 
-const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
+const Dashboard: FC<SitesRouteProps> = ({ history, tenantId }) => {
 	/**
 	 * Hooks
 	 */
@@ -28,7 +32,6 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 	const [sitesActiveSorting, setSitesActiveSorting] = useState(DEFAULT_SITES_SORTING);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
-	const history = useHistory();
 	const [loadingState, sites] = useSites(sitesSearchParams);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 
@@ -124,7 +127,10 @@ const Dashboard: FC<SitesRouteProps> = ({ basePath }) => {
 			<ContextHeader title="Dashboard">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus" onClick={() => history.push(`${basePath}/aanmaken`)}>
+					<Button
+						iconLeft="plus"
+						onClick={() => history.push(`/${tenantId}/sites/aanmaken`)}
+					>
 						Nieuwe maken
 					</Button>
 				</ContextHeaderActionsSection>
