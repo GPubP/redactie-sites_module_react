@@ -1,6 +1,7 @@
 export interface SitesDetailRequestBody {
 	name: string;
 	description: string;
+	contentTypes: string[];
 }
 
 export interface SiteSchema {
@@ -8,6 +9,7 @@ export interface SiteSchema {
 	data: {
 		name: string;
 		description: string;
+		contentTypes: string[];
 	};
 	meta: {
 		tenant: string;

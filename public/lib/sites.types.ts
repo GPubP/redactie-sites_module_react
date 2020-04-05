@@ -10,6 +10,7 @@ export interface SitesRouteProps extends RouteConfigComponentProps {
 
 export interface SitesDetailFormState {
 	name: string;
+	contentTypes: string[];
 }
 
 export enum LoadingState {
