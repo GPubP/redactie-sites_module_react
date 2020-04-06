@@ -1,7 +1,7 @@
 import apiService, { parseSearchParams } from '../api/api.service';
 import { SearchParams } from '../api/api.service.types';
 
-import { DEFAULT_SITES_SEARCH_PARAMS } from './sites.service.cont';
+import { DEFAULT_SITES_SEARCH_PARAMS } from './sites.service.const';
 import {
 	SiteSchema,
 	SitesDataSchema,

@@ -42,6 +42,7 @@ const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
 				setLoadingState(LoadingState.Loaded);
 				setFormState({
 					name: response.data.name,
+					contentTypes: response.data.contentTypes,
 				});
 				setSiteActivation(response.meta.active);
 				return;
@@ -57,8 +58,8 @@ const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
 	 * Methods
 	 */
 
-	const onSubmit = ({ name }: SitesDetailFormState): void => {
-		const request = { name, description: name };
+	const onSubmit = ({ name, contentTypes }: SitesDetailFormState): void => {
+		const request = { name, description: name, contentTypes };
 
 		const response = updateSite(siteId as string, request);
 

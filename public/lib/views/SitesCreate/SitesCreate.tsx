@@ -25,8 +25,8 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath, history }) => {
 		history.push(`${basePath}/beheer`);
 	};
 
-	const onSubmit = ({ name }: SitesDetailFormState): void => {
-		const request = { name, description: name };
+	const onSubmit = ({ name, contentTypes }: SitesDetailFormState): void => {
+		const request = { name, description: name, contentTypes };
 		const response = createSite(request);
 
 		if (response) {
