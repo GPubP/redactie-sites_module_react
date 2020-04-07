@@ -37,15 +37,19 @@ const SiteDetailComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) =>
 Core.routes.register({
 	path: '/dashboard',
 	component: Dashboard,
-	label: 'Dashboard',
 	isDefaultRoute: true,
+	navigation: {
+		label: 'Dashboard',
+	},
 });
 
 Core.routes.register({
 	path: '/sites',
 	exact: true,
 	component: SitesComponent,
-	label: 'Sites',
+	navigation: {
+		label: 'Sites',
+	},
 });
 
 routes.register([

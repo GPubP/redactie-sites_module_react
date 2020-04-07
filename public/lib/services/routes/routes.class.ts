@@ -8,6 +8,14 @@ const prefixRoute = (routeConfig: ModuleRouteConfig): ModuleRouteConfig => ({
 	...routeConfig,
 	path: `/sites${routeConfig.path}`,
 	routes: routeConfig.routes?.map(prefixRoute),
+	navigation: routeConfig.navigation
+		? {
+				...routeConfig.navigation,
+				parentPath: routeConfig.navigation.parentPath
+					? `/sites${routeConfig.navigation.parentPath}`
+					: undefined,
+		  }
+		: undefined,
 });
 
 class Routes {

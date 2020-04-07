@@ -5,11 +5,7 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
-import {
-	ModuleRouteConfig,
-	RouteConfigComponentProps,
-	useBreadcrumbs,
-} from '@redactie/redactie-core';
+import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
