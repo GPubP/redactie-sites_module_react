@@ -1,10 +1,11 @@
-export interface SitesDetailRequestBody {
-	name: string;
-	description: string;
-	contentTypes: string[];
+import { SearchParams } from '../api';
+
+export interface SitesResponse {
+	_embedded: SiteResponse[];
+	_page: SitesMetaResponse;
 }
 
-export interface SiteSchema {
+export interface SiteResponse {
 	uuid: string;
 	data: {
 		name: string;
@@ -19,19 +20,30 @@ export interface SiteSchema {
 	};
 }
 
-export interface SitesDataSchema {
-	meta: SitesMetaSchema;
-	data: SiteSchema[];
-}
-
-export interface SitesMetaSchema {
+export interface SitesMetaResponse {
 	size: string;
 	totalElements: number;
 	totalPages: number;
 	number: string;
 }
 
-export interface SitesSchema {
-	_embedded: SiteSchema[];
-	_page: SitesMetaSchema;
+export interface GetSitePayload {
+	id: string;
+}
+export interface CreateSitePayload {
+	name: string;
+	description: string;
+	contentTypes: string[];
+}
+
+export interface UpdateSitePayload {
+	id: string;
+	body: CreateSitePayload;
+}
+
+export type GetSitesPayload = SearchParams;
+
+export interface UpdateSiteActivationPayload {
+	id: string;
+	activate: boolean;
 }

@@ -4,44 +4,26 @@ import { Subject } from 'rxjs';
 import { distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
 
 import { LoadingState } from '../../sites.types';
-import { SiteModel, SitesMetaModel, sitesQuery } from '../../store/sites';
+import { SiteModel, sitesQuery } from '../../store/sites';
 
-const useSites = (): [LoadingState, SiteModel[], SitesMetaModel | null] => {
+const useSite = (): [LoadingState, SiteModel | null] => {
 	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [sites, setSites] = useState<SiteModel[]>([]);
-	const [sitesMeta, setSitesMeta] = useState<SitesMetaModel | null>(null);
+	const [site, setSite] = useState<SiteModel | null>(null);
 
 	useEffect(() => {
 		const destroyed$: Subject<boolean> = new Subject<boolean>();
 
-		sitesQuery
-			.selectAll()
+		sitesQuery.site$
 			.pipe(
 				takeUntil(destroyed$),
-				filter(sites => !isNil(sites)),
+				filter(site => !isNil(site)),
 				distinctUntilChanged()
 			)
-			.subscribe(sites => setSites(sites));
-
-		sitesQuery.meta$
-			.pipe(
-				takeUntil(destroyed$),
-				filter(meta => !isNil(meta)),
-				distinctUntilChanged()
-			)
-			.subscribe(meta => {
-				if (meta) {
-					setSitesMeta(meta);
+			.subscribe(site => {
+				if (site) {
+					setSite(site);
 				}
 			});
-
-		sitesQuery.isFetching$.pipe(takeUntil(destroyed$)).subscribe(loading => {
-			if (loading) {
-				return setLoadingState(LoadingState.Loading);
-			}
-
-			setLoadingState(LoadingState.Loaded);
-		});
 
 		sitesQuery
 			.selectError()
@@ -52,13 +34,21 @@ const useSites = (): [LoadingState, SiteModel[], SitesMetaModel | null] => {
 			)
 			.subscribe(() => setLoadingState(LoadingState.Error));
 
+		sitesQuery.isFetching$.pipe(takeUntil(destroyed$)).subscribe(loading => {
+			if (loading) {
+				return setLoadingState(LoadingState.Loading);
+			}
+
+			setLoadingState(LoadingState.Loaded);
+		});
+
 		return () => {
 			destroyed$.next(true);
 			destroyed$.complete();
 		};
 	}, []);
 
-	return [loadingState, sites, sitesMeta];
+	return [loadingState, site];
 };
 
-export default useSites;
+export default useSite;

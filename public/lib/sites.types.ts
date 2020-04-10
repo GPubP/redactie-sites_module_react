@@ -1,5 +1,8 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
+import { Routes } from './services/routes';
+import { SitesQuery, SitesService } from './store/sites';
+
 // Global types
 
 export interface SitesRouteProps extends RouteConfigComponentProps {
@@ -21,6 +24,16 @@ export enum LoadingState {
 
 export interface DefaultComponentProps {
 	className?: string;
+}
+
+export interface SitesModuleAPI {
+	routes: Routes;
+	store: {
+		sites: {
+			service: Partial<SitesService>;
+			query: SitesQuery;
+		};
+	};
 }
 
 // Acpaas UI Component types

@@ -3,11 +3,11 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 
 import { SitesDetailForm } from '../../components';
-import useRoutes from '../../hooks/useRoutes/useRoutes';
+import { useRoutes, useSitesLoadingStates } from '../../hooks';
 import { generateDetailFormState } from '../../services/helpers';
-import { createSite } from '../../services/sites';
 import { BREADCRUMB_OPTIONS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
+import { sitesService } from '../../store/sites';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
@@ -17,6 +17,7 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath, history }) => {
 	 */
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const sitesLoadingStates = useSitesLoadingStates();
 
 	/**
 	 * Methods
@@ -27,12 +28,9 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath, history }) => {
 
 	const onSubmit = ({ name, contentTypes }: SitesDetailFormState): void => {
 		const request = { name, description: name, contentTypes };
-		const response = createSite(request);
-
-		if (response) {
-			// Create was succesful, go back to the overview
+		sitesService.createSite(request).then(() => {
 			navigateToOverview();
-		}
+		});
 	};
 
 	/**
@@ -46,6 +44,7 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath, history }) => {
 			<div className="u-margin-top u-container u-wrapper">
 				<SitesDetailForm
 					initialState={generateDetailFormState()}
+					loading={sitesLoadingStates.isCreating}
 					onCancel={navigateToOverview}
 					onSubmit={onSubmit}
 				/>

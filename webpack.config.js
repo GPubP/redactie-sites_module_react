@@ -52,11 +52,14 @@ module.exports = env => {
 		],
 		externals: {
 			react: 'react',
+			rxjs: 'rxjs',
 			'react-dom': 'react-dom',
 			'react-router-dom': 'react-router-dom',
 			'@redactie/redactie-core': '@redactie/redactie-core',
 			'@acpaas-ui/react-components': '@acpaas-ui/react-components',
 			'@acpaas-ui/react-editorial-components': '@acpaas-ui/react-editorial-components',
+			'rxjs/operators': 'rxjs/operators',
+			'@datorama/akita': '@datorama/akita',
 		},
 		output: {
 			filename: 'redactie-sites-module.umd.js',
