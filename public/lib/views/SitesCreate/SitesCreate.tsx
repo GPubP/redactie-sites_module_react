@@ -1,4 +1,8 @@
-import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import {
+	Container,
+	ContextHeader,
+	ContextHeaderTopSection,
+} from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 
@@ -43,13 +47,13 @@ const SitesCreate: FC<SitesRouteProps> = ({ basePath, history }) => {
 			<ContextHeader tabs={TABS} title="Site aanmaken">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<div className="u-margin-top u-container u-wrapper">
+			<Container>
 				<SitesDetailForm
 					initialState={generateDetailFormState()}
 					onCancel={navigateToOverview}
 					onSubmit={onSubmit}
 				/>
-			</div>
+			</Container>
 		</>
 	);
 };

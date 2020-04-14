@@ -32,7 +32,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 			  }
 			: null;
 		return (
-			<Card className="u-margin-top">
+			<Card>
 				<CardBody>
 					<CardTitle>
 						Status: <SitesStatus active={!!active} />
