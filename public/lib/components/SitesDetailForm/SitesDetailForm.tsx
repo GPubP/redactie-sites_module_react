@@ -89,7 +89,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						</div>
 					</div>
 					{onActiveToggle ? renderArchive() : null}
-					<ActionBar className="o-action-bar" isOpen>
+					<ActionBar className="o-action-bar--fixed" isOpen>
 						<ActionBarContentSection>
 							<Button
 								className="u-margin-right-xs"
