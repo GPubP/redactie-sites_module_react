@@ -1,95 +1,46 @@
 import apiService, { parseSearchParams } from '../api/api.service';
-import { SearchParams } from '../api/api.service.types';
 
 import { DEFAULT_SITES_SEARCH_PARAMS } from './sites.service.const';
 import {
-	SiteSchema,
-	SitesDataSchema,
-	SitesDetailRequestBody,
-	SitesSchema,
+	CreateSitePayload,
+	GetSitePayload,
+	GetSitesPayload,
+	SiteResponse,
+	SitesResponse,
+	UpdateSiteActivationPayload,
+	UpdateSitePayload,
 } from './sites.service.types';
 
-export const getSites = async (
-	searchParams: SearchParams = DEFAULT_SITES_SEARCH_PARAMS
-): Promise<SitesDataSchema | null> => {
-	try {
-		const response: SitesSchema = await apiService
+export class SitesApiService {
+	public async getSites(
+		searchParams: GetSitesPayload = DEFAULT_SITES_SEARCH_PARAMS
+	): Promise<SitesResponse> {
+		return await apiService
 			.get('sites', {
 				searchParams: parseSearchParams(searchParams),
 			})
-			.json();
-
-		if (!response._embedded) {
-			throw new Error('Failed to get sites');
-		}
-
-		return {
-			meta: response._page,
-			data: response._embedded,
-		};
-	} catch (err) {
-		console.error(err);
-		return null;
+			.json<SitesResponse>();
 	}
-};
 
-export const createSite = async (body: SitesDetailRequestBody): Promise<any | null> => {
-	try {
-		const response: SiteSchema = await apiService.post('sites', { json: body }).json();
-
-		if (!response.data) {
-			throw new Error('Failed to create site');
-		}
-
-		return response;
-	} catch (err) {
-		console.error(err);
-		return null;
+	public async getSite({ id }: GetSitePayload): Promise<SiteResponse> {
+		return await apiService.get(`sites/${id}`).json<SiteResponse>();
 	}
-};
 
-export const getSiteById = async (id: string): Promise<SiteSchema | null> => {
-	try {
-		const response: SiteSchema = await apiService.get(`sites/${id}`).json();
-
-		if (!response.data) {
-			throw new Error(`Failed to get site with id: ${id}`);
-		}
-
-		return response;
-	} catch (err) {
-		console.error(err);
-		return null;
+	public async createSite(payload: CreateSitePayload): Promise<SiteResponse> {
+		return await apiService.post('sites', { json: payload }).json();
 	}
-};
 
-export const updateSite = async (id: string, body: SitesDetailRequestBody): Promise<any> => {
-	try {
-		const response: SiteSchema = await apiService.put(`sites/${id}`, { json: body }).json();
-
-		if (!response.data) {
-			throw new Error(`Failed to update site with id: ${id}`);
-		}
-
-		return response;
-	} catch (err) {
-		console.error(err);
-		return null;
+	public async updateSite({ body, id }: UpdateSitePayload): Promise<SiteResponse> {
+		return await apiService.put(`sites/${id}`, { json: body }).json();
 	}
-};
 
-export const updateSiteActivation = async (id: string, activate: boolean): Promise<any> => {
-	try {
+	public async updateSiteActivation({
+		id,
+		activate,
+	}: UpdateSiteActivationPayload): Promise<SiteResponse> {
 		const updateType = activate ? 'activate' : 'deactivate';
-		const response: SiteSchema = await apiService.put(`sites/${id}/${updateType}`).json();
-
-		if (!response.data) {
-			throw new Error(`Failed to ${updateType} site with id: ${id}`);
-		}
-
-		return response;
-	} catch (err) {
-		console.error(err);
-		return null;
+		return await apiService.put(`sites/${id}/${updateType}`).json();
 	}
-};
+}
+
+export const sitesApiService = new SitesApiService();
