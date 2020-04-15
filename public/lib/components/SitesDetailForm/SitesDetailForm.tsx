@@ -23,6 +23,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	onActiveToggle,
 	activeLoading,
 	active,
+	loading,
 }) => {
 	const renderArchive = (): ReactElement => {
 		const loadingStateButtonProps = activeLoading
@@ -92,6 +93,8 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 					<ActionBar className="o-action-bar--fixed" isOpen>
 						<ActionBarContentSection>
 							<Button
+								iconLeft={loading ? 'circle-o-notch fa-spin' : null}
+								disabled={loading}
 								className="u-margin-right-xs"
 								onClick={() => submitForm()}
 								type="success"

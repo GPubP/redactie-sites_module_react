@@ -8,10 +8,10 @@ import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react
 import { useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
-import { useRoutes } from '../../hooks';
-import { getSiteById, updateSite, updateSiteActivation } from '../../services/sites';
+import { useRoutes, useSite, useSitesLoadingStates } from '../../hooks';
 import { BREADCRUMB_OPTIONS } from '../../sites.const';
-import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
+import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
+import { sitesService } from '../../store/sites';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
@@ -22,65 +22,54 @@ const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
 	 * Hooks
 	 */
 	const [formState, setFormState] = useState<SitesDetailFormState | null>(null);
-	const [siteActivation, setSiteActivation] = useState<boolean>(false);
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [activeToggleLoadingState, setActiveToggleLoadingState] = useState<LoadingState>(
-		LoadingState.Loaded
-	);
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
-
+	const [loadingState, site] = useSite();
+	const sitesLoadingStates = useSitesLoadingStates();
 	const navigateToOverview = useCallback(() => {
 		history.push(`/${tenantId}/sites/beheer`);
 	}, [tenantId, history]);
 
 	useEffect(() => {
-		const fetchData = async (): Promise<void> => {
-			if (!siteId) {
-				navigateToOverview();
-			}
+		if (site) {
+			setFormState({
+				name: site.data.name,
+				contentTypes: site.data.contentTypes,
+			});
+		}
+	}, [site]);
 
-			const response = await getSiteById(siteId as string);
+	useEffect(() => {
+		if (siteId) {
+			sitesService.getSite({ id: siteId });
+			return;
+		}
 
-			if (response) {
-				setLoadingState(LoadingState.Loaded);
-				setFormState({
-					name: response.data.name,
-					contentTypes: response.data.contentTypes,
-				});
-				setSiteActivation(response.meta.active);
-				return;
-			}
-
-			navigateToOverview();
-		};
-
-		fetchData();
+		navigateToOverview();
 	}, [navigateToOverview, siteId]);
 
 	/**
 	 * Methods
 	 */
-
 	const onSubmit = ({ name, contentTypes }: SitesDetailFormState): void => {
 		const request = { name, description: name, contentTypes };
 
-		const response = updateSite(siteId as string, request);
-
-		if (response) {
-			// Create was succesful, go back to the overview
-			navigateToOverview();
+		if (siteId) {
+			sitesService
+				.updateSite({
+					id: siteId,
+					body: request,
+				})
+				.then(() => navigateToOverview());
 		}
 	};
 
 	const onActiveToggle = (): void => {
-		if (siteId) {
-			setActiveToggleLoadingState(LoadingState.Loading);
-			updateSiteActivation(siteId, !siteActivation)
-				.then(() => setSiteActivation(!siteActivation))
-				.finally(() => {
-					setActiveToggleLoadingState(LoadingState.Loaded);
-				});
+		if (siteId && site) {
+			sitesService.updateSiteActivation({
+				id: siteId,
+				activate: !site.meta.active,
+			});
 		}
 	};
 
@@ -94,9 +83,10 @@ const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
 
 		return (
 			<SitesDetailForm
-				active={siteActivation}
+				active={site?.meta.active}
 				initialState={formState}
-				activeLoading={activeToggleLoadingState === LoadingState.Loading}
+				activeLoading={sitesLoadingStates.isActivating}
+				loading={sitesLoadingStates.isUpdating}
 				onCancel={navigateToOverview}
 				onSubmit={onSubmit}
 				onActiveToggle={onActiveToggle}

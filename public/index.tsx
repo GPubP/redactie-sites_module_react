@@ -3,7 +3,9 @@ import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { routes } from './lib/services/routes/routes.class';
-import { SitesRouteProps } from './lib/sites.types';
+import { MODULE_API_NAME, MODULE_PATHS } from './lib/sites.const';
+import { SitesModuleAPI, SitesRouteProps } from './lib/sites.types';
+import { SiteModel, SitesMetaModel, sitesQuery, sitesService, SitesState } from './lib/store/sites';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 
 const SitesComponent: FC<SitesRouteProps> = ({ route, match, location, tenantId }) => {
@@ -35,7 +37,7 @@ const SiteDetailComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) =>
 
 // expose route
 Core.routes.register({
-	path: '/dashboard',
+	path: MODULE_PATHS.dashboard,
 	component: Dashboard,
 	isDefaultRoute: true,
 	navigation: {
@@ -44,7 +46,7 @@ Core.routes.register({
 });
 
 Core.routes.register({
-	path: '/sites',
+	path: MODULE_PATHS.root,
 	exact: true,
 	component: SitesComponent,
 	navigation: {
@@ -54,29 +56,41 @@ Core.routes.register({
 
 routes.register([
 	{
-		path: '/beheer',
+		path: MODULE_PATHS.overview,
 		component: SitesOverview,
 	},
 	{
-		path: '/aanmaken',
+		path: MODULE_PATHS.create,
 		component: SitesCreate,
 	},
 	{
-		path: '/:siteId',
+		path: MODULE_PATHS.detail,
 		breadcrumb: null,
 		component: SiteDetailComponent,
 		routes: [
 			{
-				path: '/:siteId/bewerken',
+				path: MODULE_PATHS.detailEdit,
 				component: SitesUpdate,
 			},
 		],
 	},
 ]);
 
-// expose module
-Core.modules.exposeModuleApi('sites-module', {
-	routes: routes,
-});
+// API export
 
-export { SitesComponent };
+const api: SitesModuleAPI = {
+	routes,
+	store: {
+		sites: {
+			service: {
+				getSite: sitesService.getSite,
+				getSites: sitesService.getSites,
+			},
+			query: sitesQuery,
+		},
+	},
+};
+
+Core.modules.exposeModuleApi(MODULE_API_NAME, api);
+
+export { SitesModuleAPI, SiteModel, SitesMetaModel, SitesState };
