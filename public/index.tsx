@@ -2,10 +2,11 @@ import Core, { ModuleRouteConfig } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import { registerSitesAPI } from './lib/api';
+import { registerContenDetailCompartment } from './lib/connectors/content';
 import { routes } from './lib/services/routes/routes.class';
-import { MODULE_API_NAME, MODULE_PATHS } from './lib/sites.const';
-import { SitesModuleAPI, SitesRouteProps } from './lib/sites.types';
-import { SiteModel, SitesMetaModel, sitesQuery, sitesService, SitesState } from './lib/store/sites';
+import { MODULE_PATHS } from './lib/sites.const';
+import { SitesRouteProps } from './lib/sites.types';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 
 const SitesComponent: FC<SitesRouteProps> = ({ route, match, location, tenantId }) => {
@@ -78,19 +79,6 @@ routes.register([
 
 // API export
 
-const api: SitesModuleAPI = {
-	routes,
-	store: {
-		sites: {
-			service: {
-				getSite: sitesService.getSite,
-				getSites: sitesService.getSites,
-			},
-			query: sitesQuery,
-		},
-	},
-};
+registerSitesAPI();
 
-Core.modules.exposeModuleApi(MODULE_API_NAME, api);
-
-export { SitesModuleAPI, SiteModel, SitesMetaModel, SitesState };
+export * from './lib/api/api.types';
