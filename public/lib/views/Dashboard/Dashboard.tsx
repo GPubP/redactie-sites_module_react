@@ -1,5 +1,6 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import {
+	Container,
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
@@ -109,20 +110,17 @@ const Dashboard: FC<SitesRouteProps> = ({ history, tenantId }) => {
 		];
 
 		return (
-			<div className="u-container u-wrapper">
-				<PaginatedTable
-					className="u-margin-top"
-					columns={sitesColumns}
-					rows={sitesRows}
-					currentPage={currentPage}
-					itemsPerPage={DEFAULT_SITES_SEARCH_PARAMS.pagesize}
-					onPageChange={handlePageChange}
-					orderBy={handleOrderBy}
-					activeSorting={sitesActiveSorting}
-					totalValues={sitesMeta?.totalElements}
-					loading={loadingState === LoadingState.Loading}
-				></PaginatedTable>
-			</div>
+			<PaginatedTable
+				columns={sitesColumns}
+				rows={sitesRows}
+				currentPage={currentPage}
+				itemsPerPage={DEFAULT_SITES_SEARCH_PARAMS.pagesize}
+				onPageChange={handlePageChange}
+				orderBy={handleOrderBy}
+				activeSorting={sitesActiveSorting}
+				totalValues={sitesMeta?.totalElements}
+				loading={loadingState === LoadingState.Loading}
+			></PaginatedTable>
 		);
 	};
 
@@ -139,7 +137,9 @@ const Dashboard: FC<SitesRouteProps> = ({ history, tenantId }) => {
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
-			<DataLoader loadingState={initialLoading} render={renderOverview} />
+			<Container>
+				<DataLoader loadingState={initialLoading} render={renderOverview} />
+			</Container>
 		</>
 	);
 };

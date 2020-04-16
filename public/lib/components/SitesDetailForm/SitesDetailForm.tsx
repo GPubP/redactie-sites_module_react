@@ -33,7 +33,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 			  }
 			: null;
 		return (
-			<Card className="u-margin-top">
+			<Card>
 				<CardBody>
 					<CardTitle>
 						Status: <SitesStatus active={!!active} />
@@ -90,7 +90,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						</div>
 					</div>
 					{onActiveToggle ? renderArchive() : null}
-					<ActionBar className="o-action-bar" isOpen>
+					<ActionBar className="o-action-bar--fixed" isOpen>
 						<ActionBarContentSection>
 							<Button
 								iconLeft={loading ? 'circle-o-notch fa-spin' : null}

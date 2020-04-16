@@ -1,4 +1,8 @@
-import { ContextHeader, ContextHeaderTopSection } from '@acpaas-ui/react-editorial-components';
+import {
+	Container,
+	ContextHeader,
+	ContextHeaderTopSection,
+} from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -78,17 +82,15 @@ const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
 		}
 
 		return (
-			<div className="u-margin-top u-container u-wrapper">
-				<SitesDetailForm
-					active={site?.meta.active}
-					initialState={formState}
-					activeLoading={sitesLoadingStates.isActivating}
-					loading={sitesLoadingStates.isUpdating}
-					onCancel={navigateToOverview}
-					onSubmit={onSubmit}
-					onActiveToggle={onActiveToggle}
-				/>
-			</div>
+			<SitesDetailForm
+				active={site?.meta.active}
+				initialState={formState}
+				activeLoading={sitesLoadingStates.isActivating}
+				loading={sitesLoadingStates.isUpdating}
+				onCancel={navigateToOverview}
+				onSubmit={onSubmit}
+				onActiveToggle={onActiveToggle}
+			/>
 		);
 	};
 
@@ -97,7 +99,9 @@ const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
 			<ContextHeader tabs={TABS} title="Site bewerken">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
-			<DataLoader loadingState={loadingState} render={renderSitesUpdate} />
+			<Container>
+				<DataLoader loadingState={loadingState} render={renderSitesUpdate} />
+			</Container>
 		</>
 	);
 };
