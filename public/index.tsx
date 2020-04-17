@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { registerSitesAPI } from './lib/api';
-import { registerContenDetailCompartment } from './lib/connectors/content';
 import { routes } from './lib/services/routes/routes.class';
 import { MODULE_PATHS } from './lib/sites.const';
 import { SitesRouteProps } from './lib/sites.types';
