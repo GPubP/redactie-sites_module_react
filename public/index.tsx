@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { registerSitesAPI } from './lib/api';
+import { TenantContext } from './lib/context';
 import { routes } from './lib/services/routes/routes.class';
 import { MODULE_PATHS } from './lib/sites.const';
 import { SitesRouteProps } from './lib/sites.types';
@@ -15,12 +16,12 @@ const SitesComponent: FC<SitesRouteProps> = ({ route, match, location, tenantId 
 	}
 
 	return (
-		<>
+		<TenantContext.Provider value={{ tenantId }}>
 			{Core.routes.render(route.routes as ModuleRouteConfig[], {
 				basePath: match.url,
 				tenantId,
 			})}
-		</>
+		</TenantContext.Provider>
 	);
 };
 
