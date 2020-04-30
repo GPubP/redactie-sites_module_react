@@ -41,9 +41,6 @@ Core.routes.register({
 	path: MODULE_PATHS.dashboard,
 	component: Dashboard,
 	isDefaultRoute: true,
-	navigation: {
-		label: 'Dashboard',
-	},
 });
 
 Core.routes.register({
