@@ -10,7 +10,7 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
-import { useNavigate, useRoutes, useSites } from '../../hooks';
+import { useNavigate, useRoutes, useSites, useHomeBreadcrumb } from '../../hooks';
 import { OrderBy } from '../../services/api';
 import { parseOrderBy } from '../../services/helpers';
 import { DEFAULT_SITES_SEARCH_PARAMS } from '../../services/sites';
@@ -27,17 +27,12 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const [currentPage, setCurrentPage] = useState(DEFAULT_SITES_SEARCH_PARAMS.page);
 	const [sitesSearchParams, setSitesSearchParams] = useState(DEFAULT_SITES_SEARCH_PARAMS);
 	const [sitesActiveSorting, setSitesActiveSorting] = useState(DEFAULT_SITES_SORTING);
-	const { navigate, generatePath } = useNavigate();
+	const { navigate } = useNavigate();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		excludePaths: [...BREADCRUMB_OPTIONS.excludePaths, ...['/:tenantId/sites']],
-		extraBreadcrumbs: [
-			{
-				name: 'Home',
-				target: generatePath(MODULE_PATHS.dashboard),
-			},
-		],
+		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
 	const [loadingState, sites, sitesMeta] = useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
@@ -111,7 +106,11 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() => navigate(MODULE_PATHS.detailEdit, { siteId: id })}
+							onClick={() =>
+								navigate(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, {
+									siteId: id,
+								})
+							}
 							type="primary"
 							transparent
 						></Button>
@@ -140,7 +139,10 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			<ContextHeader title="Sites">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus" onClick={() => navigate(MODULE_PATHS.create)}>
+					<Button
+						iconLeft="plus"
+						onClick={() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.create}`)}
+					>
 						Nieuwe maken
 					</Button>
 				</ContextHeaderActionsSection>
