@@ -4,7 +4,7 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useMemo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
@@ -36,9 +36,10 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	});
 	const [loadingState, site] = useSite();
 	const sitesLoadingStates = useSitesLoadingStates();
-	const navigateToOverview = useCallback(() => {
-		navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`);
-	}, [navigate]);
+	const navigateToOverview = useCallback(
+		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
+		[navigate]
+	);
 
 	useEffect(() => {
 		if (site) {
@@ -54,9 +55,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			sitesService.getSite({ id: siteId });
 			return;
 		}
-
-		navigateToOverview();
-	}, [navigateToOverview, siteId]);
+	}, [siteId]);
 
 	/**
 	 * Methods
