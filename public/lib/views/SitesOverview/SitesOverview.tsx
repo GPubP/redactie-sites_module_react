@@ -10,7 +10,7 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
-import { useNavigate, useRoutes, useSites, useHomeBreadcrumb } from '../../hooks';
+import { useHomeBreadcrumb, useNavigate, useRoutes, useSites } from '../../hooks';
 import { OrderBy } from '../../services/api';
 import { parseOrderBy } from '../../services/helpers';
 import { DEFAULT_SITES_SEARCH_PARAMS } from '../../services/sites';

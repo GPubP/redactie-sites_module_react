@@ -7,7 +7,7 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 
 import { SitesDetailForm } from '../../components';
-import { useHomeBreadcrumb, useRoutes, useSitesLoadingStates, useNavigate } from '../../hooks';
+import { useHomeBreadcrumb, useNavigate, useRoutes, useSitesLoadingStates } from '../../hooks';
 import { generateDetailFormState } from '../../services/helpers';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
