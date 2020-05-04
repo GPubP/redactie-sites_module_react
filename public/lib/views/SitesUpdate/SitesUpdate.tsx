@@ -4,18 +4,24 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useMemo, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
-import { useRoutes, useSite, useSitesLoadingStates } from '../../hooks';
-import { BREADCRUMB_OPTIONS } from '../../sites.const';
+import {
+	useHomeBreadcrumb,
+	useNavigate,
+	useRoutes,
+	useSite,
+	useSitesLoadingStates,
+} from '../../hooks';
+import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesService } from '../../store/sites';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
-const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
+const SitesCreate: FC<SitesRouteProps> = () => {
 	const { siteId } = useParams();
 
 	/**
@@ -23,12 +29,17 @@ const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
 	 */
 	const [formState, setFormState] = useState<SitesDetailFormState | null>(null);
 	const routes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const { navigate } = useNavigate();
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
+		...BREADCRUMB_OPTIONS,
+		extraBreadcrumbs: [useHomeBreadcrumb()],
+	});
 	const [loadingState, site] = useSite();
 	const sitesLoadingStates = useSitesLoadingStates();
-	const navigateToOverview = useCallback(() => {
-		history.push(`/${tenantId}/sites/beheer`);
-	}, [tenantId, history]);
+	const navigateToOverview = useCallback(
+		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
+		[navigate]
+	);
 
 	useEffect(() => {
 		if (site) {
@@ -44,9 +55,7 @@ const SitesCreate: FC<SitesRouteProps> = ({ history, tenantId }) => {
 			sitesService.getSite({ id: siteId });
 			return;
 		}
-
-		navigateToOverview();
-	}, [navigateToOverview, siteId]);
+	}, [siteId]);
 
 	/**
 	 * Methods

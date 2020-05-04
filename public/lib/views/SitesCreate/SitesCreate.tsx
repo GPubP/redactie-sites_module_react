@@ -7,27 +7,31 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import React, { FC } from 'react';
 
 import { SitesDetailForm } from '../../components';
-import { useRoutes, useSitesLoadingStates } from '../../hooks';
+import { useHomeBreadcrumb, useNavigate, useRoutes, useSitesLoadingStates } from '../../hooks';
 import { generateDetailFormState } from '../../services/helpers';
-import { BREADCRUMB_OPTIONS } from '../../sites.const';
+import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesService } from '../../store/sites';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
-const SitesCreate: FC<SitesRouteProps> = ({ basePath, history }) => {
+const SitesCreate: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
 	const routes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const { navigate } = useNavigate();
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
+		...BREADCRUMB_OPTIONS,
+		extraBreadcrumbs: [useHomeBreadcrumb()],
+	});
 	const sitesLoadingStates = useSitesLoadingStates();
 
 	/**
 	 * Methods
 	 */
 	const navigateToOverview = (): void => {
-		history.push(`${basePath}/beheer`);
+		navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`);
 	};
 
 	const onSubmit = ({ name, contentTypes }: SitesDetailFormState): void => {

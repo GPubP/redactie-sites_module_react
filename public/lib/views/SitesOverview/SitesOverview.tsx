@@ -12,25 +12,30 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
-import { useRoutes, useSites } from '../../hooks';
+import { useHomeBreadcrumb, useNavigate, useRoutes, useSites } from '../../hooks';
 import { OrderBy } from '../../services/api';
 import { parseOrderBy } from '../../services/helpers';
 import { DEFAULT_SITES_SEARCH_PARAMS } from '../../services/sites';
-import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING } from '../../sites.const';
+import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesRouteProps } from '../../sites.types';
 import { sitesService } from '../../store/sites';
 
 import { SitesOverviewRowData } from './SitesOverview.types';
 
-const SitesOverview: FC<SitesRouteProps> = ({ basePath, history }) => {
+const SitesOverview: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
 	const [currentPage, setCurrentPage] = useState(DEFAULT_SITES_SEARCH_PARAMS.page);
 	const [sitesSearchParams, setSitesSearchParams] = useState(DEFAULT_SITES_SEARCH_PARAMS);
 	const [sitesActiveSorting, setSitesActiveSorting] = useState(DEFAULT_SITES_SORTING);
+	const { navigate } = useNavigate();
 	const routes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
+	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
+		...BREADCRUMB_OPTIONS,
+		excludePaths: [...BREADCRUMB_OPTIONS.excludePaths, ...['/:tenantId/sites']],
+		extraBreadcrumbs: [useHomeBreadcrumb()],
+	});
 	const [loadingState, sites, sitesMeta] = useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [t] = useCoreTranslation();
@@ -104,7 +109,11 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath, history }) => {
 						<Button
 							ariaLabel="Edit"
 							icon="edit"
-							onClick={() => history.push(`${basePath}/${id}/bewerken`)}
+							onClick={() =>
+								navigate(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, {
+									siteId: id,
+								})
+							}
 							type="primary"
 							transparent
 						></Button>
@@ -133,7 +142,10 @@ const SitesOverview: FC<SitesRouteProps> = ({ basePath, history }) => {
 			<ContextHeader title="Sites">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button iconLeft="plus" onClick={() => history.push(`${basePath}/aanmaken`)}>
+					<Button
+						iconLeft="plus"
+						onClick={() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.create}`)}
+					>
 						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
 					</Button>
 				</ContextHeaderActionsSection>
