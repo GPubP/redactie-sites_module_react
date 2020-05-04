@@ -7,10 +7,12 @@ import {
 	TextField,
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement } from 'react';
 
+import { useCoreTranslation } from '../../connectors/translations';
 import SitesStatus from '../SiteStatus/SiteStatus';
 
 import { SITES_DETAIL_VALIDATION_SCHEMA } from './SitesDetailForm.const';
@@ -25,6 +27,8 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	active,
 	loading,
 }) => {
+	const [t] = useCoreTranslation();
+
 	const renderArchive = (): ReactElement => {
 		const loadingStateButtonProps = activeLoading
 			? {
@@ -50,7 +54,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							type="danger"
 							outline
 						>
-							Deactiveren
+							{t('BUTTON_ACTIVATE')}
 						</Button>
 					) : (
 						<Button
@@ -60,7 +64,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							type="success"
 							outline
 						>
-							Activeren
+							{t('BUTTON_DEACTIVATE')}
 						</Button>
 					)}
 				</CardBody>
@@ -76,7 +80,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 		>
 			{({ submitForm, values }) => (
 				<>
-					<div className="row">
+					<div className="row u-margin-bottom">
 						<div className="col-xs-12 col-md-8 row middle-xs">
 							<div className="col-xs-12 col-md-8">
 								<Field as={TextField} label="Naam" name="name" required />
@@ -84,7 +88,8 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 
 							<div className="col-xs-12 col-md-4">
 								<div className="u-margin-top">
-									Systeemnaam: <b>{kebabCase(values.name)}</b>
+									{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
+									<b>{kebabCase(values.name)}</b>
 								</div>
 							</div>
 						</div>
@@ -99,10 +104,10 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 								onClick={() => submitForm()}
 								type="success"
 							>
-								Bewaar en ga verder
+								{t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
 							</Button>
 							<Button onClick={onCancel} outline>
-								Annuleer
+								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 							</Button>
 						</ActionBarContentSection>
 					</ActionBar>

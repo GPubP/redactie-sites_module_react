@@ -7,9 +7,11 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
+import { useCoreTranslation } from '../../connectors/translations';
 import { useHomeBreadcrumb, useNavigate, useRoutes, useSites } from '../../hooks';
 import { OrderBy } from '../../services/api';
 import { parseOrderBy } from '../../services/helpers';
@@ -36,6 +38,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	});
 	const [loadingState, sites, sitesMeta] = useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		sitesService.getSites(sitesSearchParams);
@@ -88,11 +91,11 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 
 		const sitesColumns = [
 			{
-				label: 'Naam',
+				label: t(CORE_TRANSLATIONS.TABLE_NAME),
 				value: 'name',
 			},
 			{
-				label: 'Omschrijving',
+				label: t(CORE_TRANSLATIONS.TABLE_DESCRIPTION),
 				value: 'description',
 			},
 			{
@@ -143,7 +146,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 						iconLeft="plus"
 						onClick={() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.create}`)}
 					>
-						Nieuwe maken
+						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
 					</Button>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
