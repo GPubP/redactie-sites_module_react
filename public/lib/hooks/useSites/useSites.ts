@@ -1,64 +1,19 @@
-import { isNil } from 'ramda';
-import { useEffect, useState } from 'react';
-import { Subject } from 'rxjs';
-import { distinctUntilChanged, filter, takeUntil } from 'rxjs/operators';
+import { useObservable } from '@mindspace-io/react';
 
 import { LoadingState } from '../../sites.types';
-import { SiteModel, SitesMetaModel, sitesQuery } from '../../store/sites';
+import { SiteModel, SitesMetaModel } from '../../store/sites';
+import { sitesFacade } from '../../store/sites/sites.facade';
 
-const useSites = (): [LoadingState, SiteModel[], SitesMetaModel | null] => {
-	const [loadingState, setLoadingState] = useState<LoadingState>(LoadingState.Loading);
-	const [sites, setSites] = useState<SiteModel[]>([]);
-	const [sitesMeta, setSitesMeta] = useState<SitesMetaModel | null>(null);
+const useSites = (): [LoadingState, SiteModel[], SitesMetaModel | null | undefined] => {
+	// get sites observable
+	const [sites] = useObservable(sitesFacade.sites$, []);
+	const [meta] = useObservable(sitesFacade.meta$, null);
+	const [loading] = useObservable(sitesFacade.isFetching$, LoadingState.Loaded);
+	const [error] = useObservable(sitesFacade.error$, null);
 
-	useEffect(() => {
-		const destroyed$: Subject<boolean> = new Subject<boolean>();
+	const loadingState = error ? LoadingState.Error : loading;
 
-		sitesQuery
-			.selectAll()
-			.pipe(
-				takeUntil(destroyed$),
-				filter(sites => !isNil(sites)),
-				distinctUntilChanged()
-			)
-			.subscribe(sites => setSites(sites));
-
-		sitesQuery.meta$
-			.pipe(
-				takeUntil(destroyed$),
-				filter(meta => !isNil(meta)),
-				distinctUntilChanged()
-			)
-			.subscribe(meta => {
-				if (meta) {
-					setSitesMeta(meta);
-				}
-			});
-
-		sitesQuery.isFetching$.pipe(takeUntil(destroyed$)).subscribe(loading => {
-			if (loading) {
-				return setLoadingState(LoadingState.Loading);
-			}
-
-			setLoadingState(LoadingState.Loaded);
-		});
-
-		sitesQuery
-			.selectError()
-			.pipe(
-				takeUntil(destroyed$),
-				filter(error => !isNil(error)),
-				distinctUntilChanged()
-			)
-			.subscribe(() => setLoadingState(LoadingState.Error));
-
-		return () => {
-			destroyed$.next(true);
-			destroyed$.complete();
-		};
-	}, []);
-
-	return [loadingState, sites, sitesMeta];
+	return [loadingState, sites, meta];
 };
 
 export default useSites;

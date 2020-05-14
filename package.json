@@ -93,6 +93,7 @@
     "webpack-cli": "3.3.10"
   },
   "dependencies": {
+    "@mindspace-io/react": "^1.1.5",
     "lodash.kebabcase": "4.1.1"
   },
   "author": "Maarten De Weerdt",

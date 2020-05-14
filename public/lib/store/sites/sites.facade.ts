@@ -2,20 +2,34 @@ import {
 	CreateSitePayload,
 	GetSitePayload,
 	GetSitesPayload,
-	SitesApiService,
 	sitesApiService,
+	SitesApiService,
 	UpdateSiteActivationPayload,
 	UpdateSitePayload,
 } from '../../services/sites';
 
+import { SitesQuery, sitesQuery } from './sites.query';
 import { SitesStore, sitesStore } from './sites.store';
 
-export class SitesService {
-	constructor(private store: SitesStore, private sitesService: SitesApiService) {}
+export class SitesFacade {
+	constructor(
+		private store: SitesStore,
+		private service: SitesApiService,
+		private query: SitesQuery
+	) {}
+
+	public readonly meta$ = this.query.meta$;
+	public readonly sites$ = this.query.sites$;
+	public readonly site$ = this.query.site$;
+	public readonly isFetching$ = this.query.isFetching$;
+	public readonly isCreating$ = this.query.isCreating$;
+	public readonly isUpdating$ = this.query.isUpdating$;
+	public readonly isActivating$ = this.query.isActivating$;
+	public readonly error$ = this.query.error$;
 
 	public getSites(payload: GetSitesPayload): void {
 		this.store.setIsFetching(true);
-		this.sitesService
+		this.service
 			.getSites(payload)
 			.then(response => {
 				this.store.setIsFetching(false);
@@ -35,7 +49,7 @@ export class SitesService {
 
 	public getSite(payload: GetSitePayload): void {
 		this.store.setIsFetching(true);
-		this.sitesService
+		this.service
 			.getSite(payload)
 			.then(response => {
 				this.store.update({
@@ -50,7 +64,7 @@ export class SitesService {
 
 	public createSite(payload: CreateSitePayload): Promise<boolean> {
 		this.store.setIsCreating(true);
-		return this.sitesService
+		return this.service
 			.createSite(payload)
 			.then(() => {
 				this.store.setIsCreating(false);
@@ -66,7 +80,7 @@ export class SitesService {
 
 	public updateSite(payload: UpdateSitePayload): Promise<boolean> {
 		this.store.setIsUpdating(true);
-		return this.sitesService
+		return this.service
 			.updateSite(payload)
 			.then(() => {
 				return true;
@@ -81,7 +95,7 @@ export class SitesService {
 
 	public updateSiteActivation(payload: UpdateSiteActivationPayload): void {
 		this.store.setIsActivating(true);
-		this.sitesService
+		this.service
 			.updateSiteActivation(payload)
 			.then(response => {
 				this.store.setLoading(false);
@@ -96,4 +110,4 @@ export class SitesService {
 	}
 }
 
-export const sitesService = new SitesService(sitesStore, sitesApiService);
+export const sitesFacade = new SitesFacade(sitesStore, sitesApiService, sitesQuery);

@@ -18,7 +18,7 @@ import { parseOrderBy } from '../../services/helpers';
 import { DEFAULT_SITES_SEARCH_PARAMS } from '../../services/sites';
 import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesRouteProps } from '../../sites.types';
-import { sitesService } from '../../store/sites';
+import { sitesFacade } from '../../store/sites';
 
 import { SitesOverviewRowData } from './SitesOverview.types';
 
@@ -41,7 +41,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
-		sitesService.getSites(sitesSearchParams);
+		sitesFacade.getSites(sitesSearchParams);
 	}, [sitesSearchParams]);
 
 	useEffect(() => {
