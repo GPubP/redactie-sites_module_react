@@ -1,3 +1,6 @@
+import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
+import { from, Observable } from 'rxjs';
+
 import {
 	CreateSitePayload,
 	GetSitePayload,
@@ -8,6 +11,8 @@ import {
 	UpdateSitePayload,
 } from '../../services/sites';
 
+import { SiteModel, SitesState } from './sites.model';
+import { sitesPaginator } from './sites.paginator';
 import { SitesQuery, sitesQuery } from './sites.query';
 import { SitesStore, sitesStore } from './sites.store';
 
@@ -15,7 +20,8 @@ export class SitesFacade {
 	constructor(
 		private store: SitesStore,
 		private service: SitesApiService,
-		private query: SitesQuery
+		private query: SitesQuery,
+		private paginator: PaginatorPlugin<SitesState>
 	) {}
 
 	public readonly meta$ = this.query.meta$;
@@ -27,24 +33,80 @@ export class SitesFacade {
 	public readonly isActivating$ = this.query.isActivating$;
 	public readonly error$ = this.query.error$;
 
-	public getSites(payload: GetSitesPayload): void {
-		this.store.setIsFetching(true);
-		this.service
-			.getSites(payload)
-			.then(response => {
-				this.store.setIsFetching(false);
-				const sites = response._embedded;
-				const meta = response._page;
+	// public getSitesPaginated(
+	// 	payload: GetSitesPayload,
+	// 	clearCache = false
+	// ): Observable<PaginationResponse<SiteModel>> {
+	// 	if (clearCache) {
+	// 		this.paginator.clearCache();
+	// 	}
 
-				this.store.set(sites);
-				this.store.update({
-					meta,
-				});
-			})
-			.catch(err => {
-				this.store.setIsFetching(false);
-				this.store.setError(err);
-			});
+	// 	this.store.setIsFetching(true);
+	// 	this.paginator.setPage(payload.page);
+
+	// 	const getSites$ = from(
+	// 		this.service
+	// 			.getSites(payload)
+	// 			.then(response => {
+	// 				this.store.setIsFetching(false);
+	// 				const meta = response._page;
+
+	// 				this.store.update({
+	// 					meta,
+	// 				});
+
+	// 				return {
+	// 					perPage: parseInt(response._page.size, 10),
+	// 					currentPage: parseInt(response._page.number, 10),
+	// 					lastPage: response._page.totalPages,
+	// 					total: response._page.totalElements,
+	// 					data: response._embedded,
+	// 				};
+	// 			})
+	// 			.catch(error => {
+	// 				this.store.setIsFetching(false);
+	// 				this.store.setError(error);
+	// 				return error;
+	// 			})
+	// 	);
+
+	// 	return this.paginator.getPage(() => getSites$);
+	// }
+
+	public getSitesPaginated(
+		payload: GetSitesPayload,
+		clearCache = false
+	): Observable<PaginationResponse<SiteModel>> {
+		if (clearCache) {
+			this.paginator.clearCache();
+		}
+
+		this.store.setIsFetching(true);
+		return from(
+			this.service
+				.getSites(payload)
+				.then(response => {
+					this.store.setIsFetching(false);
+					const meta = response._page;
+
+					this.store.update({
+						meta,
+					});
+
+					return {
+						perPage: parseInt(response._page.size, 10),
+						currentPage: parseInt(response._page.number, 10),
+						lastPage: response._page.totalPages,
+						total: response._page.totalElements,
+						data: response._embedded,
+					};
+				})
+				.catch(error => {
+					this.store.setIsFetching(false);
+					this.store.setError(error);
+					return error;
+				})
+		);
 	}
 
 	public getSite(payload: GetSitePayload): void {
@@ -110,4 +172,4 @@ export class SitesFacade {
 	}
 }
 
-export const sitesFacade = new SitesFacade(sitesStore, sitesApiService, sitesQuery);
+export const sitesFacade = new SitesFacade(sitesStore, sitesApiService, sitesQuery, sitesPaginator);

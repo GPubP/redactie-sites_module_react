@@ -14,45 +14,44 @@ import { Link } from 'react-router-dom';
 
 import { DataLoader, SiteStatus } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
-import { useNavigate, useRoutes, useSites } from '../../hooks';
-import { OrderBy } from '../../services/api';
+import { useNavigate, useRoutes, useSitesLoadingStates, useSitesPagination } from '../../hooks';
+import { OrderBy, SearchParams } from '../../services/api';
 import { parseOrderBy } from '../../services/helpers';
 import { DEFAULT_SITES_SEARCH_PARAMS } from '../../services/sites';
 import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesRouteProps } from '../../sites.types';
-import { sitesFacade } from '../../store/sites';
 import { SitesOverviewRowData } from '../SitesOverview/SitesOverview.types';
 
 const Dashboard: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [currentPage, setCurrentPage] = useState(DEFAULT_SITES_SEARCH_PARAMS.page);
-	const [sitesSearchParams, setSitesSearchParams] = useState(DEFAULT_SITES_SEARCH_PARAMS);
+	const [sitesSearchParams, setSitesSearchParams] = useState<SearchParams>(
+		DEFAULT_SITES_SEARCH_PARAMS
+	);
+
 	const [sitesActiveSorting, setSitesActiveSorting] = useState(DEFAULT_SITES_SORTING);
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
-	const [loadingState, sites, sitesMeta] = useSites();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const sitesPagination = useSitesPagination(sitesSearchParams);
+	const sitesLoadingStates = useSitesLoadingStates();
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
-		sitesFacade.getSites(sitesSearchParams);
-	}, [sitesSearchParams]);
-
-	useEffect(() => {
-		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
+		if (
+			sitesLoadingStates.isFetching === LoadingState.Loaded ||
+			sitesLoadingStates.isFetching === LoadingState.Error
+		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [loadingState]);
+	}, [sitesLoadingStates.isFetching]);
 
 	/**
 	 * Functions
 	 */
 	const handlePageChange = (pageNumber: number): void => {
-		setCurrentPage(pageNumber);
-
 		setSitesSearchParams({
 			...sitesSearchParams,
 			page: pageNumber,
@@ -75,11 +74,11 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!sites) {
+		if (!sitesPagination) {
 			return null;
 		}
 
-		const sitesRows: SitesOverviewRowData[] = sites.map(site => ({
+		const sitesRows: SitesOverviewRowData[] = sitesPagination?.data.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			status: site.meta.active,
@@ -117,13 +116,13 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			<PaginatedTable
 				columns={sitesColumns}
 				rows={sitesRows}
-				currentPage={currentPage}
+				currentPage={sitesPagination.currentPage}
 				itemsPerPage={DEFAULT_SITES_SEARCH_PARAMS.pagesize}
 				onPageChange={handlePageChange}
 				orderBy={handleOrderBy}
 				activeSorting={sitesActiveSorting}
-				totalValues={sitesMeta?.totalElements}
-				loading={loadingState === LoadingState.Loading}
+				totalValues={sitesPagination.total}
+				loading={sitesLoadingStates.isFetching === LoadingState.Loading}
 			></PaginatedTable>
 		);
 	};

@@ -16,14 +16,14 @@ export class SitesQuery extends QueryEntity<SitesState> {
 			return LoadingState.Loading;
 		}
 
-		return LoadingState.Loading;
+		return LoadingState.Loaded;
 	}
 
 	// Data
 	public meta$ = this.select(state => state.meta).pipe(
 		filter(meta => !isNil(meta), distinctUntilChanged())
 	);
-	public sites$ = this.selectAll().pipe(filter(sites => !isNil(sites), distinctUntilChanged()));
+	public sites$ = this.selectAll();
 	public site$ = this.select(state => state.site).pipe(
 		filter(site => !isNil(site), distinctUntilChanged())
 	);

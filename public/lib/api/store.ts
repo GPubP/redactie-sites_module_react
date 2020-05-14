@@ -4,7 +4,7 @@ export const store = {
 	sites: {
 		service: {
 			getSite: sitesFacade.getSite,
-			getSites: sitesFacade.getSites,
+			getSites: sitesFacade.getSitesPaginated,
 		},
 		query: sitesQuery,
 	},
