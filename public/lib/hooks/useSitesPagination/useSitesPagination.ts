@@ -30,7 +30,7 @@ function useSitesPagination(
 		return () => {
 			s.unsubscribe();
 		};
-	}, [sitesSearchParams, sitesSearchParams.page, prevSitesSearchParams, clearCache]);
+	}, [sitesSearchParams, prevSitesSearchParams, clearCache]);
 
 	return pagination;
 }

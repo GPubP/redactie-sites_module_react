@@ -10,14 +10,14 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { useAPIQueryParams } from '@redactie/utils';
 import { prop } from 'ramda';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader, SiteStatus } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
 import { useNavigate, useRoutes, useSitesLoadingStates, useSitesPagination } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
-import { parseOrderBy } from '../../services/helpers';
+import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesRouteProps } from '../../sites.types';
 import { SitesOverviewRowData } from '../SitesOverview/SitesOverview.types';
@@ -26,18 +26,12 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [sitesActiveSorting, setSitesActiveSorting] = useState(DEFAULT_SITES_SORTING);
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
-	const [query, setQuery] = useAPIQueryParams(
-		{
-			pagesize: {
-				defaultValue: 2,
-				type: 'number',
-			},
-		},
-		true
-	);
+	const [query, setQuery] = useAPIQueryParams({
+		...DEFAULT_SITES_SORTING,
+	});
+	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const sitesPagination = useSitesPagination(query as SearchParams);
@@ -57,15 +51,12 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	 * Functions
 	 */
 	const handlePageChange = (pageNumber: number): void => {
-		console.log('handle page change', pageNumber);
 		setQuery({
 			page: pageNumber,
 		});
 	};
 
 	const handleOrderBy = (orderBy: OrderBy): void => {
-		setSitesActiveSorting(orderBy);
-
 		setQuery({
 			...query,
 			sort: parseOrderBy({
@@ -117,8 +108,6 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			},
 		];
 
-		console.log(query.pagesize, 'page size', sitesPagination);
-
 		return (
 			<PaginatedTable
 				columns={sitesColumns}
@@ -133,8 +122,6 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			></PaginatedTable>
 		);
 	};
-
-	console.log(initialLoading);
 
 	return (
 		<>
