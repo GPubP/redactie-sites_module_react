@@ -33,6 +33,7 @@ export class SitesFacade {
 	public readonly isActivating$ = this.query.isActivating$;
 	public readonly error$ = this.query.error$;
 
+	// TODO: check why this isn't working
 	// public getSitesPaginated(
 	// 	payload: GetSitesPayload,
 	// 	clearCache = false

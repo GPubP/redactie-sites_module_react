@@ -34,7 +34,7 @@ function useSitesPagination(
 
 	return pagination;
 }
-
+// TODO: check why this isn't working
 // function useSitesPagination(
 // 	sitesSearchParams: SearchParams,
 // 	clearCache = false
