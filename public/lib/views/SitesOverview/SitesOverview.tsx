@@ -8,6 +8,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { useAPIQueryParams } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
 import { DataLoader } from '../../components';
@@ -19,9 +20,8 @@ import {
 	useSitesLoadingStates,
 	useSitesPagination,
 } from '../../hooks';
-import { OrderBy } from '../../services/api';
+import { OrderBy, SearchParams } from '../../services/api';
 import { parseOrderBy } from '../../services/helpers';
-import { DEFAULT_SITES_SEARCH_PARAMS } from '../../services/sites';
 import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesRouteProps } from '../../sites.types';
 
@@ -31,10 +31,18 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [sitesSearchParams, setSitesSearchParams] = useState(DEFAULT_SITES_SEARCH_PARAMS);
 	const [sitesActiveSorting, setSitesActiveSorting] = useState(DEFAULT_SITES_SORTING);
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
+	const [query, setQuery] = useAPIQueryParams(
+		{
+			pagesize: {
+				defaultValue: 2,
+				type: 'number',
+			},
+		},
+		true
+	);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		excludePaths: [...BREADCRUMB_OPTIONS.excludePaths, ...['/:tenantId/sites']],
@@ -42,7 +50,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	});
 	const sitesLoadingStates = useSitesLoadingStates();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const sitesPagination = useSitesPagination(sitesSearchParams);
+	const sitesPagination = useSitesPagination(query as SearchParams);
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
@@ -58,8 +66,8 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	 * Functions
 	 */
 	const handlePageChange = (pageNumber: number): void => {
-		setSitesSearchParams({
-			...sitesSearchParams,
+		setQuery({
+			...query,
 			page: pageNumber,
 		});
 	};
@@ -67,8 +75,8 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const handleOrderBy = (orderBy: OrderBy): void => {
 		setSitesActiveSorting(orderBy);
 
-		setSitesSearchParams({
-			...sitesSearchParams,
+		setQuery({
+			...query,
 			sort: parseOrderBy({
 				...orderBy,
 				key: `data.${orderBy.key}`,
@@ -129,7 +137,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 				columns={sitesColumns}
 				rows={sitesRows}
 				currentPage={sitesPagination.currentPage}
-				itemsPerPage={DEFAULT_SITES_SEARCH_PARAMS.pagesize}
+				itemsPerPage={query.pagesize}
 				onPageChange={handlePageChange}
 				orderBy={handleOrderBy}
 				activeSorting={sitesActiveSorting}

@@ -1,8 +1,8 @@
 import { LoadingState } from '../../sites.types';
 
 export interface SitesLoadingStates {
-	isCreating: LoadingState;
-	isFetching: LoadingState;
-	isUpdating: LoadingState;
-	isActivating: LoadingState;
+	isCreating: LoadingState | null;
+	isFetching: LoadingState | null;
+	isUpdating: LoadingState | null;
+	isActivating: LoadingState | null;
 }

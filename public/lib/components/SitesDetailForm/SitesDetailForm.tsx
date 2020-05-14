@@ -54,7 +54,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							type="danger"
 							outline
 						>
-							{t('BUTTON_ACTIVATE')}
+							{t('BUTTON_DEACTIVATE')}
 						</Button>
 					) : (
 						<Button
@@ -64,7 +64,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							type="success"
 							outline
 						>
-							{t('BUTTON_DEACTIVATE')}
+							{t('BUTTON_ACTIVATE')}
 						</Button>
 					)}
 				</CardBody>

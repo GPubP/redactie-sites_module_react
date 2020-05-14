@@ -1,15 +1,14 @@
 import { useObservable } from '@mindspace-io/react';
 
-import { LoadingState } from '../../sites.types';
 import { sitesFacade } from '../../store/sites/sites.facade';
 
 import { SitesLoadingStates } from './useSitesLoadingStates.types';
 
 const useSitesLoadingState = (): SitesLoadingStates => {
-	const [isCreating] = useObservable(sitesFacade.isCreating$, LoadingState.Loaded);
-	const [isFetching] = useObservable(sitesFacade.isFetching$, LoadingState.Loaded);
-	const [isUpdating] = useObservable(sitesFacade.isUpdating$, LoadingState.Loaded);
-	const [isActivating] = useObservable(sitesFacade.isActivating$, LoadingState.Loaded);
+	const [isCreating] = useObservable(sitesFacade.isCreating$, null);
+	const [isFetching] = useObservable(sitesFacade.isFetching$, null);
+	const [isUpdating] = useObservable(sitesFacade.isUpdating$, null);
+	const [isActivating] = useObservable(sitesFacade.isActivating$, null);
 
 	return {
 		isCreating,

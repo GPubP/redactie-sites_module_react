@@ -4,7 +4,7 @@ import { LoadingState } from '../../sites.types';
 import { sitesFacade } from '../../store/sites/sites.facade';
 
 const useSite = (): any => {
-	const [loading] = useObservable(sitesFacade.isFetching$, LoadingState.Loaded);
+	const [loading] = useObservable(sitesFacade.isFetching$, null);
 	const [site] = useObservable(sitesFacade.site$, null);
 	const [error] = useObservable(sitesFacade.error$, null);
 
