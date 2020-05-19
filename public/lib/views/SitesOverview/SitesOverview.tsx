@@ -8,17 +8,22 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { useAPIQueryParams } from '@redactie/utils';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DataLoader } from '../../components';
 import { useCoreTranslation } from '../../connectors/translations';
-import { useHomeBreadcrumb, useNavigate, useRoutes, useSites } from '../../hooks';
-import { OrderBy } from '../../services/api';
-import { parseOrderBy } from '../../services/helpers';
-import { DEFAULT_SITES_SEARCH_PARAMS } from '../../services/sites';
+import {
+	useHomeBreadcrumb,
+	useNavigate,
+	useRoutes,
+	useSitesLoadingStates,
+	useSitesPagination,
+} from '../../hooks';
+import { OrderBy, SearchParams } from '../../services/api';
+import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesRouteProps } from '../../sites.types';
-import { sitesService } from '../../store/sites';
 
 import { SitesOverviewRowData } from './SitesOverview.types';
 
@@ -26,47 +31,44 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [currentPage, setCurrentPage] = useState(DEFAULT_SITES_SEARCH_PARAMS.page);
-	const [sitesSearchParams, setSitesSearchParams] = useState(DEFAULT_SITES_SEARCH_PARAMS);
-	const [sitesActiveSorting, setSitesActiveSorting] = useState(DEFAULT_SITES_SORTING);
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
+	const [query, setQuery] = useAPIQueryParams({
+		...DEFAULT_SITES_SORTING,
+	});
+	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		excludePaths: [...BREADCRUMB_OPTIONS.excludePaths, ...['/:tenantId/sites']],
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
-	const [loadingState, sites, sitesMeta] = useSites();
+	const sitesLoadingStates = useSitesLoadingStates();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
+	const sitesPagination = useSitesPagination(query as SearchParams);
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
-		sitesService.getSites(sitesSearchParams);
-	}, [sitesSearchParams]);
-
-	useEffect(() => {
-		if (loadingState === LoadingState.Loaded || loadingState === LoadingState.Error) {
+		if (
+			sitesLoadingStates.isFetching === LoadingState.Loaded ||
+			sitesLoadingStates.isFetching === LoadingState.Error
+		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [loadingState]);
+	}, [sitesLoadingStates.isFetching]);
 
 	/**
 	 * Functions
 	 */
 	const handlePageChange = (pageNumber: number): void => {
-		setCurrentPage(pageNumber);
-
-		setSitesSearchParams({
-			...sitesSearchParams,
+		setQuery({
+			...query,
 			page: pageNumber,
 		});
 	};
 
 	const handleOrderBy = (orderBy: OrderBy): void => {
-		setSitesActiveSorting(orderBy);
-
-		setSitesSearchParams({
-			...sitesSearchParams,
+		setQuery({
+			...query,
 			sort: parseOrderBy({
 				...orderBy,
 				key: `data.${orderBy.key}`,
@@ -78,11 +80,11 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!sites) {
+		if (!sitesPagination) {
 			return null;
 		}
 
-		const sitesRows: SitesOverviewRowData[] = sites.map(site => ({
+		const sitesRows: SitesOverviewRowData[] = sitesPagination.data.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			status: site.meta.active,
@@ -126,13 +128,13 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			<PaginatedTable
 				columns={sitesColumns}
 				rows={sitesRows}
-				currentPage={currentPage}
-				itemsPerPage={DEFAULT_SITES_SEARCH_PARAMS.pagesize}
+				currentPage={sitesPagination.currentPage}
+				itemsPerPage={query.pagesize}
 				onPageChange={handlePageChange}
 				orderBy={handleOrderBy}
 				activeSorting={sitesActiveSorting}
-				totalValues={sitesMeta?.totalElements}
-				loading={loadingState === LoadingState.Loading}
+				totalValues={sitesPagination.total}
+				loading={sitesLoadingStates.isFetching === LoadingState.Loading}
 			></PaginatedTable>
 		);
 	};

@@ -54,7 +54,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							type="danger"
 							outline
 						>
-							{t('BUTTON_ACTIVATE')}
+							{t('BUTTON_DEACTIVATE')}
 						</Button>
 					) : (
 						<Button
@@ -64,7 +64,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							type="success"
 							outline
 						>
-							{t('BUTTON_DEACTIVATE')}
+							{t('BUTTON_ACTIVATE')}
 						</Button>
 					)}
 				</CardBody>
@@ -97,18 +97,20 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 					{onActiveToggle ? renderArchive() : null}
 					<ActionBar className="o-action-bar--fixed" isOpen>
 						<ActionBarContentSection>
-							<Button
-								iconLeft={loading ? 'circle-o-notch fa-spin' : null}
-								disabled={loading}
-								className="u-margin-right-xs"
-								onClick={() => submitForm()}
-								type="success"
-							>
-								{t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
-							</Button>
-							<Button onClick={onCancel} outline>
-								{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-							</Button>
+							<div className="u-wrapper row end-xs">
+								<Button onClick={onCancel} negative>
+									{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
+								</Button>
+								<Button
+									iconLeft={loading ? 'circle-o-notch fa-spin' : null}
+									disabled={loading}
+									className="u-margin-left-xs"
+									onClick={() => submitForm()}
+									type="success"
+								>
+									{t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
+								</Button>
+							</div>
 						</ActionBarContentSection>
 					</ActionBar>
 				</>

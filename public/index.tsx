@@ -36,10 +36,18 @@ const SiteDetailComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) =>
 	);
 };
 
+const DashboardWrapperComponent: FC<SitesRouteProps> = props => {
+	return (
+		<TenantContext.Provider value={{ tenantId: props.tenantId }}>
+			<Dashboard basePath={props.match.url} {...props}></Dashboard>
+		</TenantContext.Provider>
+	);
+};
+
 // expose route
 Core.routes.register({
 	path: MODULE_PATHS.dashboard,
-	component: Dashboard,
+	component: DashboardWrapperComponent,
 	isDefaultRoute: true,
 });
 

@@ -1,6 +1,5 @@
 import apiService, { parseSearchParams } from '../api/api.service';
 
-import { DEFAULT_SITES_SEARCH_PARAMS } from './sites.service.const';
 import {
 	CreateSitePayload,
 	GetSitePayload,
@@ -12,9 +11,7 @@ import {
 } from './sites.service.types';
 
 export class SitesApiService {
-	public async getSites(
-		searchParams: GetSitesPayload = DEFAULT_SITES_SEARCH_PARAMS
-	): Promise<SitesResponse> {
+	public async getSites(searchParams: GetSitesPayload): Promise<SitesResponse> {
 		return await apiService
 			.get('sites', {
 				searchParams: parseSearchParams(searchParams),

@@ -4,7 +4,7 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC, ReactElement, useCallback, useMemo, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
@@ -16,8 +16,8 @@ import {
 	useSitesLoadingStates,
 } from '../../hooks';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
-import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
-import { sitesService } from '../../store/sites';
+import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
+import { sitesFacade } from '../../store/sites';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
@@ -52,7 +52,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	useEffect(() => {
 		if (siteId) {
-			sitesService.getSite({ id: siteId });
+			sitesFacade.getSite({ id: siteId });
 			return;
 		}
 	}, [siteId]);
@@ -64,7 +64,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		const request = { name, description: name, contentTypes };
 
 		if (siteId) {
-			sitesService
+			sitesFacade
 				.updateSite({
 					id: siteId,
 					body: request,
@@ -75,7 +75,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	const onActiveToggle = (): void => {
 		if (siteId && site) {
-			sitesService.updateSiteActivation({
+			sitesFacade.updateSiteActivation({
 				id: siteId,
 				activate: !site.meta.active,
 			});
@@ -94,8 +94,8 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			<SitesDetailForm
 				active={site?.meta.active}
 				initialState={formState}
-				activeLoading={sitesLoadingStates.isActivating}
-				loading={sitesLoadingStates.isUpdating}
+				activeLoading={sitesLoadingStates.isActivating === LoadingState.Loading}
+				loading={sitesLoadingStates.isUpdating === LoadingState.Loading}
 				onCancel={navigateToOverview}
 				onSubmit={onSubmit}
 				onActiveToggle={onActiveToggle}

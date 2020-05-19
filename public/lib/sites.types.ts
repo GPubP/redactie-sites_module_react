@@ -1,7 +1,7 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
 import { Routes } from './services/routes';
-import { SitesQuery, SitesService } from './store/sites';
+import { SitesFacade, SitesQuery } from './store/sites';
 
 // Global types
 
@@ -30,7 +30,7 @@ export interface SitesModuleAPI {
 	routes: Routes;
 	store: {
 		sites: {
-			service: Partial<SitesService>;
+			service: Partial<SitesFacade>;
 			query: SitesQuery;
 		};
 	};

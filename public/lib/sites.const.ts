@@ -1,12 +1,14 @@
-import { OrderBy } from './services/api';
+import { APIQueryParamsConfig } from '@redactie/utils';
 
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId'],
 };
 
-export const DEFAULT_SITES_SORTING: OrderBy = {
-	key: 'name',
-	order: 'asc',
+export const DEFAULT_SITES_SORTING: APIQueryParamsConfig = {
+	sort: {
+		defaultValue: 'data.name',
+		type: 'string',
+	},
 };
 
 export const MODULE_PATHS = {

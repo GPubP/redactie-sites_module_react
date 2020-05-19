@@ -1,10 +1,10 @@
-import { sitesQuery, sitesService } from '../store/sites';
+import { sitesFacade, sitesQuery } from '../store/sites';
 
 export const store = {
 	sites: {
 		service: {
-			getSite: sitesService.getSite,
-			getSites: sitesService.getSites,
+			getSite: sitesFacade.getSite,
+			getSites: sitesFacade.getSitesPaginated,
 		},
 		query: sitesQuery,
 	},
