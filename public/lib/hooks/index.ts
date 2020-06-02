@@ -6,3 +6,4 @@ export { default as useNavigate } from './useNavigate/useNavigate';
 export { default as useHomeBreadcrumb } from './useHomeBreadcrumb/useHomeBreadcrumb';
 export { default as usePrevious } from './usePrevious/usePrevious';
 export { default as useSitesPagination } from './useSitesPagination/useSitesPagination';
+export { default as useRolesRightsApi } from './useRolesRightsApi/useRolesRightsApi';

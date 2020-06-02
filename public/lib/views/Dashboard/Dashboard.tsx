@@ -14,8 +14,15 @@ import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DataLoader, SiteStatus } from '../../components';
+import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
-import { useNavigate, useRoutes, useSitesLoadingStates, useSitesPagination } from '../../hooks';
+import {
+	useNavigate,
+	useRolesRightsApi,
+	useRoutes,
+	useSitesLoadingStates,
+	useSitesPagination,
+} from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
 import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING, MODULE_PATHS } from '../../sites.const';
@@ -36,16 +43,23 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const sitesPagination = useSitesPagination(query as SearchParams);
 	const sitesLoadingStates = useSitesLoadingStates();
+	const rolesRightsApi = useRolesRightsApi();
+	const [
+		mySecurityRightsLoading,
+		mySecurityrights,
+	] = rolesRightsApi.hooks.useMySecurityRightsForTenant(true);
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		if (
-			sitesLoadingStates.isFetching === LoadingState.Loaded ||
-			sitesLoadingStates.isFetching === LoadingState.Error
+			(sitesLoadingStates.isFetching === LoadingState.Loaded ||
+				sitesLoadingStates.isFetching === LoadingState.Error) &&
+			(mySecurityRightsLoading === LoadingState.Loaded ||
+				mySecurityRightsLoading === LoadingState.Error)
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [sitesLoadingStates.isFetching]);
+	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading]);
 
 	/**
 	 * Functions
@@ -128,12 +142,17 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			<ContextHeader title="Dashboard">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button
-						iconLeft="plus"
-						onClick={() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.create}`)}
+					<rolesRightsApi.components.SecurableRender
+						userSecurityRights={mySecurityrights as string[]}
+						requiredSecurityRights={[RolesRightsConnector.securityRights.create]}
 					>
-						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
-					</Button>
+						<Button
+							iconLeft="plus"
+							onClick={() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.create}`)}
+						>
+							{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
+						</Button>
+					</rolesRightsApi.components.SecurableRender>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
