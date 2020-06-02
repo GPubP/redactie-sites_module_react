@@ -28,7 +28,7 @@ const SitesComponent: FC<SitesRouteProps> = ({ route, match, location, tenantId 
 							meta: {
 								// Apparently a child route can not access the current tenantId by its route params
 								// Most guards we use are using the tenant id to redirect to the 403 page
-								// Therefore we need to send the current tenantId through the guards mete props
+								// Therefore we need to send the current tenantId through the guards meta props
 								tenantId,
 							},
 						},
@@ -55,7 +55,7 @@ const SiteDetailComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) =>
 							meta: {
 								// Apparently a child route can not access the current tenantId by its route params
 								// Most guards we use are using the tenant id to redirect to the 403 page
-								// Therefore we need to send the current tenantId through the guards mete props
+								// Therefore we need to send the current tenantId through the guards meta props
 								tenantId,
 							},
 						},
