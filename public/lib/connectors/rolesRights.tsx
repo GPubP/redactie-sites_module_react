@@ -5,9 +5,9 @@ import { first } from 'rxjs/operators';
 export class RolesRightsConnector {
 	public static apiName = 'roles-rights-module';
 	public static securityRights = {
-		create: 'site-create-admin',
-		update: 'site-update-admin',
-		read: 'site-read-admin',
+		create: 'site-create',
+		update: 'site-update',
+		read: 'site-read',
 	};
 
 	public initialized$ = Core.modules
