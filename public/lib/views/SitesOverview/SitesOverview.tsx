@@ -12,10 +12,12 @@ import { useAPIQueryParams } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DataLoader } from '../../components';
+import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import {
 	useHomeBreadcrumb,
 	useNavigate,
+	useRolesRightsApi,
 	useRoutes,
 	useSitesLoadingStates,
 	useSitesPagination,
@@ -45,16 +47,23 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const sitesLoadingStates = useSitesLoadingStates();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const sitesPagination = useSitesPagination(query as SearchParams);
+	const rolesRightsApi = useRolesRightsApi();
+	const [
+		mySecurityRightsLoading,
+		mySecurityrights,
+	] = rolesRightsApi.hooks.useMySecurityRightsForTenant(true);
 	const [t] = useCoreTranslation();
 
 	useEffect(() => {
 		if (
-			sitesLoadingStates.isFetching === LoadingState.Loaded ||
-			sitesLoadingStates.isFetching === LoadingState.Error
+			(sitesLoadingStates.isFetching === LoadingState.Loaded ||
+				sitesLoadingStates.isFetching === LoadingState.Error) &&
+			(mySecurityRightsLoading === LoadingState.Loaded ||
+				mySecurityRightsLoading === LoadingState.Error)
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [sitesLoadingStates.isFetching]);
+	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading]);
 
 	/**
 	 * Functions
@@ -108,17 +117,22 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					const { id } = rowData as SitesOverviewRowData;
 
 					return (
-						<Button
-							ariaLabel="Edit"
-							icon="edit"
-							onClick={() =>
-								navigate(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, {
-									siteId: id,
-								})
-							}
-							type="primary"
-							transparent
-						></Button>
+						<rolesRightsApi.components.SecurableRender
+							userSecurityRights={mySecurityrights as string[]}
+							requiredSecurityRights={[RolesRightsConnector.securityRights.update]}
+						>
+							<Button
+								ariaLabel="Edit"
+								icon="edit"
+								onClick={() =>
+									navigate(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, {
+										siteId: id,
+									})
+								}
+								type="primary"
+								transparent
+							></Button>
+						</rolesRightsApi.components.SecurableRender>
 					);
 				},
 			},
@@ -144,12 +158,17 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			<ContextHeader title="Sites">
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 				<ContextHeaderActionsSection>
-					<Button
-						iconLeft="plus"
-						onClick={() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.create}`)}
+					<rolesRightsApi.components.SecurableRender
+						userSecurityRights={mySecurityrights as string[]}
+						requiredSecurityRights={[RolesRightsConnector.securityRights.create]}
 					>
-						{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
-					</Button>
+						<Button
+							iconLeft="plus"
+							onClick={() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.create}`)}
+						>
+							{t(CORE_TRANSLATIONS['BUTTON_CREATE-NEW'])}
+						</Button>
+					</rolesRightsApi.components.SecurableRender>
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
