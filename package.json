@@ -42,7 +42,7 @@
     "@commitlint/config-conventional": "8.3.4",
     "@datorama/akita": "4.22.0",
     "@redactie/module-webpack-plugin": "2.0.0",
-    "@redactie/redactie-core": "1.8.2",
+    "@redactie/redactie-core": "1.9.0",
     "@redactie/roles-rights-module": "^0.3.0-6",
     "@redactie/translations-module": "^0.2.0",
     "@redactie/utils": "0.0.1",
