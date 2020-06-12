@@ -1,6 +1,6 @@
 {
   "name": "@redactie/sites-module",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "redactie sites module",
   "main": "dist/redactie-sites-module.umd.js",
   "module": "dist/redactie-sites-module.umd.js",
@@ -23,7 +23,7 @@
     "url": "https://ex02131@bitbucket.antwerpen.be/scm/wcm/redactie-sites_module.git"
   },
   "publishConfig": {
-    "@redactie:registry": "https://nexusrepo.antwerpen.be/repository/npm-private"
+    "@redactie:registry": "https://nexusrepo.antwerpen.be/repository/npm-private/"
   },
   "keywords": [
     "Redactie",
@@ -43,7 +43,7 @@
     "@datorama/akita": "4.22.0",
     "@redactie/module-webpack-plugin": "2.0.0",
     "@redactie/redactie-core": "1.9.0",
-    "@redactie/roles-rights-module": "^0.3.0-6",
+    "@redactie/roles-rights-module": "0.3.0",
     "@redactie/translations-module": "^0.2.0",
     "@redactie/utils": "0.0.1",
     "@testing-library/jest-dom": "5.0.2",
