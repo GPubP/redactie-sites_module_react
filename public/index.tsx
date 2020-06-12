@@ -1,9 +1,10 @@
 import Core from '@redactie/redactie-core';
 import { RolesRightsModuleAPI } from '@redactie/roles-rights-module';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { registerSitesAPI } from './lib/api';
+import { RenderChildRoutes } from './lib/components';
 import { rolesRightsConnector, RolesRightsConnector } from './lib/connectors/rolesRights';
 import { TenantContext } from './lib/context';
 import { routes } from './lib/services/routes/routes.class';
@@ -12,6 +13,20 @@ import { SitesRouteProps } from './lib/sites.types';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 
 const SitesComponent: FC<SitesRouteProps> = ({ route, match, location, tenantId }) => {
+	const guardsMeta = useMemo(
+		() => ({
+			tenantId,
+		}),
+		[tenantId]
+	);
+	const extraOptions = useMemo(
+		() => ({
+			basePath: match.url,
+			tenantId,
+		}),
+		[match.url, tenantId]
+	);
+
 	// if path is /sites, redirect to /sites/beheer
 	if (/\/sites$/.test(location.pathname)) {
 		return <Redirect to={`${route.path}/beheer`} />;
@@ -19,54 +34,36 @@ const SitesComponent: FC<SitesRouteProps> = ({ route, match, location, tenantId 
 
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
-			{Core.routes.render(
-				route.routes?.map(route => {
-					return {
-						...route,
-						guardOptions: {
-							...route.guardOptions,
-							meta: {
-								// Apparently a child route can not access the current tenantId by its route params
-								// Most guards we use are using the tenant id to redirect to the 403 page
-								// Therefore we need to send the current tenantId through the guards meta props
-								tenantId,
-							},
-						},
-					};
-				}),
-				{
-					basePath: match.url,
-					tenantId,
-				}
-			)}
+			<RenderChildRoutes
+				routes={route.routes}
+				guardsMeta={guardsMeta}
+				extraOptions={extraOptions}
+			/>
 		</TenantContext.Provider>
 	);
 };
 
 const SiteDetailComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) => {
+	const guardsMeta = useMemo(
+		() => ({
+			tenantId,
+		}),
+		[tenantId]
+	);
+	const extraOptions = useMemo(
+		() => ({
+			basePath: match.url,
+			tenantId,
+		}),
+		[match.url, tenantId]
+	);
+
 	return (
-		<>
-			{Core.routes.render(
-				route.routes?.map(route => {
-					return {
-						...route,
-						guardOptions: {
-							...route.guardOptions,
-							meta: {
-								// Apparently a child route can not access the current tenantId by its route params
-								// Most guards we use are using the tenant id to redirect to the 403 page
-								// Therefore we need to send the current tenantId through the guards meta props
-								tenantId,
-							},
-						},
-					};
-				}),
-				{
-					basePath: match.url,
-					tenantId,
-				}
-			)}
-		</>
+		<RenderChildRoutes
+			routes={route.routes}
+			guardsMeta={guardsMeta}
+			extraOptions={extraOptions}
+		/>
 	);
 };
 
