@@ -21,12 +21,13 @@ const prefixRoute = (routeConfig: ModuleRouteConfig): ModuleRouteConfig => ({
 class Routes {
 	private registeredRoutes: ModuleRouteConfig[] = [];
 
-	register(routeConfig: ModuleRouteConfig | ModuleRouteConfig[]): void {
+	register(routeConfig: ModuleRouteConfig | ModuleRouteConfig[], last = false): void {
 		const configs = Array.isArray(routeConfig) ? routeConfig : [routeConfig];
-		this.registeredRoutes = [
-			...configs.map(config => prefixRoute(config)),
-			...this.registeredRoutes,
-		];
+		const prefixedRoutes = configs.map(config => prefixRoute(config));
+
+		this.registeredRoutes = last
+			? [...this.registeredRoutes, ...prefixedRoutes]
+			: [...prefixedRoutes, ...this.registeredRoutes];
 
 		Core.routes.updateChildRoutes('/sites', this.registeredRoutes);
 	}
