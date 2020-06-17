@@ -104,41 +104,44 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 		},
 	});
 
-	routes.register([
-		{
-			path: MODULE_PATHS.overview,
-			component: SitesOverview,
-		},
-		{
-			path: MODULE_PATHS.create,
-			component: SitesCreate,
-			guardOptions: {
-				guards: [
-					rolesRightsApi.guards.securityRightsTenantGuard([
-						RolesRightsConnector.securityRights.create,
-					]),
-				],
+	routes.register(
+		[
+			{
+				path: MODULE_PATHS.overview,
+				component: SitesOverview,
 			},
-		},
-		{
-			path: MODULE_PATHS.detail,
-			breadcrumb: null,
-			component: SiteDetailComponent,
-			guardOptions: {
-				guards: [
-					rolesRightsApi.guards.securityRightsTenantGuard([
-						RolesRightsConnector.securityRights.update,
-					]),
-				],
-			},
-			routes: [
-				{
-					path: MODULE_PATHS.detailEdit,
-					component: SitesUpdate,
+			{
+				path: MODULE_PATHS.create,
+				component: SitesCreate,
+				guardOptions: {
+					guards: [
+						rolesRightsApi.guards.securityRightsTenantGuard([
+							RolesRightsConnector.securityRights.create,
+						]),
+					],
 				},
-			],
-		},
-	]);
+			},
+			{
+				path: MODULE_PATHS.detail,
+				breadcrumb: null,
+				component: SiteDetailComponent,
+				routes: [
+					{
+						path: MODULE_PATHS.detailEdit,
+						component: SitesUpdate,
+						guardOptions: {
+							guards: [
+								rolesRightsApi.guards.securityRightsTenantGuard([
+									RolesRightsConnector.securityRights.update,
+								]),
+							],
+						},
+					},
+				],
+			},
+		],
+		true
+	);
 };
 
 rolesRightsConnector.initialized$.subscribe(initializeModule);
