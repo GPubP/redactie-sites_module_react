@@ -8,6 +8,7 @@ const prefixRoute = (routeConfig: ModuleRouteConfig): ModuleRouteConfig => ({
 	...routeConfig,
 	path: `/sites${routeConfig.path}`,
 	routes: routeConfig.routes?.map(prefixRoute),
+	redirect: routeConfig.redirect && `/sites${routeConfig.redirect}`,
 	navigation: routeConfig.navigation
 		? {
 				...routeConfig.navigation,
