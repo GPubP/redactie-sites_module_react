@@ -60,7 +60,7 @@ module.exports = env => {
 			'rxjs/operators': 'rxjs/operators',
 			'react-dom': 'react-dom',
 			'react-router-dom': 'react-router-dom',
-			'react-router-guards': 'react-router-guards',
+			'@redactie/react-router-guards': '@redactie/react-router-guards',
 			'@redactie/redactie-core': '@redactie/redactie-core',
 			'@redactie/utils': '@redactie/utils',
 			'@redactie/roles-rights-module': '@redactie/roles-rights-module',

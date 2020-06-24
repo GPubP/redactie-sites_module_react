@@ -1,7 +1,6 @@
 import Core from '@redactie/redactie-core';
 import { RolesRightsModuleAPI } from '@redactie/roles-rights-module';
 import React, { FC, useMemo } from 'react';
-import { Redirect } from 'react-router-dom';
 
 import { registerSitesAPI } from './lib/api';
 import { RenderChildRoutes } from './lib/components';
@@ -12,7 +11,7 @@ import { MODULE_PATHS } from './lib/sites.const';
 import { SitesRouteProps } from './lib/sites.types';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 
-const SitesComponent: FC<SitesRouteProps> = ({ route, match, location, tenantId }) => {
+const SitesComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) => {
 	const guardsMeta = useMemo(
 		() => ({
 			tenantId,
@@ -26,12 +25,6 @@ const SitesComponent: FC<SitesRouteProps> = ({ route, match, location, tenantId 
 		}),
 		[match.url, tenantId]
 	);
-
-	// if path is /sites, redirect to /sites/beheer
-	if (/\/sites$/.test(location.pathname)) {
-		return <Redirect to={`${route.path}/beheer`} />;
-	}
-
 	return (
 		<TenantContext.Provider value={{ tenantId }}>
 			<RenderChildRoutes
@@ -70,7 +63,7 @@ const SiteDetailComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) =>
 const DashboardWrapperComponent: FC<SitesRouteProps> = props => {
 	return (
 		<TenantContext.Provider value={{ tenantId: props.tenantId }}>
-			<Dashboard basePath={props.match.url} {...props}></Dashboard>
+			<Dashboard {...props}></Dashboard>
 		</TenantContext.Provider>
 	);
 };
@@ -87,6 +80,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 		path: MODULE_PATHS.root,
 		exact: true,
 		component: SitesComponent,
+		redirect: `${MODULE_PATHS.root}${MODULE_PATHS.overview}`,
 		guardOptions: {
 			guards: [
 				rolesRightsApi.guards.securityRightsTenantGuard([
