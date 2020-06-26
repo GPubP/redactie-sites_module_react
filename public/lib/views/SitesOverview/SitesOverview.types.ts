@@ -3,4 +3,5 @@ export interface SitesOverviewRowData {
 	name: string;
 	status: boolean;
 	description: string;
+	userIsMember: boolean;
 }
