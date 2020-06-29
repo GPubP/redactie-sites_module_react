@@ -98,6 +98,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			name: site.data.name,
 			status: site.meta.active,
 			description: site.data.description,
+			userIsMember: !!site._userIsMember,
 		}));
 
 		const sitesColumns = [

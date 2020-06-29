@@ -93,6 +93,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			name: site.data.name,
 			status: site.meta.active,
 			description: site.data.description,
+			userIsMember: !!site._userIsMember,
 		}));
 
 		const sitesColumns = [
@@ -102,9 +103,16 @@ const Dashboard: FC<SitesRouteProps> = () => {
 				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<>
-							<AUILink to={`sites/${prop('id')(rowData)}/content`} component={Link}>
-								{prop('name')(rowData)}
-							</AUILink>
+							{rowData.userIsMember ? (
+								<AUILink
+									to={`sites/${prop('id')(rowData)}/content`}
+									component={Link}
+								>
+									{prop('name')(rowData)}
+								</AUILink>
+							) : (
+								<label>{prop('name')(rowData)}</label>
+							)}
 							<p className="u-text-light u-margin-top-xs">
 								{prop('description')(rowData)}
 							</p>
