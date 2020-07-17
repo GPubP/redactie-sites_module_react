@@ -4,6 +4,7 @@ import {
 	CardBody,
 	CardDescription,
 	CardTitle,
+	Modal,
 	TextField,
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
@@ -70,15 +71,37 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							{t('BUTTON_ACTIVATE')}
 						</Button>
 					)}
+					{/**
+					 * TODO: move this to editorial-ui with proper div class handling and also make buttons configurable
+					 */}
 
-					<Button
-						{...loadingStateButtonProps}
-						onClick={onArchive}
-						className="u-margin-top"
-						type="danger"
-					>
-						{t('BUTTON_ARCHIVE')}
-					</Button>
+					<div style={{ display: 'inline-block' }}>
+						<Modal
+							appElement="#root"
+							title="Ben je zeker dat je deze site wil archiveren?"
+							confirmText={t('MODAL_CONFIRM-ARCHIVE')}
+							denyText={t('MODAL_CANCEL')}
+							shouldCloseOnEsc={true}
+							shouldCloseOnOverlayClick={true}
+							onConfirm={onArchive}
+							triggerElm={
+								<Button
+									{...loadingStateButtonProps}
+									onClick={onArchive}
+									className="u-margin-top"
+									type="danger"
+								>
+									{t('BUTTON_ARCHIVE')}
+								</Button>
+							}
+						>
+							<p>
+								De site archiveren betekent dat alle gegevens gekoppeld aan de site
+								ook gearchiveerd worden. Deze actie kan niet ongedaan gemaakt worden
+								zonder input van een systeem beheerder.
+							</p>
+						</Modal>
+					</div>
 				</CardBody>
 			</Card>
 		);
@@ -99,10 +122,6 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							<div className="col-xs-12 col-md-8 row middle-xs">
 								<div className="col-xs-12 col-md-8">
 									<Field as={TextField} label="Naam" name="name" required />
-									<div className="u-text-light u-margin-top-xs">
-										Geef de site een korte en duidelijke naam. Deze naam
-										verschijnt in de applicatie.
-									</div>
 								</div>
 
 								<div className="col-xs-12 col-md-4">
@@ -110,6 +129,10 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
 										<b>{kebabCase(values.name)}</b>
 									</div>
+								</div>
+								<div className="col-xs-12 u-text-light u-margin-top-xs">
+									Geef de site een korte en duidelijke naam. Deze naam verschijnt
+									in de applicatie.
 								</div>
 							</div>
 						</div>
