@@ -8,11 +8,13 @@ import {
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
+import { useDetectValueChanges } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useState } from 'react';
 
 import { useCoreTranslation } from '../../connectors/translations';
+import { SitesDetailFormState } from '../../sites.types';
 import SitesStatus from '../SiteStatus/SiteStatus';
 
 import { SITES_DETAIL_VALIDATION_SCHEMA } from './SitesDetailForm.const';
@@ -28,6 +30,8 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	loading,
 }) => {
 	const [t] = useCoreTranslation();
+	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(null);
+	const [isChanged] = useDetectValueChanges(!loading, formValue);
 
 	const renderArchive = (): ReactElement => {
 		const loadingStateButtonProps = activeLoading
@@ -78,43 +82,47 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 			onSubmit={onSubmit}
 			validationSchema={SITES_DETAIL_VALIDATION_SCHEMA}
 		>
-			{({ submitForm, values }) => (
-				<>
-					<div className="row u-margin-bottom">
-						<div className="col-xs-12 col-md-8 row middle-xs">
-							<div className="col-xs-12 col-md-8">
-								<Field as={TextField} label="Naam" name="name" required />
-							</div>
+			{({ submitForm, values }) => {
+				setFormValue(values);
 
-							<div className="col-xs-12 col-md-4">
-								<div className="u-margin-top">
-									{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-									<b>{kebabCase(values.name)}</b>
+				return (
+					<>
+						<div className="row u-margin-bottom">
+							<div className="col-xs-12 col-md-8 row middle-xs">
+								<div className="col-xs-12 col-md-8">
+									<Field as={TextField} label="Naam" name="name" required />
+								</div>
+
+								<div className="col-xs-12 col-md-4">
+									<div className="u-margin-top">
+										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
+										<b>{kebabCase(values.name)}</b>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					{onActiveToggle ? renderArchive() : null}
-					<ActionBar className="o-action-bar--fixed" isOpen>
-						<ActionBarContentSection>
-							<div className="u-wrapper row end-xs">
-								<Button onClick={onCancel} negative>
-									{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
-								</Button>
-								<Button
-									iconLeft={loading ? 'circle-o-notch fa-spin' : null}
-									disabled={loading}
-									className="u-margin-left-xs"
-									onClick={() => submitForm()}
-									type="success"
-								>
-									{t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
-								</Button>
-							</div>
-						</ActionBarContentSection>
-					</ActionBar>
-				</>
-			)}
+						{onActiveToggle ? renderArchive() : null}
+						<ActionBar className="o-action-bar--fixed" isOpen>
+							<ActionBarContentSection>
+								<div className="u-wrapper row end-xs">
+									<Button onClick={onCancel} negative>
+										{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
+									</Button>
+									<Button
+										iconLeft={loading ? 'circle-o-notch fa-spin' : null}
+										disabled={loading || !isChanged}
+										className="u-margin-left-xs"
+										onClick={() => submitForm()}
+										type="success"
+									>
+										{t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
+									</Button>
+								</div>
+							</ActionBarContentSection>
+						</ActionBar>
+					</>
+				);
+			}}
 		</Formik>
 	);
 };
