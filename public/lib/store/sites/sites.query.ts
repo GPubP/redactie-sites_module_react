@@ -42,6 +42,9 @@ export class SitesQuery extends QueryEntity<SitesState> {
 	public isActivating$ = this.select(state => state.isActivating).pipe(
 		map(this.convertBoolToLoadingState)
 	);
+	public isArchiving$ = this.select(state => state.isArchiving).pipe(
+		map(this.convertBoolToLoadingState)
+	);
 }
 
 export const sitesQuery = new SitesQuery(sitesStore);

@@ -80,6 +80,10 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		}
 	};
 
+	const onArchive = (): void => {
+		sitesFacade.archiveSite(siteId).then(() => navigateToOverview());
+	};
+
 	/**
 	 * Render
 	 */
@@ -93,10 +97,14 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				active={site?.meta.active}
 				initialState={formState}
 				activeLoading={sitesLoadingStates.isActivating === LoadingState.Loading}
-				loading={sitesLoadingStates.isUpdating === LoadingState.Loading}
+				loading={
+					sitesLoadingStates.isUpdating === LoadingState.Loading ||
+					sitesLoadingStates.isArchiving === LoadingState.Loading
+				}
 				onCancel={navigateToOverview}
 				onSubmit={onSubmit}
 				onActiveToggle={onActiveToggle}
+				onArchive={onArchive}
 			/>
 		);
 	};

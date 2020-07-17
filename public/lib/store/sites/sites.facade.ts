@@ -32,6 +32,7 @@ export class SitesFacade {
 	public readonly isCreating$ = this.query.isCreating$;
 	public readonly isUpdating$ = this.query.isUpdating$;
 	public readonly isActivating$ = this.query.isActivating$;
+	public readonly isArchiving$ = this.query.isArchiving$;
 	public readonly error$ = this.query.error$;
 
 	// TODO: check why this isn't working
@@ -175,6 +176,12 @@ export class SitesFacade {
 				this.store.setError(err);
 			})
 			.finally(() => this.store.setIsActivating(false));
+	}
+
+	public archiveSite(id: string): Promise<null> {
+		this.store.setIsArchiving(true);
+
+		return this.service.archiveSite(id).finally(() => this.store.setIsArchiving(false));
 	}
 }
 

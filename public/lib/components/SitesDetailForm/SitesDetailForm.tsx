@@ -25,6 +25,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	onCancel,
 	onSubmit,
 	onActiveToggle,
+	onArchive,
 	activeLoading,
 	active,
 	loading,
@@ -54,9 +55,8 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						<Button
 							{...loadingStateButtonProps}
 							onClick={onActiveToggle}
-							className="u-margin-top"
-							type="danger"
-							outline
+							className="u-margin-top u-margin-right"
+							type="primary"
 						>
 							{t('BUTTON_DEACTIVATE')}
 						</Button>
@@ -64,13 +64,21 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						<Button
 							{...loadingStateButtonProps}
 							onClick={onActiveToggle}
-							className="u-margin-top"
-							type="success"
-							outline
+							className="u-margin-top u-margin-right"
+							type="primary"
 						>
 							{t('BUTTON_ACTIVATE')}
 						</Button>
 					)}
+
+					<Button
+						{...loadingStateButtonProps}
+						onClick={onArchive}
+						className="u-margin-top"
+						type="danger"
+					>
+						{t('BUTTON_ARCHIVE')}
+					</Button>
 				</CardBody>
 			</Card>
 		);
@@ -91,6 +99,10 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							<div className="col-xs-12 col-md-8 row middle-xs">
 								<div className="col-xs-12 col-md-8">
 									<Field as={TextField} label="Naam" name="name" required />
+									<div className="u-text-light u-margin-top-xs">
+										Geef de site een korte en duidelijke naam. Deze naam
+										verschijnt in de applicatie.
+									</div>
 								</div>
 
 								<div className="col-xs-12 col-md-4">

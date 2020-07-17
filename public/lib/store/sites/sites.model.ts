@@ -12,6 +12,7 @@ export interface SitesState extends EntityState<SiteModel, string> {
 	isCreating: boolean;
 	isUpdating: boolean;
 	isActivating: boolean;
+	isArchiving: boolean;
 }
 
 export const createInitialSitesState = (): SitesState => ({
@@ -20,4 +21,5 @@ export const createInitialSitesState = (): SitesState => ({
 	isCreating: false,
 	isUpdating: false,
 	isActivating: false,
+	isArchiving: false,
 });

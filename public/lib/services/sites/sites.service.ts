@@ -38,6 +38,10 @@ export class SitesApiService {
 		const updateType = activate ? 'activate' : 'deactivate';
 		return await apiService.put(`sites/${id}/${updateType}`).json();
 	}
+
+	public async archiveSite(id: string): Promise<null> {
+		return await apiService.delete(`sites/${id}`).json();
+	}
 }
 
 export const sitesApiService = new SitesApiService();

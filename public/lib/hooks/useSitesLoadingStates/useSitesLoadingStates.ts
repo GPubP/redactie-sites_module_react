@@ -9,12 +9,14 @@ const useSitesLoadingState = (): SitesLoadingStates => {
 	const [isFetching] = useObservable(sitesFacade.isFetching$, null);
 	const [isUpdating] = useObservable(sitesFacade.isUpdating$, null);
 	const [isActivating] = useObservable(sitesFacade.isActivating$, null);
+	const [isArchiving] = useObservable(sitesFacade.isArchiving$, null);
 
 	return {
 		isCreating,
 		isFetching,
 		isUpdating,
 		isActivating,
+		isArchiving,
 	};
 };
 
