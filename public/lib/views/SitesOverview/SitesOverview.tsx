@@ -9,9 +9,11 @@ import {
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { useAPIQueryParams } from '@redactie/utils';
+import { clone } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 
 import { DataLoader } from '../../components';
+import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import {
@@ -24,8 +26,13 @@ import {
 } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
 import { parseOrderBy, parseOrderByString } from '../../services/helpers';
-import { BREADCRUMB_OPTIONS, DEFAULT_SITES_SORTING, MODULE_PATHS } from '../../sites.const';
-import { LoadingState, SitesRouteProps } from '../../sites.types';
+import {
+	BREADCRUMB_OPTIONS,
+	DEFAULT_SITES_SORTING,
+	MODULE_PATHS,
+	SITES_INITIAL_FILTER_STATE,
+} from '../../sites.const';
+import { FilterItemSchema, LoadingState, SitesRouteProps } from '../../sites.types';
 
 import { SitesOverviewRowData } from './SitesOverview.types';
 
@@ -35,9 +42,11 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	 */
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
-	const [query, setQuery] = useAPIQueryParams({
-		...DEFAULT_SITES_SORTING,
-	});
+	const [query, setQuery] = useAPIQueryParams(clone(DEFAULT_SITES_SORTING));
+	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
+		SITES_INITIAL_FILTER_STATE
+	);
+	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
 	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
@@ -65,6 +74,29 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 		}
 	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading]);
 
+	useEffect(() => {
+		setFilterFormState({
+			name: query.search || '',
+		});
+	}, [query.search]);
+
+	useEffect(() => {
+		setFilterItems(
+			Object.keys(filterFormState).reduce(
+				(acc, key) =>
+					filterFormState[key]
+						? acc.concat([
+								{
+									filterKey: key,
+									value: filterFormState[key] as string,
+								},
+						  ])
+						: acc,
+				[] as FilterItemSchema[]
+			)
+		);
+	}, [filterFormState]);
+
 	/**
 	 * Functions
 	 */
@@ -82,6 +114,40 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 				...orderBy,
 				key: `data.${orderBy.key}`,
 			}),
+		});
+	};
+
+	const deleteAllFilters = (): void => {
+		setQuery({
+			...query,
+			search: '',
+		});
+
+		setFilterFormState({
+			name: '',
+		});
+	};
+
+	const onSubmit = (filterValue: FilterFormState): void => {
+		setQuery({
+			...query,
+			search: filterValue.name || '',
+		});
+
+		setFilterFormState({
+			name: filterValue.name,
+		});
+	};
+
+	const deleteFilter = (item: any): void => {
+		setQuery({
+			...query,
+			...(item.filterKey === 'name' ? { search: '' } : {}),
+		});
+
+		setFilterFormState({
+			...filterFormState,
+			[item.filterKey]: '',
 		});
 	};
 
@@ -140,17 +206,29 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 		];
 
 		return (
-			<PaginatedTable
-				columns={sitesColumns}
-				rows={sitesRows}
-				currentPage={sitesPagination.currentPage}
-				itemsPerPage={query.pagesize}
-				onPageChange={handlePageChange}
-				orderBy={handleOrderBy}
-				activeSorting={sitesActiveSorting}
-				totalValues={sitesPagination.total}
-				loading={sitesLoadingStates.isFetching === LoadingState.Loading}
-			></PaginatedTable>
+			<>
+				<div className="u-margin-top">
+					<FilterForm
+						initialState={filterFormState}
+						onCancel={deleteAllFilters}
+						onSubmit={onSubmit}
+						deleteActiveFilter={deleteFilter}
+						activeFilters={filterItems}
+					/>
+				</div>
+				<PaginatedTable
+					className="u-margin-top"
+					columns={sitesColumns}
+					rows={sitesRows}
+					currentPage={sitesPagination.currentPage}
+					itemsPerPage={query.pagesize}
+					onPageChange={handlePageChange}
+					orderBy={handleOrderBy}
+					activeSorting={sitesActiveSorting}
+					totalValues={sitesPagination.total}
+					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
+				></PaginatedTable>
+			</>
 		);
 	};
 

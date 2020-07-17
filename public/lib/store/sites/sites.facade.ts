@@ -83,16 +83,18 @@ export class SitesFacade {
 		}
 
 		this.store.setIsFetching(true);
+
 		return from(
 			this.service
 				.getSites(payload)
 				.then(response => {
-					this.store.setIsFetching(false);
 					const meta = response._page;
 
 					this.store.update({
 						meta,
 					});
+
+					this.store.setIsFetching(false);
 
 					return {
 						perPage: parseInt(response._page.size, 10),
