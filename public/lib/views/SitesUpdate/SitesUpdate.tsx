@@ -64,12 +64,10 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		const request = { name, description: name, contentTypes };
 
 		if (siteId) {
-			sitesFacade
-				.updateSite({
-					id: siteId,
-					body: request,
-				})
-				.then(() => navigateToOverview());
+			sitesFacade.updateSite({
+				id: siteId,
+				body: request,
+			});
 		}
 	};
 

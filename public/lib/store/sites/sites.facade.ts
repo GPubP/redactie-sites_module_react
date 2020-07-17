@@ -5,8 +5,9 @@ import {
 	CreateSitePayload,
 	GetSitePayload,
 	GetSitesPayload,
-	sitesApiService,
+	SiteResponse,
 	SitesApiService,
+	sitesApiService,
 	UpdateSiteActivationPayload,
 	UpdateSitePayload,
 } from '../../services/sites';
@@ -127,18 +128,20 @@ export class SitesFacade {
 			.finally(() => this.store.setIsFetching(false));
 	}
 
-	public createSite(payload: CreateSitePayload): Promise<boolean> {
+	public createSite(payload: CreateSitePayload): Promise<SiteResponse | undefined> {
 		this.store.setIsCreating(true);
+
 		return this.service
 			.createSite(payload)
-			.then(() => {
+			.then(site => {
 				this.store.setIsCreating(false);
 
-				return true;
+				return site;
 			})
 			.catch(err => {
 				this.store.setError(err);
-				return false;
+
+				throw err;
 			})
 			.finally(() => this.store.setIsCreating(false));
 	}
