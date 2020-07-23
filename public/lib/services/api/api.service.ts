@@ -13,6 +13,7 @@ const api: KyInstance = ky.create({
 	headers: {
 		'x-tenant-id': CoreConfig.tenantId,
 	},
+	timeout: false,
 });
 
 export const parseSearchParams = (searchParams: SearchParams): URLSearchParams => {

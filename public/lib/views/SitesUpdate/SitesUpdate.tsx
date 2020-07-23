@@ -64,12 +64,10 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		const request = { name, description: name, contentTypes };
 
 		if (siteId) {
-			sitesFacade
-				.updateSite({
-					id: siteId,
-					body: request,
-				})
-				.then(() => navigateToOverview());
+			sitesFacade.updateSite({
+				id: siteId,
+				body: request,
+			});
 		}
 	};
 
@@ -80,6 +78,10 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				activate: !site.meta.active,
 			});
 		}
+	};
+
+	const onArchive = (): void => {
+		sitesFacade.archiveSite(siteId).then(() => navigateToOverview());
 	};
 
 	/**
@@ -95,10 +97,14 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				active={site?.meta.active}
 				initialState={formState}
 				activeLoading={sitesLoadingStates.isActivating === LoadingState.Loading}
-				loading={sitesLoadingStates.isUpdating === LoadingState.Loading}
+				loading={
+					sitesLoadingStates.isUpdating === LoadingState.Loading ||
+					sitesLoadingStates.isArchiving === LoadingState.Loading
+				}
 				onCancel={navigateToOverview}
 				onSubmit={onSubmit}
 				onActiveToggle={onActiveToggle}
+				onArchive={onArchive}
 			/>
 		);
 	};

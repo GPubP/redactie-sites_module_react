@@ -5,8 +5,9 @@ import {
 	CreateSitePayload,
 	GetSitePayload,
 	GetSitesPayload,
-	sitesApiService,
+	SiteResponse,
 	SitesApiService,
+	sitesApiService,
 	UpdateSiteActivationPayload,
 	UpdateSitePayload,
 } from '../../services/sites';
@@ -31,6 +32,7 @@ export class SitesFacade {
 	public readonly isCreating$ = this.query.isCreating$;
 	public readonly isUpdating$ = this.query.isUpdating$;
 	public readonly isActivating$ = this.query.isActivating$;
+	public readonly isArchiving$ = this.query.isArchiving$;
 	public readonly error$ = this.query.error$;
 
 	// TODO: check why this isn't working
@@ -83,16 +85,18 @@ export class SitesFacade {
 		}
 
 		this.store.setIsFetching(true);
+
 		return from(
 			this.service
 				.getSites(payload)
 				.then(response => {
-					this.store.setIsFetching(false);
 					const meta = response._page;
 
 					this.store.update({
 						meta,
 					});
+
+					this.store.setIsFetching(false);
 
 					return {
 						perPage: parseInt(response._page.size, 10),
@@ -125,18 +129,20 @@ export class SitesFacade {
 			.finally(() => this.store.setIsFetching(false));
 	}
 
-	public createSite(payload: CreateSitePayload): Promise<boolean> {
+	public createSite(payload: CreateSitePayload): Promise<SiteResponse | undefined> {
 		this.store.setIsCreating(true);
+
 		return this.service
 			.createSite(payload)
-			.then(() => {
+			.then(site => {
 				this.store.setIsCreating(false);
 
-				return true;
+				return site;
 			})
 			.catch(err => {
 				this.store.setError(err);
-				return false;
+
+				throw err;
 			})
 			.finally(() => this.store.setIsCreating(false));
 	}
@@ -170,6 +176,12 @@ export class SitesFacade {
 				this.store.setError(err);
 			})
 			.finally(() => this.store.setIsActivating(false));
+	}
+
+	public archiveSite(id: string): Promise<null> {
+		this.store.setIsArchiving(true);
+
+		return this.service.archiveSite(id).finally(() => this.store.setIsArchiving(false));
 	}
 }
 

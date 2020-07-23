@@ -8,4 +8,5 @@ export interface SitesDetailFormProps {
 	onCancel: () => void;
 	onSubmit: (values: SitesDetailFormState) => void;
 	onActiveToggle?: () => void;
+	onArchive?: () => void;
 }

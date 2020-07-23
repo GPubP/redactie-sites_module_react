@@ -44,3 +44,11 @@ export interface Tab {
 	active: boolean;
 	disabled?: boolean;
 }
+
+export interface FilterItemSchema {
+	key?: string;
+	value: string;
+	valuePrefix?: string;
+	filterKey: string;
+	formvalue?: any;
+}

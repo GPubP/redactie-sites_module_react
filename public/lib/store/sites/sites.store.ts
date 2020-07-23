@@ -31,6 +31,12 @@ export class SitesStore extends EntityStore<SitesState, SiteModel> {
 			isActivating,
 		});
 	}
+
+	public setIsArchiving(isArchiving = false): void {
+		this.update({
+			isArchiving,
+		});
+	}
 }
 
 export const sitesStore = new SitesStore();

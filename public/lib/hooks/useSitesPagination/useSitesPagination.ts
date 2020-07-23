@@ -1,5 +1,7 @@
 import { PaginationResponse } from '@datorama/akita';
+import { equals } from 'ramda';
 import { useEffect, useState } from 'react';
+import { first } from 'rxjs/operators';
 
 import { usePrevious } from '../../hooks';
 import { SearchParams } from '../../services/api';
@@ -14,22 +16,28 @@ function useSitesPagination(
 	const prevSitesSearchParams = usePrevious<SearchParams>(sitesSearchParams);
 
 	useEffect(() => {
-		if (sitesSearchParams.sort !== prevSitesSearchParams?.sort || clearCache) {
+		if (equals(sitesSearchParams, prevSitesSearchParams)) {
+			return;
+		}
+
+		if (
+			sitesSearchParams.sort !== prevSitesSearchParams?.sort ||
+			sitesSearchParams.search !== prevSitesSearchParams?.search ||
+			clearCache
+		) {
 			sitesPaginator.clearCache();
 		}
 
 		sitesPaginator.setPage(sitesSearchParams.page);
-		const s = sitesPaginator
+
+		sitesPaginator
 			.getPage(() => sitesFacade.getSitesPaginated(sitesSearchParams))
+			.pipe(first())
 			.subscribe(result => {
 				if (result) {
 					setPagination(result);
 				}
 			});
-
-		return () => {
-			s.unsubscribe();
-		};
 	}, [sitesSearchParams, prevSitesSearchParams, clearCache]);
 
 	return pagination;

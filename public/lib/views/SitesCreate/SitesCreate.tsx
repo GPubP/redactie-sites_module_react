@@ -9,6 +9,7 @@ import React, { FC } from 'react';
 import { SitesDetailForm } from '../../components';
 import { useHomeBreadcrumb, useNavigate, useRoutes, useSitesLoadingStates } from '../../hooks';
 import { generateDetailFormState } from '../../services/helpers';
+import { SiteResponse } from '../../services/sites';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
@@ -36,9 +37,19 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	const onSubmit = ({ name, contentTypes }: SitesDetailFormState): void => {
 		const request = { name, description: name, contentTypes };
-		sitesFacade.createSite(request).then(() => {
-			navigateToOverview();
-		});
+
+		sitesFacade
+			.createSite(request)
+			.then(site => {
+				if (!(site as SiteResponse)?.uuid) {
+					return;
+				}
+
+				navigate(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, {
+					siteId: (site as SiteResponse)?.uuid,
+				});
+			})
+			.catch(error => console.log(error));
 	};
 
 	/**

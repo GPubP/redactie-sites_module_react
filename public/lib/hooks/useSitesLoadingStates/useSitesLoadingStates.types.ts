@@ -5,4 +5,5 @@ export interface SitesLoadingStates {
 	isFetching: LoadingState | null;
 	isUpdating: LoadingState | null;
 	isActivating: LoadingState | null;
+	isArchiving: LoadingState | null;
 }

@@ -9,6 +9,10 @@ export const DEFAULT_SITES_SORTING: APIQueryParamsConfig = {
 		defaultValue: 'data.name',
 		type: 'string',
 	},
+	search: {
+		defaultValue: '',
+		type: 'string',
+	},
 };
 
 export const MODULE_PATHS = {
@@ -21,3 +25,7 @@ export const MODULE_PATHS = {
 };
 
 export const MODULE_API_NAME = 'sites-module';
+
+export const SITES_INITIAL_FILTER_STATE = {
+	name: '',
+};

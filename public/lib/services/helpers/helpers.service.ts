@@ -10,7 +10,7 @@ export const parseOrderBy = (orderBy: OrderBy): string => {
 	return orderBy.order === 'asc' ? orderBy.key : `-${orderBy.key}`;
 };
 
-export const parseOrderByString = (orderByString: string): OrderBy => {
+export const parseOrderByString = (orderByString = ''): OrderBy => {
 	const keys = orderByString.split('.');
 	const isDesc = orderByString.includes('-');
 	return {
