@@ -111,7 +111,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	return (
 		<>
-			<ContextHeader tabs={TABS} title="Site bewerken">
+			<ContextHeader tabs={TABS} title={`${site?.data.name || ''} bewerken`}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>

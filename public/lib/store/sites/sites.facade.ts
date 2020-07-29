@@ -35,6 +35,12 @@ export class SitesFacade {
 	public readonly isArchiving$ = this.query.isArchiving$;
 	public readonly error$ = this.query.error$;
 
+	public getSiteValue(): SiteResponse | undefined {
+		const { site } = this.store.getValue();
+
+		return site;
+	}
+
 	// TODO: check why this isn't working
 	// public getSitesPaginated(
 	// 	payload: GetSitesPayload,

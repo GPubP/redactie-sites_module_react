@@ -71,10 +71,10 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							{t('BUTTON_ACTIVATE')}
 						</Button>
 					)}
+
 					{/**
 					 * TODO: move this to editorial-ui with proper div class handling and also make buttons configurable
 					 */}
-
 					<div style={{ display: 'inline-block' }}>
 						<Modal
 							appElement="#root"
@@ -127,7 +127,11 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 								<div className="col-xs-12 col-md-4">
 									<div className="u-margin-top">
 										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-										<b>{kebabCase(values.name)}</b>
+										<b>
+											{onActiveToggle
+												? initialState?.name || ''
+												: kebabCase(values.name)}
+										</b>
 									</div>
 								</div>
 								<div className="col-xs-12 u-text-light u-margin-top-xs">
@@ -150,7 +154,9 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 										onClick={() => submitForm()}
 										type="success"
 									>
-										{t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
+										{onActiveToggle
+											? t(CORE_TRANSLATIONS['BUTTON_SAVE'])
+											: t(CORE_TRANSLATIONS['BUTTON_SAVE-NEXT'])}
 									</Button>
 								</div>
 							</ActionBarContentSection>
