@@ -1,4 +1,4 @@
-import { Button } from '@acpaas-ui/react-components';
+import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import {
 	Container,
 	ContextHeader,
@@ -9,10 +9,11 @@ import {
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { useAPIQueryParams } from '@redactie/utils';
-import { clone } from 'ramda';
+import { clone, prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 
-import { DataLoader } from '../../components';
+import { DataLoader, SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
@@ -171,10 +172,30 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_NAME),
 				value: 'name',
+				component(value: any, rowData: SitesOverviewRowData) {
+					return (
+						<>
+							{rowData.userIsMember ? (
+								<AUILink to={`${prop('id')(rowData)}/content`} component={Link}>
+									{prop('name')(rowData)}
+								</AUILink>
+							) : (
+								<label>{prop('name')(rowData)}</label>
+							)}
+							<p className="u-text-light u-margin-top-xs">
+								{prop('description')(rowData)}
+							</p>
+						</>
+					);
+				},
 			},
 			{
-				label: t(CORE_TRANSLATIONS.TABLE_DESCRIPTION),
-				value: 'description',
+				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
+				value: 'status',
+				component(value: string, rowData: SitesOverviewRowData) {
+					const isActive = !!rowData['status'];
+					return <SiteStatus active={isActive} />;
+				},
 			},
 			{
 				label: '',
