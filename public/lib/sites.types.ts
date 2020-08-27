@@ -13,6 +13,7 @@ export interface SitesRouteProps extends RouteConfigComponentProps {
 
 export interface SitesDetailFormState {
 	name: string;
+	url: string;
 	contentTypes: string[];
 }
 

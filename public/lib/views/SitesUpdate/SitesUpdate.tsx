@@ -45,6 +45,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		if (site) {
 			setFormState({
 				name: site.data.name,
+				url: site.data.url,
 				contentTypes: site.data.contentTypes,
 			});
 		}
@@ -60,8 +61,8 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	/**
 	 * Methods
 	 */
-	const onSubmit = ({ name, contentTypes }: SitesDetailFormState): void => {
-		const request = { name, description: name, contentTypes };
+	const onSubmit = ({ name, contentTypes, url }: SitesDetailFormState): void => {
+		const request = { name, description: name, contentTypes, url };
 
 		if (siteId) {
 			sitesFacade.updateSite({

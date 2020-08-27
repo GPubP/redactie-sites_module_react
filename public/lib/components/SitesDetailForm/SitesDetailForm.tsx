@@ -140,6 +140,16 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 								</div>
 							</div>
 						</div>
+						<div className="row u-margin-bottom">
+							<div className="col-xs-12 col-md-8 row middle-xs">
+								<div className="col-xs-12 col-md-8">
+									<Field as={TextField} label="URL" name="url" required />
+								</div>
+								<div className="col-xs-12 u-text-light u-margin-top-xs">
+									Locatie van de website.
+								</div>
+							</div>
+						</div>
 						{onActiveToggle ? renderArchive() : null}
 						<ActionBar className="o-action-bar--fixed" isOpen>
 							<ActionBarContentSection>
