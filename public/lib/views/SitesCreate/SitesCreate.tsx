@@ -35,8 +35,8 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`);
 	};
 
-	const onSubmit = ({ name, contentTypes }: SitesDetailFormState): void => {
-		const request = { name, description: name, contentTypes };
+	const onSubmit = ({ name, contentTypes, url }: SitesDetailFormState): void => {
+		const request = { name, description: name, contentTypes, url };
 
 		sitesFacade
 			.createSite(request)

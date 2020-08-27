@@ -4,6 +4,7 @@ import { OrderBy } from '../api';
 export const generateDetailFormState = (): SitesDetailFormState => ({
 	name: '',
 	contentTypes: [],
+	url: '',
 });
 
 export const parseOrderBy = (orderBy: OrderBy): string => {

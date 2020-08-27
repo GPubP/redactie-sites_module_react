@@ -11,6 +11,7 @@ export interface SiteResponse {
 		name: string;
 		description: string;
 		contentTypes: string[];
+		url: string;
 	};
 	meta: {
 		tenant: string;
