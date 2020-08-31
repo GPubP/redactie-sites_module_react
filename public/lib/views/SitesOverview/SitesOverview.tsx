@@ -9,7 +9,7 @@ import {
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { useAPIQueryParams } from '@redactie/utils';
-import { clone, prop } from 'ramda';
+import { clone } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -176,15 +176,13 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					return (
 						<>
 							{rowData.userIsMember ? (
-								<AUILink to={`${prop('id')(rowData)}/content`} component={Link}>
-									{prop('name')(rowData)}
+								<AUILink to={`${rowData?.id}/content`} component={Link}>
+									{value}
 								</AUILink>
 							) : (
-								<label>{prop('name')(rowData)}</label>
+								<label>{value}</label>
 							)}
-							<p className="u-text-light u-margin-top-xs">
-								{prop('description')(rowData)}
-							</p>
+							<p className="u-text-light u-margin-top-xs">{rowData?.description}</p>
 						</>
 					);
 				},
@@ -192,8 +190,8 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				value: 'status',
-				component(value: string, rowData: SitesOverviewRowData) {
-					const isActive = !!rowData['status'];
+				component(value: string) {
+					const isActive = !!value;
 					return <SiteStatus active={isActive} />;
 				},
 			},
