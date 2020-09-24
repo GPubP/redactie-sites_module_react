@@ -22,7 +22,7 @@ import { sitesFacade } from '../../store/sites';
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 
 const SitesCreate: FC<SitesRouteProps> = () => {
-	const { siteId } = useParams();
+	const { siteId } = useParams<{ siteId: string }>();
 
 	/**
 	 * Hooks
