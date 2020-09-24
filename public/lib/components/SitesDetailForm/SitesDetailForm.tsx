@@ -9,7 +9,7 @@ import {
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { useDetectValueChanges, ErrorMessage } from '@redactie/utils';
+import { ErrorMessage, useDetectValueChanges } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement, useState } from 'react';
