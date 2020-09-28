@@ -41,47 +41,6 @@ export class SitesFacade {
 		return site;
 	}
 
-	// TODO: check why this isn't working
-	// public getSitesPaginated(
-	// 	payload: GetSitesPayload,
-	// 	clearCache = false
-	// ): Observable<PaginationResponse<SiteModel>> {
-	// 	if (clearCache) {
-	// 		this.paginator.clearCache();
-	// 	}
-
-	// 	this.store.setIsFetching(true);
-	// 	this.paginator.setPage(payload.page);
-
-	// 	const getSites$ = from(
-	// 		this.service
-	// 			.getSites(payload)
-	// 			.then(response => {
-	// 				this.store.setIsFetching(false);
-	// 				const meta = response._page;
-
-	// 				this.store.update({
-	// 					meta,
-	// 				});
-
-	// 				return {
-	// 					perPage: parseInt(response._page.size, 10),
-	// 					currentPage: parseInt(response._page.number, 10),
-	// 					lastPage: response._page.totalPages,
-	// 					total: response._page.totalElements,
-	// 					data: response._embedded,
-	// 				};
-	// 			})
-	// 			.catch(error => {
-	// 				this.store.setIsFetching(false);
-	// 				this.store.setError(error);
-	// 				return error;
-	// 			})
-	// 	);
-
-	// 	return this.paginator.getPage(() => getSites$);
-	// }
-
 	public getSitesPaginated(
 		payload: GetSitesPayload,
 		clearCache = false
@@ -100,9 +59,8 @@ export class SitesFacade {
 
 					this.store.update({
 						meta,
+						isFetching: false,
 					});
-
-					this.store.setIsFetching(false);
 
 					return {
 						perPage: parseInt(response._page.size, 10),
@@ -113,8 +71,10 @@ export class SitesFacade {
 					};
 				})
 				.catch(error => {
-					this.store.setIsFetching(false);
-					this.store.setError(error);
+					this.store.update({
+						error,
+						isFetching: false,
+					});
 					return error;
 				})
 		);
@@ -127,12 +87,15 @@ export class SitesFacade {
 			.then(response => {
 				this.store.update({
 					site: response,
+					isFetching: false,
 				});
 			})
-			.catch(err => {
-				this.store.setError(err);
-			})
-			.finally(() => this.store.setIsFetching(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetching: false,
+				});
+			});
 	}
 
 	public createSite(payload: CreateSitePayload): Promise<SiteResponse | undefined> {
@@ -142,30 +105,33 @@ export class SitesFacade {
 			.createSite(payload)
 			.then(site => {
 				this.store.setIsCreating(false);
-
 				return site;
 			})
-			.catch(err => {
-				this.store.setError(err);
-
-				throw err;
-			})
-			.finally(() => this.store.setIsCreating(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isCreating: false,
+				});
+				throw error;
+			});
 	}
 
-	public updateSite(payload: UpdateSitePayload): Promise<boolean> {
+	public updateSite(payload: UpdateSitePayload): void {
 		this.store.setIsUpdating(true);
-		return this.service
+		this.service
 			.updateSite(payload)
-			.then(() => {
-				return true;
+			.then(response => {
+				this.store.update({
+					site: response,
+					isUpdating: false,
+				});
 			})
-			.catch(err => {
-				this.store.setError(err);
-
-				return false;
-			})
-			.finally(() => this.store.setIsUpdating(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isUpdating: false,
+				});
+			});
 	}
 
 	public updateSiteActivation(payload: UpdateSiteActivationPayload): void {
@@ -173,15 +139,17 @@ export class SitesFacade {
 		this.service
 			.updateSiteActivation(payload)
 			.then(response => {
-				this.store.setLoading(false);
 				this.store.update({
 					site: response,
+					isActivating: false,
 				});
 			})
-			.catch(err => {
-				this.store.setError(err);
-			})
-			.finally(() => this.store.setIsActivating(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isActivating: false,
+				});
+			});
 	}
 
 	public archiveSite(id: string): Promise<null> {

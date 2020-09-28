@@ -4,17 +4,14 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
+import { useNavigate } from '@redactie/roles-rights-module/public/lib/hooks';
+import { FormikProps } from 'formik';
+import { equals } from 'ramda';
+import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
-import {
-	useHomeBreadcrumb,
-	useNavigate,
-	useRoutes,
-	useSite,
-	useSitesLoadingStates,
-} from '../../hooks';
+import { useHomeBreadcrumb, useRoutes, useSite, useSitesLoadingStates } from '../../hooks';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
@@ -27,15 +24,23 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [formState, setFormState] = useState<SitesDetailFormState | null>(null);
+	const [loadingState, site] = useSite();
+	const sitesLoadingStates = useSitesLoadingStates();
+	const isUpdating = sitesLoadingStates.isUpdating === LoadingState.Loading;
+	const isActiveLoading = sitesLoadingStates.isActivating === LoadingState.Loading;
+	const isArchivedLoading = sitesLoadingStates.isArchiving === LoadingState.Loading;
+	const [initialFormValue, setInitialFormValue] = useState<SitesDetailFormState | null>(null);
+	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(initialFormValue);
+	const isChanged = useMemo(() => !equals(initialFormValue, formValue), [
+		initialFormValue,
+		formValue,
+	]);
 	const routes = useRoutes();
-	const { navigate } = useNavigate();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
-	const [loadingState, site] = useSite();
-	const sitesLoadingStates = useSitesLoadingStates();
+	const { navigate } = useNavigate();
 	const navigateToOverview = useCallback(
 		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
 		[navigate]
@@ -43,7 +48,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	useEffect(() => {
 		if (site) {
-			setFormState({
+			setInitialFormValue({
 				name: site.data.name,
 				url: site.data.url,
 				contentTypes: site.data.contentTypes,
@@ -72,6 +77,10 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		}
 	};
 
+	const onCancel = (resetForm: FormikProps<SitesDetailFormState>['resetForm']): void => {
+		resetForm();
+	};
+
 	const onActiveToggle = (): void => {
 		if (siteId && site) {
 			sitesFacade.updateSiteActivation({
@@ -89,23 +98,23 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 * Render
 	 */
 	const renderSitesUpdate = (): ReactElement | null => {
-		if (!formState) {
+		if (!initialFormValue) {
 			return null;
 		}
 
 		return (
 			<SitesDetailForm
 				active={site?.meta.active}
-				initialState={formState}
-				activeLoading={sitesLoadingStates.isActivating === LoadingState.Loading}
-				loading={
-					sitesLoadingStates.isUpdating === LoadingState.Loading ||
-					sitesLoadingStates.isArchiving === LoadingState.Loading
-				}
-				onCancel={navigateToOverview}
+				initialState={initialFormValue}
+				activeLoading={isActiveLoading}
+				archiveLoading={isArchivedLoading}
+				loading={isUpdating}
+				isChanged={isChanged}
+				onCancel={onCancel}
 				onSubmit={onSubmit}
 				onActiveToggle={onActiveToggle}
 				onArchive={onArchive}
+				onChange={setFormValue}
 			/>
 		);
 	};

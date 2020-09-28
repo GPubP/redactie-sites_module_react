@@ -4,7 +4,8 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import React, { FC } from 'react';
+import { equals } from 'ramda';
+import React, { FC, useMemo, useState } from 'react';
 
 import { SitesDetailForm } from '../../components';
 import { useHomeBreadcrumb, useNavigate, useRoutes, useSitesLoadingStates } from '../../hooks';
@@ -15,6 +16,7 @@ import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../
 import { sitesFacade } from '../../store/sites';
 
 const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
+const initialFormValue = generateDetailFormState();
 
 const SitesCreate: FC<SitesRouteProps> = () => {
 	/**
@@ -27,6 +29,8 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
 	const sitesLoadingStates = useSitesLoadingStates();
+	const [formValue, setFormValue] = useState<SitesDetailFormState>(initialFormValue);
+	const isChanged = useMemo(() => !equals(initialFormValue, formValue), [formValue]);
 
 	/**
 	 * Methods
@@ -62,7 +66,9 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			</ContextHeader>
 			<Container>
 				<SitesDetailForm
-					initialState={generateDetailFormState()}
+					isChanged={isChanged}
+					onChange={setFormValue}
+					initialState={initialFormValue}
 					loading={sitesLoadingStates.isCreating === LoadingState.Loading}
 					onCancel={navigateToOverview}
 					onSubmit={onSubmit}
