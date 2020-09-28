@@ -9,7 +9,7 @@ import {
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { useDetectValueChanges } from '@redactie/utils';
+import { ErrorMessage, useDetectValueChanges } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement, useState } from 'react';
@@ -121,32 +121,38 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						<div className="row u-margin-bottom">
 							<div className="col-xs-12 col-md-8 row middle-xs">
 								<div className="col-xs-12 col-md-8">
-									<Field as={TextField} label="Naam" name="name" required />
+									<Field
+										description="Geef de site een korte en duidelijke naam. Deze naam verschijnt
+									in de applicatie."
+										as={TextField}
+										label="Naam"
+										name="name"
+										required
+									/>
+									<ErrorMessage name="name" />
 								</div>
 
 								<div className="col-xs-12 col-md-4">
-									<div className="u-margin-top">
-										{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-										<b>
-											{onActiveToggle
-												? initialState?.name || ''
-												: kebabCase(values.name)}
-										</b>
-									</div>
-								</div>
-								<div className="col-xs-12 u-text-light u-margin-top-xs">
-									Geef de site een korte en duidelijke naam. Deze naam verschijnt
-									in de applicatie.
+									{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
+									<b>
+										{onActiveToggle
+											? initialState?.name || ''
+											: kebabCase(values.name)}
+									</b>
 								</div>
 							</div>
 						</div>
 						<div className="row u-margin-bottom">
 							<div className="col-xs-12 col-md-8 row middle-xs">
 								<div className="col-xs-12 col-md-8">
-									<Field as={TextField} label="URL" name="url" required />
-								</div>
-								<div className="col-xs-12 u-text-light u-margin-top-xs">
-									Locatie van de website.
+									<Field
+										description="Locatie van de website."
+										as={TextField}
+										label="URL"
+										name="url"
+										required
+									/>
+									<ErrorMessage name="url" />
 								</div>
 							</div>
 						</div>
@@ -161,7 +167,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 										iconLeft={loading ? 'circle-o-notch fa-spin' : null}
 										disabled={loading || !isChanged}
 										className="u-margin-left-xs"
-										onClick={() => submitForm()}
+										onClick={submitForm}
 										type="success"
 									>
 										{onActiveToggle
