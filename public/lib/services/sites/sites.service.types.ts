@@ -19,7 +19,7 @@ export interface SiteResponse {
 		updatedAt: string;
 		active: boolean;
 	};
-	_userIsMember?: boolean;
+	userIsMember?: boolean;
 }
 
 export interface SitesMetaResponse {
