@@ -4,14 +4,19 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import { useNavigate } from '@redactie/roles-rights-module/public/lib/hooks';
 import { FormikProps } from 'formik';
 import { equals } from 'ramda';
 import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
-import { useHomeBreadcrumb, useRoutes, useSite, useSitesLoadingStates } from '../../hooks';
+import {
+	useHomeBreadcrumb,
+	useNavigate,
+	useRoutes,
+	useSite,
+	useSitesLoadingStates,
+} from '../../hooks';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
