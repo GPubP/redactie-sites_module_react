@@ -10,11 +10,12 @@ import {
 	LoadingState,
 	useDetectValueChanges,
 	useNavigate,
+	useRoutes,
 } from '@redactie/utils';
 import React, { FC, useState } from 'react';
 
 import { SitesDetailForm } from '../../components';
-import { useHomeBreadcrumb, useRoutes, useSitesLoadingStates } from '../../hooks';
+import { useHomeBreadcrumb, useSitesLoadingStates } from '../../hooks';
 import { generateDetailFormState } from '../../services/helpers';
 import { SiteResponse } from '../../services/sites';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';

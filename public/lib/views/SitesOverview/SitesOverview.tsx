@@ -8,7 +8,13 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { DataLoader, LoadingState, useAPIQueryParams, useNavigate } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	useAPIQueryParams,
+	useNavigate,
+	useRoutes,
+} from '@redactie/utils';
 import { clone } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -20,7 +26,6 @@ import { useCoreTranslation } from '../../connectors/translations';
 import {
 	useHomeBreadcrumb,
 	useRolesRightsApi,
-	useRoutes,
 	useSitesLoadingStates,
 	useSitesPagination,
 } from '../../hooks';

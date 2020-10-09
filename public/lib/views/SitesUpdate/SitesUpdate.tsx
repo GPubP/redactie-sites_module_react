@@ -11,6 +11,7 @@ import {
 	LoadingState,
 	useDetectValueChanges,
 	useNavigate,
+	useRoutes,
 	useWillUnmount,
 } from '@redactie/utils';
 import { FormikProps } from 'formik';
@@ -18,7 +19,7 @@ import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react
 import { useParams } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
-import { useHomeBreadcrumb, useRoutes, useSite, useSitesLoadingStates } from '../../hooks';
+import { useHomeBreadcrumb, useSite, useSitesLoadingStates } from '../../hooks';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';

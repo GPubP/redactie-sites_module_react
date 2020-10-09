@@ -8,7 +8,13 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { DataLoader, LoadingState, useAPIQueryParams, useNavigate } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	useAPIQueryParams,
+	useNavigate,
+	useRoutes,
+} from '@redactie/utils';
 import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -18,12 +24,7 @@ import { SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
-import {
-	useRolesRightsApi,
-	useRoutes,
-	useSitesLoadingStates,
-	useSitesPagination,
-} from '../../hooks';
+import { useRolesRightsApi, useSitesLoadingStates, useSitesPagination } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
 import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import {
