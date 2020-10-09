@@ -250,6 +250,8 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					itemsPerPage={query.pagesize}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
+					noDataMessage="Er zijn geen resultaten voor de ingestelde filters"
+					loadDataMessage="Sites ophalen"
 					activeSorting={sitesActiveSorting}
 					totalValues={sitesPagination.total}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
