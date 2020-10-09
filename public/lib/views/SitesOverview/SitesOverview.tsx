@@ -8,20 +8,24 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { useAPIQueryParams } from '@redactie/utils';
+import {
+	DataLoader,
+	LoadingState,
+	useAPIQueryParams,
+	useNavigate,
+	useRoutes,
+} from '@redactie/utils';
 import { clone } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { DataLoader, SiteStatus } from '../../components';
+import { SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
 import {
 	useHomeBreadcrumb,
-	useNavigate,
 	useRolesRightsApi,
-	useRoutes,
 	useSitesLoadingStates,
 	useSitesPagination,
 } from '../../hooks';
@@ -33,7 +37,7 @@ import {
 	MODULE_PATHS,
 	SITES_INITIAL_FILTER_STATE,
 } from '../../sites.const';
-import { FilterItemSchema, LoadingState, SitesRouteProps } from '../../sites.types';
+import { FilterItemSchema, SitesRouteProps } from '../../sites.types';
 
 import { SitesOverviewRowData } from './SitesOverview.types';
 
@@ -121,6 +125,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const deleteAllFilters = (): void => {
 		setQuery({
 			...query,
+			page: 1,
 			search: '',
 		});
 
@@ -132,6 +137,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const onSubmit = (filterValue: FilterFormState): void => {
 		setQuery({
 			...query,
+			page: 1,
 			search: filterValue.name || '',
 		});
 
@@ -143,6 +149,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const deleteFilter = (item: any): void => {
 		setQuery({
 			...query,
+			page: 1,
 			...(item.filterKey === 'name' ? { search: '' } : {}),
 		});
 
@@ -243,6 +250,8 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					itemsPerPage={query.pagesize}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
+					noDataMessage="Er zijn geen resultaten voor de ingestelde filters"
+					loadDataMessage="Sites ophalen"
 					activeSorting={sitesActiveSorting}
 					totalValues={sitesPagination.total}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}

@@ -1,7 +1,6 @@
 import { isNil, QueryEntity } from '@datorama/akita';
+import { LoadingState } from '@redactie/utils';
 import { distinctUntilChanged, filter, map } from 'rxjs/operators';
-
-import { LoadingState } from '../../sites.types';
 
 import { SitesState } from './sites.model';
 import { SitesStore, sitesStore } from './sites.store';

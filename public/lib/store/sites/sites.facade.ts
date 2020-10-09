@@ -1,4 +1,5 @@
 import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
+import { AlertProps, alertService } from '@redactie/utils';
 import { from, Observable } from 'rxjs';
 
 import {
@@ -11,7 +12,9 @@ import {
 	UpdateSiteActivationPayload,
 	UpdateSitePayload,
 } from '../../services/sites';
+import { ALERT_CONTAINER_IDS } from '../../sites.const';
 
+import { getAlertMessages } from './sites.alertMessages';
 import { SiteModel, SitesState } from './sites.model';
 import { sitesPaginator } from './sites.paginator';
 import { SitesQuery, sitesQuery } from './sites.query';
@@ -41,47 +44,6 @@ export class SitesFacade {
 		return site;
 	}
 
-	// TODO: check why this isn't working
-	// public getSitesPaginated(
-	// 	payload: GetSitesPayload,
-	// 	clearCache = false
-	// ): Observable<PaginationResponse<SiteModel>> {
-	// 	if (clearCache) {
-	// 		this.paginator.clearCache();
-	// 	}
-
-	// 	this.store.setIsFetching(true);
-	// 	this.paginator.setPage(payload.page);
-
-	// 	const getSites$ = from(
-	// 		this.service
-	// 			.getSites(payload)
-	// 			.then(response => {
-	// 				this.store.setIsFetching(false);
-	// 				const meta = response._page;
-
-	// 				this.store.update({
-	// 					meta,
-	// 				});
-
-	// 				return {
-	// 					perPage: parseInt(response._page.size, 10),
-	// 					currentPage: parseInt(response._page.number, 10),
-	// 					lastPage: response._page.totalPages,
-	// 					total: response._page.totalElements,
-	// 					data: response._embedded,
-	// 				};
-	// 			})
-	// 			.catch(error => {
-	// 				this.store.setIsFetching(false);
-	// 				this.store.setError(error);
-	// 				return error;
-	// 			})
-	// 	);
-
-	// 	return this.paginator.getPage(() => getSites$);
-	// }
-
 	public getSitesPaginated(
 		payload: GetSitesPayload,
 		clearCache = false
@@ -100,9 +62,8 @@ export class SitesFacade {
 
 					this.store.update({
 						meta,
+						isFetching: false,
 					});
-
-					this.store.setIsFetching(false);
 
 					return {
 						perPage: parseInt(response._page.size, 10),
@@ -113,8 +74,10 @@ export class SitesFacade {
 					};
 				})
 				.catch(error => {
-					this.store.setIsFetching(false);
-					this.store.setError(error);
+					this.store.update({
+						error,
+						isFetching: false,
+					});
 					return error;
 				})
 		);
@@ -127,45 +90,61 @@ export class SitesFacade {
 			.then(response => {
 				this.store.update({
 					site: response,
+					isFetching: false,
 				});
 			})
-			.catch(err => {
-				this.store.setError(err);
-			})
-			.finally(() => this.store.setIsFetching(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isFetching: false,
+				});
+			});
 	}
 
 	public createSite(payload: CreateSitePayload): Promise<SiteResponse | undefined> {
 		this.store.setIsCreating(true);
+		const alertMessages = getAlertMessages(payload.name);
 
 		return this.service
 			.createSite(payload)
 			.then(site => {
 				this.store.setIsCreating(false);
-
+				// NOTE!: Wait till the update container exists
+				// The update container does not exist on the create page
+				// A success message is shown to the user after the system has navigated to the detail page
+				setTimeout(() => {
+					this.alertService(alertMessages.create.success, 'update', 'success');
+				}, 300);
 				return site;
 			})
-			.catch(err => {
-				this.store.setError(err);
-
-				throw err;
-			})
-			.finally(() => this.store.setIsCreating(false));
+			.catch(error => {
+				this.store.setIsCreating(false);
+				this.alertService(alertMessages.create.error, 'create', 'error');
+				return error;
+			});
 	}
 
-	public updateSite(payload: UpdateSitePayload): Promise<boolean> {
+	public updateSite(payload: UpdateSitePayload): Promise<SiteResponse> {
 		this.store.setIsUpdating(true);
+		const alertMessages = getAlertMessages(payload.body.name);
+
 		return this.service
 			.updateSite(payload)
-			.then(() => {
-				return true;
+			.then(response => {
+				this.store.update({
+					site: response,
+					isUpdating: false,
+				});
+				this.alertService(alertMessages.update.success, 'update', 'success');
+				return response;
 			})
-			.catch(err => {
-				this.store.setError(err);
-
-				return false;
-			})
-			.finally(() => this.store.setIsUpdating(false));
+			.catch(error => {
+				this.store.update({
+					isUpdating: false,
+				});
+				this.alertService(alertMessages.update.error, 'update', 'error');
+				return error;
+			});
 	}
 
 	public updateSiteActivation(payload: UpdateSiteActivationPayload): void {
@@ -173,21 +152,41 @@ export class SitesFacade {
 		this.service
 			.updateSiteActivation(payload)
 			.then(response => {
-				this.store.setLoading(false);
 				this.store.update({
 					site: response,
+					isActivating: false,
 				});
 			})
-			.catch(err => {
-				this.store.setError(err);
-			})
-			.finally(() => this.store.setIsActivating(false));
+			.catch(error => {
+				this.store.update({
+					error,
+					isActivating: false,
+				});
+			});
+	}
+
+	public resetSite(): void {
+		this.store.update({
+			site: undefined,
+		});
 	}
 
 	public archiveSite(id: string): Promise<null> {
 		this.store.setIsArchiving(true);
 
 		return this.service.archiveSite(id).finally(() => this.store.setIsArchiving(false));
+	}
+
+	private alertService(
+		alertProps: AlertProps,
+		containerId: 'create' | 'update',
+		type: 'success' | 'error'
+	): void {
+		const alertType = type === 'error' ? 'danger' : type;
+		const alertOptions = { containerId: ALERT_CONTAINER_IDS[containerId] };
+
+		// alertService.dismiss();
+		alertService[alertType](alertProps, alertOptions);
 	}
 }
 

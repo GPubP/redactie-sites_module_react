@@ -1,9 +1,9 @@
 import { PaginationResponse } from '@datorama/akita';
+import { usePrevious } from '@redactie/utils';
 import { equals } from 'ramda';
 import { useEffect, useState } from 'react';
 import { first } from 'rxjs/operators';
 
-import { usePrevious } from '../../hooks';
 import { SearchParams } from '../../services/api';
 import { SiteResponse } from '../../services/sites';
 import { sitesFacade, sitesPaginator } from '../../store/sites';

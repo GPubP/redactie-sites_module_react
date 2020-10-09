@@ -9,39 +9,46 @@ import {
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { ErrorMessage, useDetectValueChanges } from '@redactie/utils';
+import { ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement } from 'react';
 
 import { useCoreTranslation } from '../../connectors/translations';
 import { SitesDetailFormState } from '../../sites.types';
 import SitesStatus from '../SiteStatus/SiteStatus';
 
 import { SITES_DETAIL_VALIDATION_SCHEMA } from './SitesDetailForm.const';
-import { SitesDetailFormProps } from './SitesDetailForm.types';
+import { SitesDetailFormChildrenFn, SitesDetailFormProps } from './SitesDetailForm.types';
 
 const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	initialState,
-	onCancel,
-	onSubmit,
+	activeLoading = false,
+	archiveLoading = false,
+	active = false,
+	loading = false,
+	isChanged = false,
+	children,
+	onChange = () => null,
+	onCancel = () => null,
+	onSubmit = () => null,
+	onArchive = () => null,
 	onActiveToggle,
-	onArchive,
-	activeLoading,
-	active,
-	loading,
 }) => {
 	const [t] = useCoreTranslation();
-	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(null);
-	const [isChanged] = useDetectValueChanges(!loading, formValue);
 
-	const renderArchive = (): ReactElement => {
-		const loadingStateButtonProps = activeLoading
+	const getLoadingStateBtnProps = (
+		loading: boolean
+	): { iconLeft: string; disabled: boolean } | null => {
+		return loading
 			? {
 					iconLeft: 'circle-o-notch fa-spin',
 					disabled: true,
 			  }
 			: null;
+	};
+
+	const renderArchive = (): ReactElement => {
 		return (
 			<Card>
 				<CardBody>
@@ -52,25 +59,14 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						Bepaal of deze site actief is of niet. Het gevolg hiervan is of de site en
 						zijn content en/of content types al dan niet beschikbaar zijn.
 					</CardDescription>
-					{active ? (
-						<Button
-							{...loadingStateButtonProps}
-							onClick={onActiveToggle}
-							className="u-margin-top u-margin-right"
-							type="primary"
-						>
-							{t('BUTTON_DEACTIVATE')}
-						</Button>
-					) : (
-						<Button
-							{...loadingStateButtonProps}
-							onClick={onActiveToggle}
-							className="u-margin-top u-margin-right"
-							type="primary"
-						>
-							{t('BUTTON_ACTIVATE')}
-						</Button>
-					)}
+					<Button
+						{...getLoadingStateBtnProps(activeLoading)}
+						onClick={onActiveToggle}
+						className="u-margin-top u-margin-right"
+						type="primary"
+					>
+						{active ? t('BUTTON_DEACTIVATE') : t('BUTTON_ACTIVATE')}
+					</Button>
 
 					{/**
 					 * TODO: move this to editorial-ui with proper div class handling and also make buttons configurable
@@ -86,7 +82,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							onConfirm={onArchive}
 							triggerElm={
 								<Button
-									{...loadingStateButtonProps}
+									{...getLoadingStateBtnProps(archiveLoading)}
 									onClick={onArchive}
 									className="u-margin-top"
 									type="danger"
@@ -109,15 +105,18 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 
 	return (
 		<Formik
+			enableReinitialize
 			initialValues={initialState}
 			onSubmit={onSubmit}
 			validationSchema={SITES_DETAIL_VALIDATION_SCHEMA}
 		>
-			{({ submitForm, values }) => {
-				setFormValue(values);
-
+			{formikProps => {
+				const { submitForm, values, resetForm } = formikProps;
 				return (
 					<>
+						<FormikOnChangeHandler
+							onChange={values => onChange(values as SitesDetailFormState)}
+						/>
 						<div className="row u-margin-bottom">
 							<div className="col-xs-12 col-md-8 row middle-xs">
 								<div className="col-xs-12 col-md-8">
@@ -160,7 +159,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						<ActionBar className="o-action-bar--fixed" isOpen>
 							<ActionBarContentSection>
 								<div className="u-wrapper row end-xs">
-									<Button onClick={onCancel} negative>
+									<Button onClick={() => onCancel(resetForm)} negative>
 										{t(CORE_TRANSLATIONS.BUTTON_CANCEL)}
 									</Button>
 									<Button
@@ -177,6 +176,9 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 								</div>
 							</ActionBarContentSection>
 						</ActionBar>
+						{typeof children === 'function'
+							? (children as SitesDetailFormChildrenFn)(formikProps)
+							: children}
 					</>
 				);
 			}}

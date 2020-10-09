@@ -1,4 +1,4 @@
-import { LoadingState } from '../../sites.types';
+import { LoadingState } from '@redactie/utils';
 
 export interface SitesLoadingStates {
 	isCreating: LoadingState | null;
