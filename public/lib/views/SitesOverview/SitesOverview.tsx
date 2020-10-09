@@ -125,6 +125,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const deleteAllFilters = (): void => {
 		setQuery({
 			...query,
+			page: 1,
 			search: '',
 		});
 
@@ -136,6 +137,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const onSubmit = (filterValue: FilterFormState): void => {
 		setQuery({
 			...query,
+			page: 1,
 			search: filterValue.name || '',
 		});
 
@@ -147,6 +149,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const deleteFilter = (item: any): void => {
 		setQuery({
 			...query,
+			page: 1,
 			...(item.filterKey === 'name' ? { search: '' } : {}),
 		});
 
