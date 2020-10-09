@@ -1,11 +1,10 @@
 import Core from '@redactie/redactie-core';
 import { RolesRightsModuleAPI } from '@redactie/roles-rights-module';
+import { RenderChildRoutes, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
 import { registerSitesAPI } from './lib/api';
-import { RenderChildRoutes } from './lib/components';
 import { rolesRightsConnector, RolesRightsConnector } from './lib/connectors/rolesRights';
-import { TenantContext } from './lib/context';
 import { routes } from './lib/services/routes/routes.class';
 import { MODULE_PATHS } from './lib/sites.const';
 import { SitesRouteProps } from './lib/sites.types';
