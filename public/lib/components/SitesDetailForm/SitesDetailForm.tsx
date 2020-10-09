@@ -59,25 +59,14 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						Bepaal of deze site actief is of niet. Het gevolg hiervan is of de site en
 						zijn content en/of content types al dan niet beschikbaar zijn.
 					</CardDescription>
-					{active ? (
-						<Button
-							{...getLoadingStateBtnProps(activeLoading)}
-							onClick={onActiveToggle}
-							className="u-margin-top u-margin-right"
-							type="primary"
-						>
-							{t('BUTTON_DEACTIVATE')}
-						</Button>
-					) : (
-						<Button
-							{...getLoadingStateBtnProps(activeLoading)}
-							onClick={onActiveToggle}
-							className="u-margin-top u-margin-right"
-							type="primary"
-						>
-							{t('BUTTON_ACTIVATE')}
-						</Button>
-					)}
+					<Button
+						{...getLoadingStateBtnProps(activeLoading)}
+						onClick={onActiveToggle}
+						className="u-margin-top u-margin-right"
+						type="primary"
+					>
+						{active ? t('BUTTON_DEACTIVATE') : t('BUTTON_ACTIVATE')}
+					</Button>
 
 					{/**
 					 * TODO: move this to editorial-ui with proper div class handling and also make buttons configurable
