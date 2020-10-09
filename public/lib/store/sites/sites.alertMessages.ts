@@ -1,7 +1,5 @@
 import { AlertProps } from '@redactie/utils';
 
-import { SiteResponse } from '../../services/sites';
-
 export type AlertMessages = Record<
 	'create' | 'update',
 	{ [key in 'success' | 'error']: AlertProps }
