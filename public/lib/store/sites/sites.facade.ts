@@ -1,4 +1,5 @@
 import { PaginationResponse, PaginatorPlugin } from '@datorama/akita';
+import { AlertProps, alertService } from '@redactie/utils';
 import { from, Observable } from 'rxjs';
 
 import {
@@ -11,7 +12,9 @@ import {
 	UpdateSiteActivationPayload,
 	UpdateSitePayload,
 } from '../../services/sites';
+import { ALERT_CONTAINER_IDS } from '../../sites.const';
 
+import { getAlertMessages } from './sites.alertMessages';
 import { SiteModel, SitesState } from './sites.model';
 import { sitesPaginator } from './sites.paginator';
 import { SitesQuery, sitesQuery } from './sites.query';
@@ -100,37 +103,47 @@ export class SitesFacade {
 
 	public createSite(payload: CreateSitePayload): Promise<SiteResponse | undefined> {
 		this.store.setIsCreating(true);
+		const alertMessages = getAlertMessages(payload.name);
 
 		return this.service
 			.createSite(payload)
 			.then(site => {
 				this.store.setIsCreating(false);
+				// NOTE!: Wait till the update container exists
+				// The update container does not exist on the create page
+				// A success message is shown to the user after the system has navigated to the detail page
+				setTimeout(() => {
+					this.alertService(alertMessages.create.success, 'update', 'success');
+				}, 300);
 				return site;
 			})
 			.catch(error => {
-				this.store.update({
-					error,
-					isCreating: false,
-				});
-				throw error;
+				this.store.setIsCreating(false);
+				this.alertService(alertMessages.create.error, 'create', 'error');
+				return error;
 			});
 	}
 
-	public updateSite(payload: UpdateSitePayload): void {
+	public updateSite(payload: UpdateSitePayload): Promise<SiteResponse> {
 		this.store.setIsUpdating(true);
-		this.service
+		const alertMessages = getAlertMessages(payload.body.name);
+
+		return this.service
 			.updateSite(payload)
 			.then(response => {
 				this.store.update({
 					site: response,
 					isUpdating: false,
 				});
+				this.alertService(alertMessages.update.success, 'update', 'success');
+				return response;
 			})
 			.catch(error => {
 				this.store.update({
-					error,
 					isUpdating: false,
 				});
+				this.alertService(alertMessages.update.error, 'update', 'error');
+				return error;
 			});
 	}
 
@@ -152,10 +165,28 @@ export class SitesFacade {
 			});
 	}
 
+	public resetSite(): void {
+		this.store.update({
+			site: undefined,
+		});
+	}
+
 	public archiveSite(id: string): Promise<null> {
 		this.store.setIsArchiving(true);
 
 		return this.service.archiveSite(id).finally(() => this.store.setIsArchiving(false));
+	}
+
+	private alertService(
+		alertProps: AlertProps,
+		containerId: 'create' | 'update',
+		type: 'success' | 'error'
+	): void {
+		const alertType = type === 'error' ? 'danger' : type;
+		const alertOptions = { containerId: ALERT_CONTAINER_IDS[containerId] };
+
+		// alertService.dismiss();
+		alertService[alertType](alertProps, alertOptions);
 	}
 }
 

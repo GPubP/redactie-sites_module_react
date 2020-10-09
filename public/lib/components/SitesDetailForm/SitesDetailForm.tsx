@@ -9,7 +9,7 @@ import {
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { ErrorMessage, FormikOnChangeHandler, LeavePrompt } from '@redactie/utils';
+import { ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement } from 'react';
@@ -19,7 +19,7 @@ import { SitesDetailFormState } from '../../sites.types';
 import SitesStatus from '../SiteStatus/SiteStatus';
 
 import { SITES_DETAIL_VALIDATION_SCHEMA } from './SitesDetailForm.const';
-import { SitesDetailFormProps } from './SitesDetailForm.types';
+import { SitesDetailFormChildrenFn, SitesDetailFormProps } from './SitesDetailForm.types';
 
 const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	initialState,
@@ -28,6 +28,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	active = false,
 	loading = false,
 	isChanged = false,
+	children,
 	onChange = () => null,
 	onCancel = () => null,
 	onSubmit = () => null,
@@ -120,7 +121,8 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 			onSubmit={onSubmit}
 			validationSchema={SITES_DETAIL_VALIDATION_SCHEMA}
 		>
-			{({ submitForm, values, resetForm }) => {
+			{formikProps => {
+				const { submitForm, values, resetForm } = formikProps;
 				return (
 					<>
 						<FormikOnChangeHandler
@@ -185,7 +187,9 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 								</div>
 							</ActionBarContentSection>
 						</ActionBar>
-						<LeavePrompt when={isChanged} onConfirm={submitForm} />
+						{typeof children === 'function'
+							? (children as SitesDetailFormChildrenFn)(formikProps)
+							: children}
 					</>
 				);
 			}}

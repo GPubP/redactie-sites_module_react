@@ -15,6 +15,8 @@ export const DEFAULT_SITES_SORTING: APIQueryParamsConfig = {
 	},
 };
 
+export const TENANT_ROOT = '/:tenantId';
+
 export const MODULE_PATHS = {
 	dashboard: '/dashboard',
 	root: '/sites',
@@ -28,4 +30,9 @@ export const MODULE_API_NAME = 'sites-module';
 
 export const SITES_INITIAL_FILTER_STATE = {
 	name: '',
+};
+
+export const ALERT_CONTAINER_IDS = {
+	create: 'create',
+	update: 'update',
 };

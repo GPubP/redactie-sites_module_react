@@ -4,9 +4,14 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import {
+	AlertContainer,
+	LeavePrompt,
+	useDetectValueChanges,
+	useWillUnmount,
+} from '@redactie/utils';
 import { FormikProps } from 'formik';
-import { equals } from 'ramda';
-import React, { FC, ReactElement, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { DataLoader, SitesDetailForm } from '../../components';
@@ -17,7 +22,7 @@ import {
 	useSite,
 	useSitesLoadingStates,
 } from '../../hooks';
-import { BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
+import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
@@ -31,15 +36,18 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	const [loadingState, site] = useSite();
 	const sitesLoadingStates = useSitesLoadingStates();
+	const isFetching = loadingState === LoadingState.Loading;
 	const isUpdating = sitesLoadingStates.isUpdating === LoadingState.Loading;
 	const isActiveLoading = sitesLoadingStates.isActivating === LoadingState.Loading;
 	const isArchivedLoading = sitesLoadingStates.isArchiving === LoadingState.Loading;
 	const [initialFormValue, setInitialFormValue] = useState<SitesDetailFormState | null>(null);
+	const onUnMount = useWillUnmount();
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(initialFormValue);
-	const isChanged = useMemo(() => !equals(initialFormValue, formValue), [
-		initialFormValue,
-		formValue,
-	]);
+	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(
+		!isFetching && !isUpdating,
+		formValue || initialFormValue
+	);
+
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
@@ -68,6 +76,10 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		}
 	}, [siteId]);
 
+	onUnMount(() => {
+		sitesFacade.resetSite();
+	});
+
 	/**
 	 * Methods
 	 */
@@ -75,15 +87,20 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		const request = { name, description: name, contentTypes, url };
 
 		if (siteId) {
-			sitesFacade.updateSite({
-				id: siteId,
-				body: request,
-			});
+			sitesFacade
+				.updateSite({
+					id: siteId,
+					body: request,
+				})
+				.then(() => {
+					resetDetectValueChanges();
+				});
 		}
 	};
 
 	const onCancel = (resetForm: FormikProps<SitesDetailFormState>['resetForm']): void => {
 		resetForm();
+		resetDetectValueChanges();
 	};
 
 	const onActiveToggle = (): void => {
@@ -120,7 +137,16 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				onActiveToggle={onActiveToggle}
 				onArchive={onArchive}
 				onChange={setFormValue}
-			/>
+			>
+				{({ submitForm }) => (
+					<LeavePrompt
+						shouldBlockNavigationOnConfirm
+						confirmText="Bewaar"
+						when={isChanged}
+						onConfirm={submitForm}
+					/>
+				)}
+			</SitesDetailForm>
 		);
 	};
 
@@ -130,6 +156,9 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
+				<div className="u-margin-bottom">
+					<AlertContainer containerId={ALERT_CONTAINER_IDS.update} />
+				</div>
 				<DataLoader loadingState={loadingState} render={renderSitesUpdate} />
 			</Container>
 		</>
