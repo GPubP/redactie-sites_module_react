@@ -4,7 +4,7 @@ import {
 	ContextHeaderTopSection,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import { AlertContainer, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import { AlertContainer, LeavePrompt, LoadingState, useDetectValueChanges } from '@redactie/utils';
 import React, { FC, useState } from 'react';
 
 import { SitesDetailForm } from '../../components';
@@ -12,7 +12,7 @@ import { useHomeBreadcrumb, useNavigate, useRoutes, useSitesLoadingStates } from
 import { generateDetailFormState } from '../../services/helpers';
 import { SiteResponse } from '../../services/sites';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
-import { LoadingState, SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
+import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
 import { SITES_CREATE_ALLOWED_PATHS } from './SitesCreate.const';

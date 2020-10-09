@@ -1,7 +1,7 @@
 import { useObservable } from '@mindspace-io/react';
+import { LoadingState } from '@redactie/utils';
 
 import { SiteResponse } from '../../services/sites/sites.service.types';
-import { LoadingState } from '../../sites.types';
 import { sitesFacade } from '../../store/sites/sites.facade';
 
 const useSite = (): [LoadingState, SiteResponse | undefined] => {

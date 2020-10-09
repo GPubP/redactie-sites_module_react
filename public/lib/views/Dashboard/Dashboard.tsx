@@ -8,13 +8,13 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
-import { useAPIQueryParams } from '@redactie/utils';
+import { DataLoader, LoadingState, useAPIQueryParams } from '@redactie/utils';
 import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { FilterItemSchema } from '../../../../../redactie-content-types_module_react/dist/public/lib/views/ContentTypesOverview/ContentTypesOverview.types.d';
-import { DataLoader, SiteStatus } from '../../components';
+import { SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { useCoreTranslation } from '../../connectors/translations';
@@ -33,7 +33,7 @@ import {
 	MODULE_PATHS,
 	SITES_INITIAL_FILTER_STATE,
 } from '../../sites.const';
-import { LoadingState, SitesRouteProps } from '../../sites.types';
+import { SitesRouteProps } from '../../sites.types';
 import { SitesOverviewRowData } from '../SitesOverview/SitesOverview.types';
 
 const Dashboard: FC<SitesRouteProps> = () => {
