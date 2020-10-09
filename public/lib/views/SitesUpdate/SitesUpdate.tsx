@@ -39,7 +39,6 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	const isActiveLoading = sitesLoadingStates.isActivating === LoadingState.Loading;
 	const isArchivedLoading = sitesLoadingStates.isArchiving === LoadingState.Loading;
 	const [initialFormValue, setInitialFormValue] = useState<SitesDetailFormState | null>(null);
-	const onUnMount = useWillUnmount();
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(initialFormValue);
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(
 		!isFetching && !isUpdating,
@@ -74,7 +73,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		}
 	}, [siteId]);
 
-	onUnMount(() => {
+	useWillUnmount(() => {
 		sitesFacade.resetSite();
 	});
 
