@@ -1,4 +1,5 @@
-import { useNavigate } from '../../hooks';
+import { useNavigate } from '@redactie/utils';
+
 import { MODULE_PATHS } from '../../sites.const';
 
 const useHomeBreadcrumb = (): { name: string; target: string } => {
