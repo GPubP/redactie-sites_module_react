@@ -35,7 +35,7 @@ export interface SitesModuleAPI {
 
 export interface Tab {
 	name: string;
-	target: string;
+	target: string | null;
 	active: boolean;
 	disabled?: boolean;
 }

@@ -21,10 +21,10 @@ import { useParams } from 'react-router-dom';
 import { SitesDetailForm } from '../../components';
 import { useHomeBreadcrumb, useSite, useSitesLoadingStates } from '../../hooks';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
-import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
+import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
-const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
+import { TABS } from './SitesUpdate.const';
 
 const SitesCreate: FC<SitesRouteProps> = () => {
 	const { siteId } = useParams<{ siteId: string }>();
@@ -83,16 +83,16 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	const onSubmit = ({ name, contentTypes, url }: SitesDetailFormState): void => {
 		const request = { name, description: name, contentTypes, url };
 
-		if (siteId) {
-			sitesFacade
-				.updateSite({
-					id: siteId,
-					body: request,
-				})
-				.then(() => {
-					resetDetectValueChanges();
-				});
+		if (!siteId) {
+			return;
 		}
+
+		sitesFacade
+			.updateSite({
+				id: siteId,
+				body: request,
+			})
+			.then(() => resetDetectValueChanges());
 	};
 
 	const onCancel = (resetForm: FormikProps<SitesDetailFormState>['resetForm']): void => {

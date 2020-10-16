@@ -21,9 +21,9 @@ export const MODULE_PATHS = {
 	dashboard: '/dashboard',
 	root: '/sites',
 	overview: '/beheer',
-	create: '/aanmaken',
+	create: '/aanmaken/instellingen',
 	detail: '/:siteId',
-	detailEdit: '/:siteId/bewerken',
+	detailEdit: '/:siteId/bewerken/instellingen',
 };
 
 export const MODULE_API_NAME = 'sites-module';
