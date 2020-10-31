@@ -68,7 +68,7 @@ const DashboardWrapperComponent: FC<SitesRouteProps> = props => {
 };
 
 const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
-	// expose route
+	// Expose route
 	Core.routes.register({
 		path: MODULE_PATHS.dashboard,
 		component: DashboardWrapperComponent,
@@ -80,13 +80,6 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 		exact: true,
 		component: SitesComponent,
 		redirect: `${MODULE_PATHS.root}${MODULE_PATHS.overview}`,
-		guardOptions: {
-			guards: [
-				rolesRightsApi.guards.securityRightsTenantGuard([
-					RolesRightsConnector.securityRights.read,
-				]),
-			],
-		},
 		navigation: {
 			label: 'Sites',
 			canShown: [
@@ -102,6 +95,13 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 			{
 				path: MODULE_PATHS.overview,
 				component: SitesOverview,
+				guardOptions: {
+					guards: [
+						rolesRightsApi.guards.securityRightsTenantGuard([
+							RolesRightsConnector.securityRights.read,
+						]),
+					],
+				},
 			},
 			{
 				path: MODULE_PATHS.create,
@@ -118,6 +118,13 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 				path: MODULE_PATHS.detail,
 				breadcrumb: null,
 				component: SiteDetailComponent,
+				guardOptions: {
+					guards: [
+						rolesRightsApi.guards.securityRightsTenantGuard([
+							RolesRightsConnector.securityRights.read,
+						]),
+					],
+				},
 				routes: [
 					{
 						path: MODULE_PATHS.detailEdit,
