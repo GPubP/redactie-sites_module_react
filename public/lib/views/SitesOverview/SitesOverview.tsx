@@ -279,7 +279,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
-				<DataLoader loadingState={initialLoading} render={renderOverview} />
+				<DataLoader loadingState={initialLoading} render={renderOverview} notFoundMessage='Er zijn geen resultaten voor de ingestelde filters' />
 			</Container>
 		</>
 	);
