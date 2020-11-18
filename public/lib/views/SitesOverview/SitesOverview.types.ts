@@ -1,7 +1,7 @@
 export interface SitesOverviewRowData {
 	id: string;
 	name: string;
-	status: boolean;
+	active: boolean;
 	description: string;
 	userIsMember: boolean;
 }
