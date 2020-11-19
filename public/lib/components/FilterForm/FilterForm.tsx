@@ -1,10 +1,9 @@
 import { TextField } from '@acpaas-ui/react-components';
 import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
-import { useCoreTranslation } from '../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 
 import { FILTER_FORM_VALIDATION_SCHEMA } from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';

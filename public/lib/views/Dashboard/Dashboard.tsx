@@ -7,7 +7,6 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import {
 	DataLoader,
 	LoadingState,
@@ -23,7 +22,7 @@ import { FilterItemSchema } from '../../../../../redactie-content-types_module_r
 import { SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
-import { useCoreTranslation } from '../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useRolesRightsApi, useSitesLoadingStates, useSitesPagination } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
 import { parseOrderBy, parseOrderByString } from '../../services/helpers';
@@ -109,7 +108,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			...query,
 			sort: parseOrderBy({
 				...orderBy,
-				key: `data.${orderBy.key}`,
+				key: `${orderBy.key === 'active' ? 'meta' : 'data'}.${orderBy.key}`,
 			}),
 		});
 	};
@@ -159,7 +158,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 		const sitesRows: SitesOverviewRowData[] = (sitesPagination?.data || []).map(site => ({
 			id: site.uuid,
 			name: site.data.name,
-			status: site.meta.active,
+			active: site.meta.active,
 			description: site.data.description,
 			userIsMember: !!site.userIsMember,
 		}));
@@ -190,9 +189,9 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			},
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-				value: 'status',
-				component(value: string, rowData: SitesOverviewRowData) {
-					const isActive = !!rowData['status'];
+				value: 'active',
+				component(value: string) {
+					const isActive = !!value;
 					return <SiteStatus active={isActive} />;
 				},
 			},
