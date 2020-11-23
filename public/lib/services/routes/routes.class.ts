@@ -15,6 +15,7 @@ const prefixRoute = (routeConfig: ModuleRouteConfig): ModuleRouteConfig => ({
 				parentPath: routeConfig.navigation.parentPath
 					? `/sites${routeConfig.navigation.parentPath}`
 					: undefined,
+				logoUrl: '/sites/:siteId/content',
 		  }
 		: undefined,
 });
