@@ -59,6 +59,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	useEffect(() => {
 		if (site) {
 			setInitialFormValue({
+				uuid: site.uuid,
 				name: site.data.name,
 				url: site.data.url,
 				contentTypes: site.data.contentTypes,

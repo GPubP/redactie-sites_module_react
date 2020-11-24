@@ -12,6 +12,7 @@ import { ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { SitesDetailFormState } from '../../sites.types';
@@ -129,15 +130,6 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 									/>
 									<ErrorMessage name="name" />
 								</div>
-
-								<div className="col-xs-12 col-md-4">
-									{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-									<b>
-										{onActiveToggle
-											? initialState?.name || ''
-											: kebabCase(values.name)}
-									</b>
-								</div>
 							</div>
 						</div>
 						<div className="row u-margin-bottom">
@@ -155,6 +147,27 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							</div>
 						</div>
 						{onActiveToggle ? renderArchive() : null}
+						{initialState.uuid && (
+							<div className="row u-margin-top">
+								<div className="col-xs-12 ">
+									<label>UUID</label>
+									<p className="u-margin-top-xs">
+										<span className="u-text-light u-margin-right-xs">
+											{initialState.uuid}
+										</span>
+										<CopyToClipboard text={initialState.uuid}>
+											<Button
+												className="u-button-as-link"
+												htmlType="button"
+												type="transparent"
+											>
+												Kopieer
+											</Button>
+										</CopyToClipboard>
+									</p>
+								</div>
+							</div>
+						)}
 						<ActionBar className="o-action-bar--fixed" isOpen>
 							<ActionBarContentSection>
 								<div className="u-wrapper row end-xs">
