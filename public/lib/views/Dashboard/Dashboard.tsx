@@ -18,7 +18,6 @@ import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { FilterItemSchema } from '../../../../../redactie-content-types_module_react/dist/public/lib/views/ContentTypesOverview/ContentTypesOverview.types.d';
 import { SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
@@ -32,7 +31,7 @@ import {
 	MODULE_PATHS,
 	SITES_INITIAL_FILTER_STATE,
 } from '../../sites.const';
-import { SitesRouteProps } from '../../sites.types';
+import { FilterItemSchema, SitesRouteProps } from '../../sites.types';
 import { SitesOverviewRowData } from '../SitesOverview/SitesOverview.types';
 
 const Dashboard: FC<SitesRouteProps> = () => {
