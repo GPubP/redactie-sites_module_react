@@ -7,6 +7,7 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import { FilterItemSchema } from '@redactie/roles-rights-module/dist/public/lib/views/SiteUsersOverview/SiteUsersOverview.types';
 import {
 	DataLoader,
 	LoadingState,
@@ -18,7 +19,6 @@ import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { FilterItemSchema } from '../../../../../redactie-content-types_module_react/dist/public/lib/views/ContentTypesOverview/ContentTypesOverview.types.d';
 import { SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
