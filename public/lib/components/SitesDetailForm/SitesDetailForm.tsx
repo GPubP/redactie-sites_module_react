@@ -161,7 +161,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 												htmlType="button"
 												type="transparent"
 											>
-												Kopieer
+												{t(CORE_TRANSLATIONS.GENERAL_COPY)}
 											</Button>
 										</CopyToClipboard>
 									</p>
