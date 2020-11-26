@@ -7,7 +7,6 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import { CORE_TRANSLATIONS } from '@redactie/translations-module/public/lib/i18next/translations.const';
 import {
 	DataLoader,
 	LoadingState,
@@ -22,7 +21,7 @@ import { Link } from 'react-router-dom';
 import { SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
-import { useCoreTranslation } from '../../connectors/translations';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import {
 	useHomeBreadcrumb,
 	useRolesRightsApi,
@@ -117,7 +116,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			...query,
 			sort: parseOrderBy({
 				...orderBy,
-				key: `data.${orderBy.key}`,
+				key: `${orderBy.key === 'active' ? 'meta' : 'data'}.${orderBy.key}`,
 			}),
 		});
 	};
@@ -170,7 +169,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 		const sitesRows: SitesOverviewRowData[] = sitesPagination.data.map(site => ({
 			id: site.uuid,
 			name: site.data.name,
-			status: site.meta.active,
+			active: site.meta.active,
 			description: site.data.description,
 			userIsMember: !!site.userIsMember,
 		}));
@@ -196,7 +195,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			},
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-				value: 'status',
+				value: 'active',
 				component(value: string) {
 					const isActive = !!value;
 					return <SiteStatus active={isActive} />;
