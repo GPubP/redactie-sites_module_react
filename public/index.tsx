@@ -81,6 +81,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 		component: SitesComponent,
 		redirect: `${MODULE_PATHS.root}${MODULE_PATHS.overview}`,
 		navigation: {
+			order: 0,
 			label: 'Sites',
 			canShown: [
 				rolesRightsApi.canShowns.securityRightsTenantCanShown([
