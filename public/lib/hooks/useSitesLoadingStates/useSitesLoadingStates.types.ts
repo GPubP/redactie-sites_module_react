@@ -7,3 +7,5 @@ export interface SitesLoadingStates {
 	isActivating: LoadingState | null;
 	isArchiving: LoadingState | null;
 }
+
+export type UseSitesLoadingStates = () => SitesLoadingStates;

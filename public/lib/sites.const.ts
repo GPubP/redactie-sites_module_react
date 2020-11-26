@@ -1,7 +1,7 @@
 import { APIQueryParamsConfig } from '@redactie/utils';
 
 export const BREADCRUMB_OPTIONS = {
-	excludePaths: ['/', '/:tenantId'],
+	excludePaths: ['/', '/:tenantId', '/:tenantId/sites/:siteId/bewerken'],
 };
 
 export const DEFAULT_SITES_SORTING: APIQueryParamsConfig = {

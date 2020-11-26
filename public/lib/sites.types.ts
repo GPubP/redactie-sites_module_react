@@ -1,5 +1,8 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 
+import { UseSite } from './hooks/useSite';
+import { UseSitesLoadingStates } from './hooks/useSitesLoadingStates';
+import { UseSitesPagination } from './hooks/useSitesPagination';
 import { Routes } from './services/routes';
 import { SitesFacade, SitesQuery } from './store/sites';
 
@@ -28,6 +31,11 @@ export interface SitesModuleAPI {
 			service: Partial<SitesFacade>;
 			query: SitesQuery;
 		};
+	};
+	hooks: {
+		useSite: UseSite;
+		useSitesPagination: UseSitesPagination;
+		useSitesLoadingState: UseSitesLoadingStates;
 	};
 }
 

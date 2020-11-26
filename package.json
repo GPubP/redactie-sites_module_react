@@ -46,7 +46,7 @@
     "@redactie/redactie-core": "^1.10.6",
     "@redactie/roles-rights-module": "0.7.0",
     "@redactie/translations-module": "0.6.1",
-    "@redactie/utils": "^0.10.0",
+    "@redactie/utils": "^0.16.0",
     "@testing-library/jest-dom": "5.0.2",
     "@testing-library/react": "9.4.0",
     "@types/jest": "24.9.1",
@@ -97,9 +97,7 @@
     "webpack-cli": "3.3.10",
     "yup": "0.28.3"
   },
-  "dependencies": {
-    "@mindspace-io/react": "^1.1.5"
-  },
+  "dependencies": {},
   "author": "Maarten De Weerdt",
   "license": "ISC"
 }

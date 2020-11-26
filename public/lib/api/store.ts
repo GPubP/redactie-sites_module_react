@@ -5,6 +5,8 @@ export const store = {
 		service: {
 			getSite: sitesFacade.getSite,
 			getSites: sitesFacade.getSitesPaginated,
+			updateSite: sitesFacade.updateSite,
+			// update
 		},
 		query: sitesQuery,
 	},

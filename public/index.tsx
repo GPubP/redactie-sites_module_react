@@ -1,3 +1,4 @@
+import { akitaDevtools } from '@datorama/akita';
 import Core from '@redactie/redactie-core';
 import { RolesRightsModuleAPI } from '@redactie/roles-rights-module';
 import { RenderChildRoutes, TenantContext } from '@redactie/utils';
@@ -9,6 +10,8 @@ import { routes } from './lib/services/routes/routes.class';
 import { MODULE_PATHS } from './lib/sites.const';
 import { SitesRouteProps } from './lib/sites.types';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
+
+akitaDevtools();
 
 const SitesComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) => {
 	const guardsMeta = useMemo(

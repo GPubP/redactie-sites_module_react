@@ -8,10 +8,12 @@ import { SearchParams } from '../../services/api';
 import { SiteResponse } from '../../services/sites';
 import { sitesFacade, sitesPaginator } from '../../store/sites';
 
-function useSitesPagination(
+import { UseSitesPagination } from './useSitesPagination.types';
+
+const useSitesPagination: UseSitesPagination = (
 	sitesSearchParams: SearchParams,
 	clearCache = false
-): PaginationResponse<SiteResponse> | null {
+) => {
 	const [pagination, setPagination] = useState<PaginationResponse<SiteResponse> | null>(null);
 	const prevSitesSearchParams = usePrevious<SearchParams>(sitesSearchParams);
 
@@ -41,34 +43,6 @@ function useSitesPagination(
 	}, [sitesSearchParams, prevSitesSearchParams, clearCache]);
 
 	return pagination;
-}
-// TODO: check why this isn't working
-// function useSitesPagination(
-// 	sitesSearchParams: SearchParams,
-// 	clearCache = false
-// ): PaginationResponse<SiteResponse> | null {
-// 	const [pagination, setPagination] = useState<PaginationResponse<SiteResponse> | null>(null);
-// 	const prevSitesSearchParams = usePrevious<SearchParams>(sitesSearchParams);
-
-// 	useEffect(() => {
-// 		const shouldClearCache =
-// 			sitesSearchParams.sort !== prevSitesSearchParams?.sort || clearCache;
-// 		console.log(shouldClearCache, 'should clear cache');
-
-// 		const s = sitesFacade
-// 			.getSitesPaginated(sitesSearchParams, shouldClearCache)
-// 			.subscribe(result => {
-// 				if (result) {
-// 					setPagination(result);
-// 				}
-// 			});
-
-// 		return () => {
-// 			s.unsubscribe();
-// 		};
-// 	}, [sitesSearchParams, sitesSearchParams.page, prevSitesSearchParams, clearCache]);
-
-// 	return pagination;
-// }
+};
 
 export default useSitesPagination;

@@ -32,7 +32,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [loadingState, site] = useSite();
+	const [loadingState, site] = useSite(siteId);
 	const sitesLoadingStates = useSitesLoadingStates();
 	const isFetching = loadingState === LoadingState.Loading;
 	const isUpdating = sitesLoadingStates.isUpdating === LoadingState.Loading;
@@ -65,17 +65,6 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			});
 		}
 	}, [site]);
-
-	useEffect(() => {
-		if (siteId) {
-			sitesFacade.getSite({ id: siteId });
-			return;
-		}
-	}, [siteId]);
-
-	useWillUnmount(() => {
-		sitesFacade.resetSite();
-	});
 
 	/**
 	 * Methods
