@@ -278,7 +278,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
-				<DataLoader loadingState={initialLoading} render={renderOverview} notFoundMessage={t(CORE_TRANSLATIONS["TABLE_NO-RESULT"])} />
+				<DataLoader loadingState={initialLoading} render={renderOverview} notFoundMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])} />
 			</Container>
 		</>
 	);
