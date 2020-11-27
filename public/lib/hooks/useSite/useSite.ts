@@ -9,7 +9,6 @@ const useSite: UseSite = (siteId: string) => {
 	useEffect(() => {
 		if (!sitesFacade.hasActive(siteId) && siteId) {
 			sitesFacade.setActive(siteId);
-			console.log('get site');
 			sitesFacade.getSite({ id: siteId });
 		}
 	}, [siteId]);

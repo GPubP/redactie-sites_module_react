@@ -33,6 +33,8 @@ export const SITES_INITIAL_FILTER_STATE = {
 };
 
 export const ALERT_CONTAINER_IDS = {
-	create: 'create',
-	update: 'update',
+	create: 'sites-create',
+	update: 'sites-update',
+	fetch: 'sites-fetch',
+	fetchOne: 'sites-fetch-one',
 };

@@ -6,4 +6,4 @@ import { SiteResponse } from '../../services/sites';
 export type UseSitesPagination = (
 	sitesSearchParams: SearchParams,
 	clearCache?: boolean
-) => PaginationResponse<SiteResponse> | null;
+) => [PaginationResponse<SiteResponse> | null, () => void];

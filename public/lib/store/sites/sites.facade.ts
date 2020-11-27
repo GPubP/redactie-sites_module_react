@@ -51,7 +51,7 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 		if (clearCache) {
 			this.paginator.clearCache();
 		}
-
+		const alertMessages = getAlertMessages();
 		this.store.setIsFetching(true);
 
 		return from(
@@ -74,19 +74,53 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 					};
 				})
 				.catch(error => {
+					this.alertService(alertMessages.fetch.error, 'fetch', 'error');
 					this.store.update({
 						error,
 						isFetching: false,
 					});
-					return error;
+					throw error;
 				})
 		);
+	}
+
+	public getSites(): void {
+		const { isFetching } = this.query.getValue();
+		if (isFetching) {
+			return;
+		}
+		const alertMessages = getAlertMessages();
+		this.store.setIsFetching(true);
+
+		this.service
+			.getSites({
+				// TODO: It is not possible to fetch all sites
+				// at once
+				pagesize: 1000,
+			} as any)
+			.then(response => {
+				if (response) {
+					this.store.update({
+						meta: response._page,
+						isFetching: false,
+					});
+					this.store.set(response._embedded);
+				}
+			})
+			.catch(error => {
+				this.alertService(alertMessages.fetch.error, 'fetch', 'error');
+				this.store.update({
+					error,
+					isFetching: false,
+				});
+			});
 	}
 
 	public getSite(payload: GetSitePayload): void {
 		if (this.query.hasDetailEntity(payload.id)) {
 			return;
 		}
+		const alertMessages = getAlertMessages();
 
 		this.store.setIsFetching(true);
 		this.service
@@ -101,6 +135,7 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 				}));
 			})
 			.catch(error => {
+				this.alertService(alertMessages.fetchOne.error, 'fetchOne', 'error');
 				this.store.update({
 					error,
 					isFetching: false,
@@ -173,12 +208,6 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 			});
 	}
 
-	public resetSite(): void {
-		this.store.update({
-			site: undefined,
-		});
-	}
-
 	public archiveSite(siteId: string): Promise<null> {
 		this.store.setIsArchiving(true);
 
@@ -187,7 +216,7 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 
 	private alertService(
 		alertProps: AlertProps,
-		containerId: 'create' | 'update',
+		containerId: 'create' | 'update' | 'fetch' | 'fetchOne',
 		type: 'success' | 'error'
 	): void {
 		const alertType = type === 'error' ? 'danger' : type;

@@ -12,7 +12,6 @@ import {
 	useDetectValueChanges,
 	useNavigate,
 	useRoutes,
-	useWillUnmount,
 } from '@redactie/utils';
 import { FormikProps } from 'formik';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
@@ -142,9 +141,14 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
-				<div className="u-margin-bottom">
-					<AlertContainer containerId={ALERT_CONTAINER_IDS.update} />
-				</div>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.update}
+				/>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.fetchOne}
+				/>
 				<DataLoader loadingState={loadingState} render={renderSitesUpdate} />
 			</Container>
 		</>

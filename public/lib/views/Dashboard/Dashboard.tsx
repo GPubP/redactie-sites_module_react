@@ -51,7 +51,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const sitesPagination = useSitesPagination(query as SearchParams);
+	const [sitesPagination] = useSitesPagination(query as SearchParams);
 	const sitesLoadingStates = useSitesLoadingStates();
 	const rolesRightsApi = useRolesRightsApi();
 	const [

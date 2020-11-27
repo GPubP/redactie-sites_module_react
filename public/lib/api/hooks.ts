@@ -1,6 +1,9 @@
-import { useSite, useSitesPagination } from '../hooks';
+import { useSite, useSites, useSitesLoadingStates, useSitesPagination } from '../hooks';
+import { SitesModuleAPI } from '../sites.types';
 
-export const hooks = {
+export const hooks: SitesModuleAPI['hooks'] = {
 	useSite,
+	useSites,
 	useSitesPagination,
+	useSitesLoadingStates,
 };

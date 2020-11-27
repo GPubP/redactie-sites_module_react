@@ -1,8 +1,9 @@
 import { PaginationResponse } from '@datorama/akita';
-import { usePrevious } from '@redactie/utils';
+import { usePrevious, useWillUnmount } from '@redactie/utils';
 import { equals } from 'ramda';
 import { useEffect, useState } from 'react';
-import { first } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { SearchParams } from '../../services/api';
 import { SiteResponse } from '../../services/sites';
@@ -10,12 +11,10 @@ import { sitesFacade, sitesPaginator } from '../../store/sites';
 
 import { UseSitesPagination } from './useSitesPagination.types';
 
-const useSitesPagination: UseSitesPagination = (
-	sitesSearchParams: SearchParams,
-	clearCache = false
-) => {
+const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = false) => {
 	const [pagination, setPagination] = useState<PaginationResponse<SiteResponse> | null>(null);
 	const prevSitesSearchParams = usePrevious<SearchParams>(sitesSearchParams);
+	const [pageChangesSubscriptions, setPageChangesSubscriptions] = useState<Subscription[]>([]);
 
 	useEffect(() => {
 		if (equals(sitesSearchParams, prevSitesSearchParams)) {
@@ -31,18 +30,27 @@ const useSitesPagination: UseSitesPagination = (
 		}
 
 		sitesPaginator.setPage(sitesSearchParams.page);
-
-		sitesPaginator
-			.getPage(() => sitesFacade.getSitesPaginated(sitesSearchParams))
-			.pipe(first())
+		const s = sitesPaginator.pageChanges
+			.pipe(
+				switchMap(() =>
+					sitesPaginator.getPage(() => sitesFacade.getSitesPaginated(sitesSearchParams))
+				)
+			)
 			.subscribe(result => {
 				if (result) {
 					setPagination(result);
 				}
 			});
+		setPageChangesSubscriptions(state => [...state, s]);
 	}, [sitesSearchParams, prevSitesSearchParams, clearCache]);
 
-	return pagination;
+	useWillUnmount(() => {
+		// NOTE: It is not possible to unsubscribe insinde the useEffect
+		// Because by doing that we broke the subscription :(
+		pageChangesSubscriptions.forEach(s => s.unsubscribe());
+	});
+
+	return [pagination, sitesPaginator.refreshCurrentPage.bind(sitesPaginator)];
 };
 
 export default useSitesPagination;
