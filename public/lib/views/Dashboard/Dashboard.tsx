@@ -7,6 +7,7 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
+import { FilterItemSchema } from '@redactie/roles-rights-module/dist/public/lib/views/SiteUsersOverview/SiteUsersOverview.types';
 import {
 	DataLoader,
 	LoadingState,
