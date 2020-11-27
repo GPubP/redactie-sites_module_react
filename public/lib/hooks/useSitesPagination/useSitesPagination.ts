@@ -3,7 +3,7 @@ import { usePrevious, useWillUnmount } from '@redactie/utils';
 import { equals } from 'ramda';
 import { useEffect, useState } from 'react';
 import { Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 import { SearchParams } from '../../services/api';
 import { SiteResponse } from '../../services/sites';
@@ -34,7 +34,8 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 			.pipe(
 				switchMap(() =>
 					sitesPaginator.getPage(() => sitesFacade.getSitesPaginated(sitesSearchParams))
-				)
+				),
+				take(1)
 			)
 			.subscribe(result => {
 				if (result) {
