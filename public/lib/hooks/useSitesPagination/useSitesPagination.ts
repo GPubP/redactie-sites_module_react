@@ -1,20 +1,41 @@
 import { PaginationResponse } from '@datorama/akita';
-import { usePrevious, useWillUnmount } from '@redactie/utils';
+import { usePrevious } from '@redactie/utils';
 import { equals } from 'ramda';
 import { useEffect, useState } from 'react';
-import { Subscription } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { combineLatest, Subject } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 
 import { SearchParams } from '../../services/api';
 import { SiteResponse } from '../../services/sites';
 import { sitesFacade, sitesPaginator } from '../../store/sites';
 
 import { UseSitesPagination } from './useSitesPagination.types';
+const subject = new Subject<SearchParams>();
+const searchParamsObservable = subject.asObservable();
 
 const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = false) => {
 	const [pagination, setPagination] = useState<PaginationResponse<SiteResponse> | null>(null);
 	const prevSitesSearchParams = usePrevious<SearchParams>(sitesSearchParams);
-	const [pageChangesSubscriptions, setPageChangesSubscriptions] = useState<Subscription[]>([]);
+
+	useEffect(() => {
+		const s = combineLatest(sitesPaginator.pageChanges, searchParamsObservable)
+			.pipe(
+				filter(([page, searchParams]) => page === searchParams.page),
+				switchMap(([, searchParams]) =>
+					sitesPaginator.getPage(() => sitesFacade.getSitesPaginated(searchParams))
+				)
+			)
+			.subscribe(result => {
+				if (result) {
+					setPagination(result);
+				}
+			});
+
+		return () => {
+			s.unsubscribe();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (equals(sitesSearchParams, prevSitesSearchParams)) {
@@ -29,27 +50,21 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 			sitesPaginator.clearCache();
 		}
 
-		sitesPaginator.setPage(sitesSearchParams.page);
-		const s = sitesPaginator.pageChanges
-			.pipe(
-				switchMap(() =>
-					sitesPaginator.getPage(() => sitesFacade.getSitesPaginated(sitesSearchParams))
-				),
-				take(1)
-			)
-			.subscribe(result => {
-				if (result) {
-					setPagination(result);
-				}
-			});
-		setPageChangesSubscriptions(state => [...state, s]);
-	}, [sitesSearchParams, prevSitesSearchParams, clearCache]);
+		subject.next(sitesSearchParams);
 
-	useWillUnmount(() => {
-		// NOTE: It is not possible to unsubscribe insinde the useEffect
-		// Because by doing that we broke the subscription :(
-		pageChangesSubscriptions.forEach(s => s.unsubscribe());
-	});
+		if (sitesSearchParams.page !== prevSitesSearchParams?.page) {
+			sitesPaginator.setPage(sitesSearchParams.page);
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [
+		clearCache,
+		prevSitesSearchParams,
+		sitesSearchParams,
+		sitesSearchParams.page,
+		sitesSearchParams.search,
+		sitesSearchParams.sort,
+	]);
 
 	return [pagination, sitesPaginator.refreshCurrentPage.bind(sitesPaginator)];
 };
