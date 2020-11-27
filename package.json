@@ -1,6 +1,6 @@
 {
   "name": "@redactie/sites-module",
-  "version": "0.19.2",
+  "version": "0.19.3",
   "description": "redactie sites module",
   "main": "dist/redactie-sites-module.umd.js",
   "module": "dist/redactie-sites-module.umd.js",
@@ -99,9 +99,7 @@
     "webpack-cli": "3.3.10",
     "yup": "0.28.3"
   },
-  "dependencies": {
-    "@mindspace-io/react": "^1.1.5"
-  },
+  "dependencies": {},
   "author": "Maarten De Weerdt",
   "license": "ISC"
 }

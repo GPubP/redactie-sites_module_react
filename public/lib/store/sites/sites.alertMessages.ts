@@ -1,11 +1,11 @@
 import { AlertProps } from '@redactie/utils';
 
 export type AlertMessages = Record<
-	'create' | 'update',
+	'create' | 'update' | 'fetch' | 'fetchOne',
 	{ [key in 'success' | 'error']: AlertProps }
 >;
 
-export const getAlertMessages = (name: string): AlertMessages => ({
+export const getAlertMessages = (name?: string): AlertMessages => ({
 	create: {
 		success: {
 			title: 'Aangemaakt',
@@ -24,6 +24,26 @@ export const getAlertMessages = (name: string): AlertMessages => ({
 		error: {
 			title: 'Bewaren mislukt',
 			message: `Bewaren van de site ${name} is mislukt`,
+		},
+	},
+	fetch: {
+		error: {
+			title: 'Ophalen',
+			message: 'Ophalen van sites is mislukt',
+		},
+		success: {
+			title: 'Ophalen',
+			message: 'Ophalen van sites is gelukt',
+		},
+	},
+	fetchOne: {
+		error: {
+			title: 'Ophalen',
+			message: 'Ophalen van site is mislukt',
+		},
+		success: {
+			title: 'Ophalen',
+			message: 'Ophalen van site is gelukt',
 		},
 	},
 });
