@@ -8,10 +8,11 @@ import {
 	TextField,
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
+import { CopyValue, ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { SitesDetailFormState } from '../../sites.types';
@@ -129,15 +130,6 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 									/>
 									<ErrorMessage name="name" />
 								</div>
-
-								<div className="col-xs-12 col-md-4">
-									{t(CORE_TRANSLATIONS['GENERAL_SYSTEM-NAME'])}:{' '}
-									<b>
-										{onActiveToggle
-											? initialState?.name || ''
-											: kebabCase(values.name)}
-									</b>
-								</div>
 							</div>
 						</div>
 						<div className="row u-margin-bottom">
@@ -155,6 +147,11 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							</div>
 						</div>
 						{onActiveToggle ? renderArchive() : null}
+						{initialState.uuid && (
+							<div className="row u-margin-top">
+								<CopyValue label='UUID' value={initialState.uuid} buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)} className='col-xs-12' />
+							</div>
+						)}
 						<ActionBar className="o-action-bar--fixed" isOpen>
 							<ActionBarContentSection>
 								<div className="u-wrapper row end-xs">
