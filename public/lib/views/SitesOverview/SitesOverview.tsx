@@ -8,6 +8,7 @@ import {
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
+	AlertContainer,
 	DataLoader,
 	LoadingState,
 	useAPIQueryParams,
@@ -31,6 +32,7 @@ import {
 import { OrderBy, SearchParams } from '../../services/api';
 import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import {
+	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
 	DEFAULT_SITES_SORTING,
 	MODULE_PATHS,
@@ -59,7 +61,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	});
 	const sitesLoadingStates = useSitesLoadingStates();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const sitesPagination = useSitesPagination(query as SearchParams);
+	const [sitesPagination] = useSitesPagination(query as SearchParams);
 	const rolesRightsApi = useRolesRightsApi();
 	const [
 		mySecurityRightsLoading,
@@ -278,7 +280,15 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 				</ContextHeaderActionsSection>
 			</ContextHeader>
 			<Container>
-				<DataLoader loadingState={initialLoading} render={renderOverview} notFoundMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])} />
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={ALERT_CONTAINER_IDS.fetch}
+				/>
+				<DataLoader
+					loadingState={initialLoading}
+					render={renderOverview}
+					notFoundMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
+				/>
 			</Container>
 		</>
 	);

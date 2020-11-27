@@ -1,29 +1,12 @@
-import { EntityStore, StoreConfig } from '@datorama/akita';
+import { StoreConfig } from '@datorama/akita';
+import { BaseEntityStore } from '@redactie/utils';
 
-import { createInitialSitesState, SiteModel, SitesState } from './sites.model';
+import { SiteModel, SitesState } from './sites.model';
 
-@StoreConfig({ name: 'sites', idKey: 'uuid' })
-export class SitesStore extends EntityStore<SitesState, SiteModel> {
-	constructor() {
-		super(createInitialSitesState());
-	}
-
-	public setIsFetching(isFetching = false): void {
-		this.update({
-			isFetching,
-		});
-	}
-
-	public setIsUpdating(isUpdating = false): void {
-		this.update({
-			isUpdating,
-		});
-	}
-
-	public setIsCreating(isCreating = false): void {
-		this.update({
-			isCreating,
-		});
+@StoreConfig({ name: 'sites-sites', idKey: 'uuid' })
+export class SitesStore extends BaseEntityStore<SitesState, SiteModel> {
+	constructor(initialState: Partial<SitesState>) {
+		super(initialState);
 	}
 
 	public setIsActivating(isActivating = false): void {
@@ -39,4 +22,8 @@ export class SitesStore extends EntityStore<SitesState, SiteModel> {
 	}
 }
 
-export const sitesStore = new SitesStore();
+export const sitesStore = new SitesStore({
+	detailIds: [],
+	isActivating: false,
+	isArchiving: false,
+});

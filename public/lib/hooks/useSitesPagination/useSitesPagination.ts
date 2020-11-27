@@ -2,18 +2,40 @@ import { PaginationResponse } from '@datorama/akita';
 import { usePrevious } from '@redactie/utils';
 import { equals } from 'ramda';
 import { useEffect, useState } from 'react';
-import { first } from 'rxjs/operators';
+import { combineLatest, Subject } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 
 import { SearchParams } from '../../services/api';
 import { SiteResponse } from '../../services/sites';
 import { sitesFacade, sitesPaginator } from '../../store/sites';
 
-function useSitesPagination(
-	sitesSearchParams: SearchParams,
-	clearCache = false
-): PaginationResponse<SiteResponse> | null {
+import { UseSitesPagination } from './useSitesPagination.types';
+const subject = new Subject<SearchParams>();
+const searchParamsObservable = subject.asObservable();
+
+const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = false) => {
 	const [pagination, setPagination] = useState<PaginationResponse<SiteResponse> | null>(null);
 	const prevSitesSearchParams = usePrevious<SearchParams>(sitesSearchParams);
+
+	useEffect(() => {
+		const s = combineLatest(sitesPaginator.pageChanges, searchParamsObservable)
+			.pipe(
+				filter(([page, searchParams]) => page === searchParams.page),
+				switchMap(([, searchParams]) =>
+					sitesPaginator.getPage(() => sitesFacade.getSitesPaginated(searchParams))
+				)
+			)
+			.subscribe(result => {
+				if (result) {
+					setPagination(result);
+				}
+			});
+
+		return () => {
+			s.unsubscribe();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
 	useEffect(() => {
 		if (equals(sitesSearchParams, prevSitesSearchParams)) {
@@ -28,47 +50,23 @@ function useSitesPagination(
 			sitesPaginator.clearCache();
 		}
 
-		sitesPaginator.setPage(sitesSearchParams.page);
+		subject.next(sitesSearchParams);
 
-		sitesPaginator
-			.getPage(() => sitesFacade.getSitesPaginated(sitesSearchParams))
-			.pipe(first())
-			.subscribe(result => {
-				if (result) {
-					setPagination(result);
-				}
-			});
-	}, [sitesSearchParams, prevSitesSearchParams, clearCache]);
+		if (sitesSearchParams.page !== prevSitesSearchParams?.page) {
+			sitesPaginator.setPage(sitesSearchParams.page);
+		}
 
-	return pagination;
-}
-// TODO: check why this isn't working
-// function useSitesPagination(
-// 	sitesSearchParams: SearchParams,
-// 	clearCache = false
-// ): PaginationResponse<SiteResponse> | null {
-// 	const [pagination, setPagination] = useState<PaginationResponse<SiteResponse> | null>(null);
-// 	const prevSitesSearchParams = usePrevious<SearchParams>(sitesSearchParams);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [
+		clearCache,
+		prevSitesSearchParams,
+		sitesSearchParams,
+		sitesSearchParams.page,
+		sitesSearchParams.search,
+		sitesSearchParams.sort,
+	]);
 
-// 	useEffect(() => {
-// 		const shouldClearCache =
-// 			sitesSearchParams.sort !== prevSitesSearchParams?.sort || clearCache;
-// 		console.log(shouldClearCache, 'should clear cache');
-
-// 		const s = sitesFacade
-// 			.getSitesPaginated(sitesSearchParams, shouldClearCache)
-// 			.subscribe(result => {
-// 				if (result) {
-// 					setPagination(result);
-// 				}
-// 			});
-
-// 		return () => {
-// 			s.unsubscribe();
-// 		};
-// 	}, [sitesSearchParams, sitesSearchParams.page, prevSitesSearchParams, clearCache]);
-
-// 	return pagination;
-// }
+	return [pagination, sitesPaginator.refreshCurrentPage.bind(sitesPaginator)];
+};
 
 export default useSitesPagination;
