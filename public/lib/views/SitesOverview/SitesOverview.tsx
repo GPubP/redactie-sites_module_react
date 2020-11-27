@@ -284,8 +284,11 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					toastClassName="u-margin-bottom"
 					containerId={ALERT_CONTAINER_IDS.fetch}
 				/>
-
-				<DataLoader loadingState={initialLoading} render={renderOverview} />
+				<DataLoader
+					loadingState={initialLoading}
+					render={renderOverview}
+					notFoundMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
+				/>
 			</Container>
 		</>
 	);
