@@ -8,7 +8,7 @@ import {
 	TextField,
 } from '@acpaas-ui/react-components';
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
-import { ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
+import { CopyValue, ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik } from 'formik';
 import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement } from 'react';
@@ -149,23 +149,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						{onActiveToggle ? renderArchive() : null}
 						{initialState.uuid && (
 							<div className="row u-margin-top">
-								<div className="col-xs-12 ">
-									<label>UUID</label>
-									<p className="u-margin-top-xs">
-										<span className="u-text-light u-margin-right-xs">
-											{initialState.uuid}
-										</span>
-										<CopyToClipboard text={initialState.uuid}>
-											<Button
-												className="u-button-as-link"
-												htmlType="button"
-												type="transparent"
-											>
-												{t(CORE_TRANSLATIONS.GENERAL_COPY)}
-											</Button>
-										</CopyToClipboard>
-									</p>
-								</div>
+								<CopyValue label='UUID' value={initialState.uuid} buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)} className='col-xs-12' />
 							</div>
 						)}
 						<ActionBar className="o-action-bar--fixed" isOpen>
