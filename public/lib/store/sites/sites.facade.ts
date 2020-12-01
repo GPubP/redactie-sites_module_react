@@ -44,6 +44,10 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 		return this.query.hasActive(siteId);
 	}
 
+	public setIsFetching(isFetching = false): void {
+		this.store.setIsFetching(isFetching);
+	}
+
 	public getSitesPaginated(
 		payload: GetSitesPayload,
 		clearCache = false
@@ -52,7 +56,6 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 			this.paginator.clearCache();
 		}
 		const alertMessages = getAlertMessages();
-		this.store.setIsFetching(true);
 
 		return from(
 			this.service
@@ -62,7 +65,6 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 
 					this.store.update({
 						meta,
-						isFetching: false,
 					});
 
 					return {
