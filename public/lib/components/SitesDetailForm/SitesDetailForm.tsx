@@ -10,9 +10,7 @@ import {
 import { ActionBar, ActionBarContentSection } from '@acpaas-ui/react-editorial-components';
 import { CopyValue, ErrorMessage, FormikOnChangeHandler } from '@redactie/utils';
 import { Field, Formik } from 'formik';
-import kebabCase from 'lodash.kebabcase';
 import React, { FC, ReactElement } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { SitesDetailFormState } from '../../sites.types';
@@ -38,14 +36,24 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	const [t] = useCoreTranslation();
 
 	const getLoadingStateBtnProps = (
-		loading: boolean
+		loading: boolean,
+		defaultIcon?: string
 	): { iconLeft: string; disabled: boolean } | null => {
-		return loading
-			? {
-					iconLeft: 'circle-o-notch fa-spin',
-					disabled: true,
-			  }
-			: null;
+		if (loading) {
+			return {
+				iconLeft: 'circle-o-notch fa-spin',
+				disabled: true,
+		  	};
+		}
+
+		if (defaultIcon) {
+			return {
+				iconLeft: defaultIcon,
+				disabled: false,
+			}
+		}
+
+		return null;
 	};
 
 	const renderArchive = (): ReactElement => {
@@ -82,7 +90,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 							onConfirm={onArchive}
 							triggerElm={
 								<Button
-									{...getLoadingStateBtnProps(archiveLoading)}
+									{...getLoadingStateBtnProps(archiveLoading, 'archive')}
 									onClick={onArchive}
 									className="u-margin-top"
 									type="danger"
