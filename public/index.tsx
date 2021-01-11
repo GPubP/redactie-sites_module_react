@@ -74,6 +74,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 	// Expose route
 	Core.routes.register({
 		path: MODULE_PATHS.dashboard,
+		breadcrumb: null,
 		component: DashboardWrapperComponent,
 		isDefaultRoute: true,
 	});
@@ -98,6 +99,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 		[
 			{
 				path: MODULE_PATHS.overview,
+				breadcrumb: null,
 				component: SitesOverview,
 				guardOptions: {
 					guards: [
@@ -109,6 +111,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 			},
 			{
 				path: MODULE_PATHS.create,
+				breadcrumb: null,
 				component: SitesCreate,
 				guardOptions: {
 					guards: [
@@ -133,6 +136,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 					{
 						path: MODULE_PATHS.detailEdit,
 						component: SitesUpdate,
+						breadcrumb: null,
 						guardOptions: {
 							guards: [
 								rolesRightsApi.guards.securityRightsTenantGuard([
