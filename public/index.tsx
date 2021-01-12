@@ -74,7 +74,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 	// Expose route
 	Core.routes.register({
 		path: MODULE_PATHS.dashboard,
-		breadcrumb: null,
+		breadcrumb: false,
 		component: DashboardWrapperComponent,
 		isDefaultRoute: true,
 	});
@@ -99,7 +99,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 		[
 			{
 				path: MODULE_PATHS.overview,
-				breadcrumb: null,
+				breadcrumb: false,
 				component: SitesOverview,
 				guardOptions: {
 					guards: [
@@ -111,7 +111,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 			},
 			{
 				path: MODULE_PATHS.create,
-				breadcrumb: null,
+				breadcrumb: false,
 				component: SitesCreate,
 				guardOptions: {
 					guards: [
@@ -123,7 +123,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 			},
 			{
 				path: MODULE_PATHS.detail,
-				breadcrumb: null,
+				breadcrumb: false,
 				component: SiteDetailComponent,
 				guardOptions: {
 					guards: [
@@ -136,7 +136,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 					{
 						path: MODULE_PATHS.detailEdit,
 						component: SitesUpdate,
-						breadcrumb: null,
+						breadcrumb: false,
 						guardOptions: {
 							guards: [
 								rolesRightsApi.guards.securityRightsTenantGuard([
