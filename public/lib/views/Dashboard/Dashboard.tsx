@@ -151,10 +151,6 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!sitesPagination) {
-			return null;
-		}
-
 		const sitesRows: SitesOverviewRowData[] = (sitesPagination?.data || []).map(site => ({
 			id: site.uuid,
 			name: site.data.name,
@@ -212,12 +208,12 @@ const Dashboard: FC<SitesRouteProps> = () => {
 					className="u-margin-top"
 					columns={sitesColumns}
 					rows={sitesRows}
-					currentPage={sitesPagination.currentPage}
+					currentPage={sitesPagination?.currentPage ?? 1}
 					itemsPerPage={query.pagesize}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					activeSorting={sitesActiveSorting}
-					totalValues={sitesPagination.total}
+					totalValues={sitesPagination?.total ?? 0}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
 				></PaginatedTable>
 			</>
