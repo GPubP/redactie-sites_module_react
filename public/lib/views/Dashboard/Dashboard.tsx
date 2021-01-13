@@ -65,11 +65,12 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			(sitesLoadingStates.isFetching === LoadingState.Loaded ||
 				sitesLoadingStates.isFetching === LoadingState.Error) &&
 			(mySecurityRightsLoading === LoadingState.Loaded ||
-				mySecurityRightsLoading === LoadingState.Error)
+				mySecurityRightsLoading === LoadingState.Error) &&
+			sitesPagination
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading]);
+	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading, sitesPagination]);
 
 	useEffect(() => {
 		setFilterFormState({
