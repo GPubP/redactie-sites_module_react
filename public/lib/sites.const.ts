@@ -13,6 +13,10 @@ export const DEFAULT_SITES_SORTING: APIQueryParamsConfig = {
 		defaultValue: '',
 		type: 'string',
 	},
+	sparse: {
+		defaultValue: true,
+		type: 'boolean',
+	},
 };
 
 export const TENANT_ROOT = '/:tenantId';
