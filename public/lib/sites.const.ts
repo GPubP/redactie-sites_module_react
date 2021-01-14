@@ -4,7 +4,7 @@ export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId', '/:tenantId/sites/:siteId/bewerken'],
 };
 
-export const DEFAULT_SITES_SORTING: APIQueryParamsConfig = {
+export const DEFAULT_SITES_QUERY_PARAMS: APIQueryParamsConfig = {
 	sort: {
 		defaultValue: 'data.name',
 		type: 'string',
@@ -12,6 +12,10 @@ export const DEFAULT_SITES_SORTING: APIQueryParamsConfig = {
 	search: {
 		defaultValue: '',
 		type: 'string',
+	},
+	sparse: {
+		defaultValue: true,
+		type: 'boolean',
 	},
 };
 

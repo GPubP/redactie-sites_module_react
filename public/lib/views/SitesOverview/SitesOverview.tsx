@@ -34,7 +34,7 @@ import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
-	DEFAULT_SITES_SORTING,
+	DEFAULT_SITES_QUERY_PARAMS,
 	MODULE_PATHS,
 	SITES_INITIAL_FILTER_STATE,
 } from '../../sites.const';
@@ -48,7 +48,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	 */
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
-	const [query, setQuery] = useAPIQueryParams(clone(DEFAULT_SITES_SORTING));
+	const [query, setQuery] = useAPIQueryParams(clone(DEFAULT_SITES_QUERY_PARAMS));
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
 		SITES_INITIAL_FILTER_STATE
 	);
@@ -74,11 +74,12 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			(sitesLoadingStates.isFetching === LoadingState.Loaded ||
 				sitesLoadingStates.isFetching === LoadingState.Error) &&
 			(mySecurityRightsLoading === LoadingState.Loaded ||
-				mySecurityRightsLoading === LoadingState.Error)
+				mySecurityRightsLoading === LoadingState.Error) &&
+			sitesPagination
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading]);
+	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading, sitesPagination]);
 
 	useEffect(() => {
 		setFilterFormState({
@@ -164,11 +165,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	 * Render
 	 */
 	const renderOverview = (): ReactElement | null => {
-		if (!sitesPagination) {
-			return null;
-		}
-
-		const sitesRows: SitesOverviewRowData[] = sitesPagination.data.map(site => ({
+		const sitesRows: SitesOverviewRowData[] = (sitesPagination?.data || []).map(site => ({
 			id: site.uuid,
 			name: site.data.name,
 			active: site.meta.active,
@@ -247,14 +244,14 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					className="u-margin-top"
 					columns={sitesColumns}
 					rows={sitesRows}
-					currentPage={sitesPagination.currentPage}
+					currentPage={sitesPagination?.currentPage ?? 1}
 					itemsPerPage={query.pagesize}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
 					noDataMessage="Er zijn geen resultaten voor de ingestelde filters"
 					loadDataMessage="Sites ophalen"
 					activeSorting={sitesActiveSorting}
-					totalValues={sitesPagination.total}
+					totalValues={sitesPagination?.total ?? 0}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
 				></PaginatedTable>
 			</>

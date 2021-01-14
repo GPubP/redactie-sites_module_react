@@ -48,6 +48,10 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 		this.store.setIsFetching(isFetching);
 	}
 
+	public setIsUpdating(isUpdating = false): void {
+		this.store.setIsUpdating(isUpdating);
+	}
+
 	public getSitesPaginated(
 		payload: GetSitesPayload,
 		clearCache = false
