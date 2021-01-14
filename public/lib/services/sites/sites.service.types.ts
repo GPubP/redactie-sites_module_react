@@ -18,6 +18,7 @@ export interface SiteResponse {
 		createdAt: string;
 		updatedAt: string;
 		active: boolean;
+		contentItemsCount?: number;
 	};
 	userIsMember?: boolean;
 }

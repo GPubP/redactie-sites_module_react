@@ -96,10 +96,9 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 
 		this.service
 			.getSites({
-				// TODO: It is not possible to fetch all sites
-				// at once
-				pagesize: 1000,
-			} as any)
+				page: 0,
+				pagesize: -1,
+			})
 			.then(response => {
 				if (response) {
 					this.store.update({
