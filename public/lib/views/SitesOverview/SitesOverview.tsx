@@ -34,7 +34,7 @@ import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
-	DEFAULT_SITES_SORTING,
+	DEFAULT_SITES_QUERY_PARAMS,
 	MODULE_PATHS,
 	SITES_INITIAL_FILTER_STATE,
 } from '../../sites.const';
@@ -48,7 +48,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	 */
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
-	const [query, setQuery] = useAPIQueryParams(clone(DEFAULT_SITES_SORTING));
+	const [query, setQuery] = useAPIQueryParams(clone(DEFAULT_SITES_QUERY_PARAMS));
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
 		SITES_INITIAL_FILTER_STATE
 	);

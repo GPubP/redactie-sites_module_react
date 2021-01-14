@@ -1,7 +1,7 @@
 import { PaginationResponse } from '@datorama/akita';
 import { usePrevious } from '@redactie/utils';
 import { equals } from 'ramda';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { combineLatest, Subject } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 
@@ -12,9 +12,9 @@ import { sitesFacade, sitesPaginator } from '../../store/sites';
 import { UseSitesPagination } from './useSitesPagination.types';
 const subject = new Subject<SearchParams>();
 const searchParamsObservable = subject.asObservable();
-let previousPage: number;
 
 const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = false) => {
+	const isRefreshingPage = useRef(false);
 	const [pagination, setPagination] = useState<PaginationResponse<SiteResponse> | null>(null);
 	const prevSitesSearchParams = usePrevious<SearchParams>(sitesSearchParams);
 
@@ -22,21 +22,28 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 		const s = combineLatest(sitesPaginator.pageChanges, searchParamsObservable)
 			.pipe(
 				filter(([page, searchParams]) => page === searchParams.page),
-				tap(([page]) => {
-					if (previousPage !== page) {
+				tap(() => {
+					if (!isRefreshingPage.current) {
 						// Don't show a loading indicator when we refresh the current page
 						sitesFacade.setIsFetching(true);
 					}
-					previousPage = page;
 				}),
 				switchMap(([, searchParams]) =>
 					sitesPaginator.getPage(() => sitesFacade.getSitesPaginated(searchParams))
 				)
 			)
 			.subscribe(result => {
+				isRefreshingPage.current = false;
 				if (result) {
 					setPagination(result);
 					sitesFacade.setIsFetching(false);
+					// NOTE: This is a hack!
+					// The paginator class is not bound to the store data.
+					// Updating an item in store will not change the data in the paginator
+					// We need to refresh the current page to get the updated data
+					// We are still updating the data when we are refreshing the page
+					// Therefore we need to set the isUpdating prop to false when we fetched the data from the server
+					sitesFacade.setIsUpdating(false);
 				}
 			});
 
@@ -61,7 +68,10 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 
 		subject.next(sitesSearchParams);
 
-		if (sitesSearchParams.page !== prevSitesSearchParams?.page) {
+		if (
+			sitesSearchParams.page !== prevSitesSearchParams?.page &&
+			sitesPaginator.currentPage !== sitesSearchParams.page
+		) {
 			sitesPaginator.setPage(sitesSearchParams.page);
 		}
 
@@ -75,7 +85,20 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 		sitesSearchParams.sort,
 	]);
 
-	return [pagination, sitesPaginator.refreshCurrentPage.bind(sitesPaginator)];
+	return [
+		pagination,
+		() => {
+			// NOTE: This is a hack!
+			// The paginator class is not bound to the store data.
+			// Updating an item in store will not change the data in the paginator
+			// We need to refresh the current page to get the updated data
+			// We are still updating the data when we are refreshing the page
+			// Therefore we need to set the isUpdating prop to true
+			sitesFacade.setIsUpdating(true);
+			isRefreshingPage.current = true;
+			sitesPaginator.refreshCurrentPage();
+		},
+	];
 };
 
 export default useSitesPagination;

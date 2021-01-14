@@ -28,7 +28,7 @@ import { OrderBy, SearchParams } from '../../services/api';
 import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import {
 	BREADCRUMB_OPTIONS,
-	DEFAULT_SITES_SORTING,
+	DEFAULT_SITES_QUERY_PARAMS,
 	MODULE_PATHS,
 	SITES_INITIAL_FILTER_STATE,
 } from '../../sites.const';
@@ -42,7 +42,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
 	const [query, setQuery] = useAPIQueryParams({
-		...DEFAULT_SITES_SORTING,
+		...DEFAULT_SITES_QUERY_PARAMS,
 	});
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
 		SITES_INITIAL_FILTER_STATE
