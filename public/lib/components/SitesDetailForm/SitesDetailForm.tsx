@@ -43,14 +43,14 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 			return {
 				iconLeft: 'circle-o-notch fa-spin',
 				disabled: true,
-		  	};
+			};
 		}
 
 		if (defaultIcon) {
 			return {
 				iconLeft: defaultIcon,
 				disabled: false,
-			}
+			};
 		}
 
 		return null;
@@ -119,7 +119,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 			validationSchema={SITES_DETAIL_VALIDATION_SCHEMA}
 		>
 			{formikProps => {
-				const { submitForm, values, resetForm } = formikProps;
+				const { submitForm, resetForm } = formikProps;
 				return (
 					<>
 						<FormikOnChangeHandler
@@ -157,7 +157,12 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 						{onActiveToggle ? renderArchive() : null}
 						{initialState.uuid && (
 							<div className="row u-margin-top">
-								<CopyValue label='UUID' value={initialState.uuid} buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)} className='col-xs-12' />
+								<CopyValue
+									label="UUID"
+									value={initialState.uuid}
+									buttonText={t(CORE_TRANSLATIONS.GENERAL_COPY)}
+									className="col-xs-12"
+								/>
 							</div>
 						)}
 						<ActionBar className="o-action-bar--fixed" isOpen>
