@@ -9,7 +9,6 @@ export const store: SitesModuleAPI['store'] = {
 			getSite: sitesFacade.getSite.bind(sitesFacade),
 			getSitesPaginated: sitesFacade.getSitesPaginated.bind(sitesFacade),
 			updateSite: sitesFacade.updateSite.bind(sitesFacade),
-			getSites: sitesFacade.getSites.bind(sitesFacade),
 		},
 		query: sitesQuery,
 	},

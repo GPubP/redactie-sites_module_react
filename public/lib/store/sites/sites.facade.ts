@@ -86,37 +86,6 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 		);
 	}
 
-	public getSites(): void {
-		const { isFetching } = this.query.getValue();
-		if (isFetching) {
-			return;
-		}
-		const alertMessages = getAlertMessages();
-		this.store.setIsFetching(true);
-
-		this.service
-			.getSites({
-				page: 0,
-				pagesize: -1,
-			})
-			.then(response => {
-				if (response) {
-					this.store.update({
-						meta: response._page,
-						isFetching: false,
-					});
-					this.store.set(response._embedded);
-				}
-			})
-			.catch(error => {
-				this.alertService(alertMessages.fetch.error, 'fetch', 'error');
-				this.store.update({
-					error,
-					isFetching: false,
-				});
-			});
-	}
-
 	public getSite(payload: GetSitePayload): void {
 		if (this.query.hasDetailEntity(payload.id)) {
 			return;
