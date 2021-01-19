@@ -32,7 +32,7 @@ export interface SitesModuleAPI {
 	store: {
 		sites: {
 			service: SitesApiService;
-			facade: Pick<SitesFacade, 'getSite' | 'getSitesPaginated' | 'updateSite' | 'getSites'>;
+			facade: Pick<SitesFacade, 'getSite' | 'getSitesPaginated' | 'updateSite'>;
 			query: SitesQuery;
 		};
 	};
