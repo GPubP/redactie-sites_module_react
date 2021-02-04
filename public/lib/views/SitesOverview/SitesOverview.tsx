@@ -4,7 +4,9 @@ import {
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
+	EllipsisWithTooltip,
 	PaginatedTable,
+	TooltipTypeMap,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
@@ -182,12 +184,22 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 						<>
 							{rowData.userIsMember ? (
 								<AUILink to={`${rowData?.id}/content`} component={Link}>
-									{value}
+									<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+										{value}
+									</EllipsisWithTooltip>
 								</AUILink>
 							) : (
-								<label>{value}</label>
+								<label>
+									<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+										{value}
+									</EllipsisWithTooltip>
+								</label>
 							)}
-							<p className="u-text-light u-margin-top-xs">{rowData?.description}</p>
+							<p className="u-text-light u-margin-top-xs">
+								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+									{rowData?.description}
+								</EllipsisWithTooltip>
+							</p>
 						</>
 					);
 				},
@@ -195,6 +207,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				value: 'active',
+				width: '120px',
 				component(value: string) {
 					const isActive = !!value;
 					return <SiteStatus active={isActive} />;
@@ -204,6 +217,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 				label: '',
 				classList: ['u-text-right'],
 				disableSorting: true,
+				width: '100px',
 				component(value: unknown, rowData: unknown) {
 					const { id } = rowData as SitesOverviewRowData;
 
@@ -241,7 +255,9 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					/>
 				</div>
 				<PaginatedTable
+					fixed
 					className="u-margin-top"
+					tableClassName="a-table--fixed--xs"
 					columns={sitesColumns}
 					rows={sitesRows}
 					currentPage={sitesPagination?.currentPage ?? 1}
