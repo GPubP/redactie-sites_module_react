@@ -4,6 +4,7 @@ import {
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
+	EllipsisWithTooltip,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
@@ -164,6 +165,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_NAME),
 				value: 'name',
+				width: '70%',
 				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<>
@@ -172,13 +174,21 @@ const Dashboard: FC<SitesRouteProps> = () => {
 									to={`sites/${prop('id')(rowData)}/content`}
 									component={Link}
 								>
-									{prop('name')(rowData)}
+									<EllipsisWithTooltip>
+										{prop('name')(rowData)}
+									</EllipsisWithTooltip>
 								</AUILink>
 							) : (
-								<label>{prop('name')(rowData)}</label>
+								<label>
+									<EllipsisWithTooltip>
+										{prop('name')(rowData)}
+									</EllipsisWithTooltip>
+								</label>
 							)}
 							<p className="u-text-light u-margin-top-xs">
-								{prop('description')(rowData)}
+								<EllipsisWithTooltip>
+									{prop('description')(rowData)}
+								</EllipsisWithTooltip>
 							</p>
 						</>
 					);
@@ -187,6 +197,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				value: 'active',
+				width: '30%',
 				component(value: string) {
 					const isActive = !!value;
 					return <SiteStatus active={isActive} />;
@@ -206,7 +217,9 @@ const Dashboard: FC<SitesRouteProps> = () => {
 					/>
 				</div>
 				<PaginatedTable
+					fixed
 					className="u-margin-top"
+					tableClassName="a-table--fixed--xs"
 					columns={sitesColumns}
 					rows={sitesRows}
 					currentPage={sitesPagination?.currentPage ?? 1}
