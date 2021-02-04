@@ -165,6 +165,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_NAME),
 				value: 'name',
+				width: '70%',
 				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<>
@@ -196,7 +197,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				value: 'active',
-				width: '120px',
+				width: '30%',
 				component(value: string) {
 					const isActive = !!value;
 					return <SiteStatus active={isActive} />;

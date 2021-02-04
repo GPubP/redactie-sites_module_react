@@ -178,6 +178,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_NAME),
 				value: 'name',
+				width: '50%',
 				component(value: any, rowData: SitesOverviewRowData) {
 					return (
 						<>
@@ -200,7 +201,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
 				value: 'active',
-				width: '120px',
+				width: '30%',
 				component(value: string) {
 					const isActive = !!value;
 					return <SiteStatus active={isActive} />;
@@ -210,7 +211,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 				label: '',
 				classList: ['u-text-right'],
 				disableSorting: true,
-				width: '100px',
+				width: '20%',
 				component(value: unknown, rowData: unknown) {
 					const { id } = rowData as SitesOverviewRowData;
 
