@@ -6,7 +6,6 @@ import {
 	ContextHeaderTopSection,
 	EllipsisWithTooltip,
 	PaginatedTable,
-	TooltipTypeMap,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import { FilterItemSchema } from '@redactie/roles-rights-module/dist/public/lib/views/SiteUsersOverview/SiteUsersOverview.types';
@@ -174,19 +173,19 @@ const Dashboard: FC<SitesRouteProps> = () => {
 									to={`sites/${prop('id')(rowData)}/content`}
 									component={Link}
 								>
-									<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+									<EllipsisWithTooltip>
 										{prop('name')(rowData)}
 									</EllipsisWithTooltip>
 								</AUILink>
 							) : (
 								<label>
-									<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+									<EllipsisWithTooltip>
 										{prop('name')(rowData)}
 									</EllipsisWithTooltip>
 								</label>
 							)}
 							<p className="u-text-light u-margin-top-xs">
-								<EllipsisWithTooltip type={TooltipTypeMap.PRIMARY}>
+								<EllipsisWithTooltip>
 									{prop('description')(rowData)}
 								</EllipsisWithTooltip>
 							</p>
