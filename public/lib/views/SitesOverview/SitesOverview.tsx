@@ -179,20 +179,26 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 				label: t(CORE_TRANSLATIONS.TABLE_NAME),
 				value: 'name',
 				width: '50%',
-				component(value: any, rowData: SitesOverviewRowData) {
+				component(name: string, { userIsMember, id, description }: SitesOverviewRowData) {
 					return (
 						<>
-							{rowData.userIsMember ? (
-								<AUILink to={`${rowData?.id}/content`} component={Link}>
-									<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
+							{userIsMember ? (
+								<AUILink to={`${id}/content`} component={Link}>
+									<EllipsisWithTooltip>{name}</EllipsisWithTooltip>
 								</AUILink>
 							) : (
 								<label>
-									<EllipsisWithTooltip>{value}</EllipsisWithTooltip>
+									<EllipsisWithTooltip>{name}</EllipsisWithTooltip>
 								</label>
 							)}
-							<p className="u-text-light u-margin-top-xs">
-								<EllipsisWithTooltip>{rowData?.description}</EllipsisWithTooltip>
+							<p className="small">
+								{description ? (
+									<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+								) : (
+									<span className="u-text-italic">
+										{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+									</span>
+								)}
 							</p>
 						</>
 					);
