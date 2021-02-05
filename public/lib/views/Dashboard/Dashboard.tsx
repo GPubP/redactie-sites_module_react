@@ -16,7 +16,6 @@ import {
 	useNavigate,
 	useRoutes,
 } from '@redactie/utils';
-import { prop } from 'ramda';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -166,29 +165,26 @@ const Dashboard: FC<SitesRouteProps> = () => {
 				label: t(CORE_TRANSLATIONS.TABLE_NAME),
 				value: 'name',
 				width: '70%',
-				component(value: any, rowData: SitesOverviewRowData) {
+				component(name: string, { userIsMember, id, description }: SitesOverviewRowData) {
 					return (
 						<>
-							{rowData.userIsMember ? (
-								<AUILink
-									to={`sites/${prop('id')(rowData)}/content`}
-									component={Link}
-								>
-									<EllipsisWithTooltip>
-										{prop('name')(rowData)}
-									</EllipsisWithTooltip>
+							{userIsMember ? (
+								<AUILink to={`sites/${id}/content`} component={Link}>
+									<EllipsisWithTooltip>{name}</EllipsisWithTooltip>
 								</AUILink>
 							) : (
 								<label>
-									<EllipsisWithTooltip>
-										{prop('name')(rowData)}
-									</EllipsisWithTooltip>
+									<EllipsisWithTooltip>{name}</EllipsisWithTooltip>
 								</label>
 							)}
-							<p className="u-text-light u-margin-top-xs">
-								<EllipsisWithTooltip>
-									{prop('description')(rowData)}
-								</EllipsisWithTooltip>
+							<p className="small">
+								{description ? (
+									<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+								) : (
+									<span className="u-text-italic">
+										{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
+									</span>
+								)}
 							</p>
 						</>
 					);
