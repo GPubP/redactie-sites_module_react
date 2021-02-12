@@ -14,7 +14,7 @@ import {
 	useRoutes,
 } from '@redactie/utils';
 import { FormikProps } from 'formik';
-import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useCallback, useEffect, useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
@@ -22,8 +22,9 @@ import { useHomeBreadcrumb, useSite, useSitesLoadingStates } from '../../hooks';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 
-import { TABS } from './SitesUpdate.const';
+import { TABS, BADGES } from './SitesUpdate.const';
 
 const SitesCreate: FC<SitesRouteProps> = () => {
 	const { siteId } = useParams<{ siteId: string }>();
@@ -33,6 +34,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	const [loadingState, site] = useSite(siteId);
 	const sitesLoadingStates = useSitesLoadingStates();
+	const [t] = useCoreTranslation();
 	const isFetching = loadingState === LoadingState.Loading;
 	const isUpdating = sitesLoadingStates.isUpdating === LoadingState.Loading;
 	const isActiveLoading = sitesLoadingStates.isActivating === LoadingState.Loading;
@@ -65,6 +67,16 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			});
 		}
 	}, [site]);
+
+	const title = useMemo(() => {
+		return site?.data.name ? (
+			<>
+				<i>{site?.data.name}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
+			</>
+		) : (
+			<>{t(CORE_TRANSLATIONS.ROUTING_UPDATE)}</>
+		);
+	}, [site, t]);
 
 	/**
 	 * Methods
@@ -138,7 +150,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	return (
 		<>
-			<ContextHeader tabs={TABS} title={`${site?.data.name || ''} bewerken`}>
+			<ContextHeader tabs={TABS} title={title} badges={BADGES}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>

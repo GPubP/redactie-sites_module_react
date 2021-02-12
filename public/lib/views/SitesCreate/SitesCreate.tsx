@@ -21,6 +21,7 @@ import { SiteResponse } from '../../services/sites';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 
 import { SITES_CREATE_ALLOWED_PATHS } from './SitesCreate.const';
 
@@ -33,6 +34,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	const routes = useRoutes();
 	const { navigate } = useNavigate();
+	const [t] = useCoreTranslation();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		extraBreadcrumbs: [useHomeBreadcrumb()],
@@ -73,7 +75,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	return (
 		<>
-			<ContextHeader tabs={TABS} title="Site aanmaken">
+			<ContextHeader tabs={TABS} title={`Site ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
