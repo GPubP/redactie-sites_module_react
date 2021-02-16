@@ -15,13 +15,13 @@ import {
 import React, { FC, useState } from 'react';
 
 import { SitesDetailForm } from '../../components';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSitesLoadingStates } from '../../hooks';
 import { generateDetailFormState } from '../../services/helpers';
 import { SiteResponse } from '../../services/sites';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 
 import { SITES_CREATE_ALLOWED_PATHS } from './SitesCreate.const';
 
