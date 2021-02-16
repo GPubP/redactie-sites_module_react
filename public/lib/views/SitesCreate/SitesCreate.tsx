@@ -15,6 +15,7 @@ import {
 import React, { FC, useState } from 'react';
 
 import { SitesDetailForm } from '../../components';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSitesLoadingStates } from '../../hooks';
 import { generateDetailFormState } from '../../services/helpers';
 import { SiteResponse } from '../../services/sites';
@@ -33,6 +34,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	const routes = useRoutes();
 	const { navigate } = useNavigate();
+	const [t] = useCoreTranslation();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		extraBreadcrumbs: [useHomeBreadcrumb()],
@@ -73,7 +75,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	return (
 		<>
-			<ContextHeader tabs={TABS} title="Site aanmaken">
+			<ContextHeader tabs={TABS} title={`Site ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>

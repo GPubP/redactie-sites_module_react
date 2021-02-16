@@ -18,12 +18,13 @@ import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react
 import { useParams } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
+import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSite, useSitesLoadingStates } from '../../hooks';
 import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
-import { TABS } from './SitesUpdate.const';
+import { BADGES, TABS } from './SitesUpdate.const';
 
 const SitesCreate: FC<SitesRouteProps> = () => {
 	const { siteId } = useParams<{ siteId: string }>();
@@ -33,6 +34,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	const [loadingState, site] = useSite(siteId);
 	const sitesLoadingStates = useSitesLoadingStates();
+	const [t] = useCoreTranslation();
 	const isFetching = loadingState === LoadingState.Loading;
 	const isUpdating = sitesLoadingStates.isUpdating === LoadingState.Loading;
 	const isActiveLoading = sitesLoadingStates.isActivating === LoadingState.Loading;
@@ -65,6 +67,12 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			});
 		}
 	}, [site]);
+
+	const pageTitle = (
+		<>
+			<i>{site?.data?.name ?? 'Site'}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
+		</>
+	);
 
 	/**
 	 * Methods
@@ -138,7 +146,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	return (
 		<>
-			<ContextHeader tabs={TABS} title={`${site?.data.name || ''} bewerken`}>
+			<ContextHeader tabs={TABS} title={pageTitle} badges={BADGES}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
