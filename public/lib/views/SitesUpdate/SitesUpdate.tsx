@@ -68,15 +68,11 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		}
 	}, [site]);
 
-	const title = useMemo(() => {
-		return site?.data.name ? (
-			<>
-				<i>{site?.data.name}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
-			</>
-		) : (
-			<>{t(CORE_TRANSLATIONS.ROUTING_UPDATE)}</>
-		);
-	}, [site, t]);
+	const pageTitle = (
+		<>
+			<i>{site?.data?.name ?? 'Site'}</i> {t(CORE_TRANSLATIONS.ROUTING_UPDATE)}
+		</>
+	);
 
 	/**
 	 * Methods
@@ -150,7 +146,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	return (
 		<>
-			<ContextHeader tabs={TABS} title={title} badges={BADGES}>
+			<ContextHeader tabs={TABS} title={pageTitle} badges={BADGES}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
