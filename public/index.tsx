@@ -5,9 +5,10 @@ import { RenderChildRoutes, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
 
 import { registerSitesAPI } from './lib/api';
+import { SitesPreNavigation } from './lib/components';
 import { rolesRightsConnector, RolesRightsConnector } from './lib/connectors/rolesRights';
 import { routes } from './lib/services/routes/routes.class';
-import { MODULE_PATHS } from './lib/sites.const';
+import { MODULE_PATHS, TENANT_ROOT } from './lib/sites.const';
 import { SitesRouteProps } from './lib/sites.types';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 
@@ -93,6 +94,16 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 				]),
 			],
 		},
+	});
+
+	Core.preNavigation.register({
+		component: SitesPreNavigation,
+		includePaths: [`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.detail}`],
+		excludePaths: [
+			`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`,
+			`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.overview}`,
+			`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.create}`,
+		],
 	});
 
 	routes.register(
