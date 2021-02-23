@@ -32,16 +32,15 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 
 	public readonly meta$ = this.query.meta$;
 	public readonly sites$ = this.query.sites$;
-	public readonly site$ = this.query.selectActive() as Observable<SiteModel>;
 	public readonly isActivating$ = this.query.isActivating$;
 	public readonly isArchiving$ = this.query.isArchiving$;
 
-	public setActive(siteId: string): void {
-		this.store.setActive(siteId);
+	public selectSite(siteId: string): Observable<SiteModel> {
+		return this.query.selectEntity(siteId);
 	}
 
-	public hasActive(siteId: string): boolean {
-		return this.query.hasActive(siteId);
+	public hasSite(siteId: string): boolean {
+		return this.query.hasDetailEntity(siteId);
 	}
 
 	public setIsFetching(isFetching = false): void {
@@ -96,23 +95,24 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 		}
 		const alertMessages = getAlertMessages();
 
-		this.store.setIsFetching(true);
+		this.store.setIsFetchingOne(true);
 		this.service
 			.getSite(payload)
 			.then(response => {
 				this.store.upsert(response.uuid, response);
 				this.store.update(state => ({
+					error: null,
 					detailIds: state.detailIds.includes(response.uuid)
 						? state.detailIds
 						: [...state.detailIds, response.uuid],
-					isFetching: false,
+					isFetchingOne: false,
 				}));
 			})
 			.catch(error => {
 				this.alertService(alertMessages.fetchOne.error, 'fetchOne', 'error');
 				this.store.update({
 					error,
-					isFetching: false,
+					isFetchingOne: false,
 				});
 			});
 	}
