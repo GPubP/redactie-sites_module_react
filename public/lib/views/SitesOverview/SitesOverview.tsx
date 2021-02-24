@@ -12,6 +12,8 @@ import {
 	AlertContainer,
 	DataLoader,
 	LoadingState,
+	parseOrderByToString,
+	parseStringToOrderBy,
 	useAPIQueryParams,
 	useNavigate,
 	useRoutes,
@@ -31,7 +33,6 @@ import {
 	useSitesPagination,
 } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
-import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
@@ -54,7 +55,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 		SITES_INITIAL_FILTER_STATE
 	);
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
-	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
+	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort), [query.sort]);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		excludePaths: [...BREADCRUMB_OPTIONS.excludePaths, ...['/:tenantId/sites']],
@@ -118,7 +119,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const handleOrderBy = (orderBy: OrderBy): void => {
 		setQuery({
 			...query,
-			sort: parseOrderBy({
+			sort: parseOrderByToString({
 				...orderBy,
 				key: `${orderBy.key === 'active' ? 'meta' : 'data'}.${orderBy.key}`,
 			}),

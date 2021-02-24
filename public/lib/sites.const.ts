@@ -38,7 +38,7 @@ export const SITES_INITIAL_FILTER_STATE = {
 	name: '',
 };
 
-export const DETAIL_TABS: Tab[] = [{ name: 'Instellingen', target: null, active: true }];
+export const DETAIL_TABS: Tab[] = [{ name: 'Instellingen', target: '', active: true }];
 
 export const ALERT_CONTAINER_IDS = {
 	create: 'sites-create',

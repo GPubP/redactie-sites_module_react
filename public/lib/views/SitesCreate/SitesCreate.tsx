@@ -13,11 +13,11 @@ import {
 	useRoutes,
 } from '@redactie/utils';
 import React, { FC, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSitesLoadingStates } from '../../hooks';
-import { generateDetailFormState } from '../../services/helpers';
 import { SiteResponse } from '../../services/sites';
 import {
 	ALERT_CONTAINER_IDS,
@@ -28,27 +28,22 @@ import {
 import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
-import { SITES_CREATE_ALLOWED_PATHS } from './SitesCreate.const';
-
-const initialFormValue = generateDetailFormState();
+import { INITIAL_DETAIL_FORM_STATE, SITES_CREATE_ALLOWED_PATHS } from './SitesCreate.const';
 
 const SitesCreate: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
 	const routes = useRoutes();
-	const { navigate } = useNavigate();
+	const { generatePath, navigate } = useNavigate();
 	const [t] = useCoreTranslation();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
 	const sitesLoadingStates = useSitesLoadingStates();
-	const [formValue, setFormValue] = useState<SitesDetailFormState>(initialFormValue);
-	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(
-		!!initialFormValue,
-		formValue
-	);
+	const [formValue, setFormValue] = useState<SitesDetailFormState>(INITIAL_DETAIL_FORM_STATE());
+	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(!!formValue, formValue);
 
 	/**
 	 * Methods
@@ -79,7 +74,15 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	return (
 		<>
-			<ContextHeader tabs={DETAIL_TABS} title={`Site ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`}>
+			<ContextHeader
+				linkProps={(props: any) => ({
+					...props,
+					to: generatePath(`${MODULE_PATHS.root}${MODULE_PATHS.create}`),
+					component: Link,
+				})}
+				tabs={DETAIL_TABS}
+				title={`Site ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`}
+			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
@@ -89,7 +92,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				<SitesDetailForm
 					isChanged={isChanged}
 					onChange={setFormValue}
-					initialState={initialFormValue}
+					initialState={formValue}
 					loading={sitesLoadingStates.isCreating === LoadingState.Loading}
 					onCancel={navigateToOverview}
 					onSubmit={onSubmit}

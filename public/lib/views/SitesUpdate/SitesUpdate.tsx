@@ -15,7 +15,7 @@ import {
 } from '@redactie/utils';
 import { FormikProps } from 'formik';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
@@ -56,7 +56,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		...BREADCRUMB_OPTIONS,
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
-	const { navigate } = useNavigate();
+	const { generatePath, navigate } = useNavigate();
 	const navigateToOverview = useCallback(
 		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
 		[navigate]
@@ -151,7 +151,16 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	return (
 		<>
-			<ContextHeader tabs={DETAIL_TABS} title={pageTitle} badges={BADGES}>
+			<ContextHeader
+				linkProps={(props: any) => ({
+					...props,
+					to: generatePath(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, { siteId }),
+					component: Link,
+				})}
+				tabs={DETAIL_TABS}
+				title={pageTitle}
+				badges={BADGES}
+			>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
