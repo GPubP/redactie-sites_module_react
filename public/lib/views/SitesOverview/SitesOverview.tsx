@@ -264,7 +264,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					itemsPerPage={query.pagesize}
 					onPageChange={handlePageChange}
 					orderBy={handleOrderBy}
-					noDataMessage="Er zijn geen resultaten voor de ingestelde filters"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 					loadDataMessage="Sites ophalen"
 					activeSorting={sitesActiveSorting}
 					totalValues={sitesPagination?.total ?? 0}

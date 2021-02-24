@@ -225,6 +225,8 @@ const Dashboard: FC<SitesRouteProps> = () => {
 					activeSorting={sitesActiveSorting}
 					totalValues={sitesPagination?.total ?? 0}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
+					loadDataMessage="Sites ophalen"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 				/>
 			</>
 		);
