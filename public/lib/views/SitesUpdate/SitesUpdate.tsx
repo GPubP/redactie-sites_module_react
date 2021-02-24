@@ -20,11 +20,16 @@ import { useParams } from 'react-router-dom';
 import { SitesDetailForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSite, useSitesLoadingStates } from '../../hooks';
-import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
+import {
+	ALERT_CONTAINER_IDS,
+	BREADCRUMB_OPTIONS,
+	DETAIL_TABS,
+	MODULE_PATHS,
+} from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
-import { BADGES, TABS } from './SitesUpdate.const';
+import { BADGES } from './SitesUpdate.const';
 
 const SitesCreate: FC<SitesRouteProps> = () => {
 	const { siteId } = useParams<{ siteId: string }>();
@@ -146,7 +151,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 
 	return (
 		<>
-			<ContextHeader tabs={TABS} title={pageTitle} badges={BADGES}>
+			<ContextHeader tabs={DETAIL_TABS} title={pageTitle} badges={BADGES}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>

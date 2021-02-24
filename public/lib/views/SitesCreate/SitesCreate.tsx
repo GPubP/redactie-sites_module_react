@@ -19,13 +19,17 @@ import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translat
 import { useHomeBreadcrumb, useSitesLoadingStates } from '../../hooks';
 import { generateDetailFormState } from '../../services/helpers';
 import { SiteResponse } from '../../services/sites';
-import { ALERT_CONTAINER_IDS, BREADCRUMB_OPTIONS, MODULE_PATHS } from '../../sites.const';
-import { SitesDetailFormState, SitesRouteProps, Tab } from '../../sites.types';
+import {
+	ALERT_CONTAINER_IDS,
+	BREADCRUMB_OPTIONS,
+	DETAIL_TABS,
+	MODULE_PATHS,
+} from '../../sites.const';
+import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
 import { SITES_CREATE_ALLOWED_PATHS } from './SitesCreate.const';
 
-const TABS: Tab[] = [{ name: 'Instellingen', target: 'instellingen', active: true }];
 const initialFormValue = generateDetailFormState();
 
 const SitesCreate: FC<SitesRouteProps> = () => {
@@ -75,7 +79,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	return (
 		<>
-			<ContextHeader tabs={TABS} title={`Site ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`}>
+			<ContextHeader tabs={DETAIL_TABS} title={`Site ${t(CORE_TRANSLATIONS.ROUTING_CREATE)}`}>
 				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
 			</ContextHeader>
 			<Container>
