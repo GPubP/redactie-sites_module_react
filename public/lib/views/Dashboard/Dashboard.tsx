@@ -225,7 +225,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 					activeSorting={sitesActiveSorting}
 					totalValues={sitesPagination?.total ?? 0}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
-				></PaginatedTable>
+				/>
 			</>
 		);
 	};

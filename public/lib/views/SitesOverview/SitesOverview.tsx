@@ -236,7 +236,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 								}
 								type="primary"
 								transparent
-							></Button>
+							/>
 						</rolesRightsApi.components.SecurableRender>
 					);
 				},
@@ -269,7 +269,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					activeSorting={sitesActiveSorting}
 					totalValues={sitesPagination?.total ?? 0}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
-				></PaginatedTable>
+				/>
 			</>
 		);
 	};
