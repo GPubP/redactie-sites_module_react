@@ -13,6 +13,10 @@ export const DEFAULT_SITES_QUERY_PARAMS: APIQueryParamsConfig = {
 		defaultValue: '',
 		type: 'string',
 	},
+	status: {
+		defaultValue: '',
+		type: 'string',
+	},
 	sparse: {
 		defaultValue: true,
 		type: 'boolean',
@@ -34,6 +38,7 @@ export const MODULE_API_NAME = 'sites-module';
 
 export const SITES_INITIAL_FILTER_STATE = {
 	name: '',
+	status: '',
 };
 
 export const ALERT_CONTAINER_IDS = {

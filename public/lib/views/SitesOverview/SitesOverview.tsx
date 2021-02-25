@@ -22,6 +22,7 @@ import { Link } from 'react-router-dom';
 
 import { SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
+import { STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import {
@@ -85,25 +86,35 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	useEffect(() => {
 		setFilterFormState({
 			name: query.search || '',
+			status: query.status || '',
 		});
-	}, [query.search]);
+	}, [query.search, query.status]);
 
 	useEffect(() => {
-		setFilterItems(
-			Object.keys(filterFormState).reduce(
-				(acc, key) =>
-					filterFormState[key]
-						? acc.concat([
-								{
-									filterKey: key,
-									value: filterFormState[key] as string,
-								},
-						  ])
-						: acc,
-				[] as FilterItemSchema[]
-			)
-		);
-	}, [filterFormState]);
+		setFilterItems([
+			...(filterFormState.name
+				? [
+						{
+							filterKey: filterFormState.name as string,
+							valuePrefix: 'Zoekterm',
+							value: filterFormState.name,
+						},
+				  ]
+				: []),
+			...(filterFormState.status
+				? [
+						{
+							filterKey: filterFormState.status as string,
+							valuePrefix: 'Status',
+							value:
+								STATUS_OPTIONS(t).find(
+									option => option.value === filterFormState.status
+								)?.label || '',
+						},
+				  ]
+				: []),
+		]);
+	}, [filterFormState, t]);
 
 	/**
 	 * Functions
@@ -130,10 +141,12 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			...query,
 			page: 1,
 			search: '',
+			status: '',
 		});
 
 		setFilterFormState({
 			name: '',
+			status: '',
 		});
 	};
 
@@ -142,10 +155,12 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			...query,
 			page: 1,
 			search: filterValue.name || '',
+			status: filterValue.status || '',
 		});
 
 		setFilterFormState({
 			name: filterValue.name,
+			status: filterValue.status,
 		});
 	};
 
@@ -154,6 +169,9 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			...query,
 			page: 1,
 			...(item.filterKey === 'name' ? { search: '' } : {}),
+			...(item.filterKey === 'active' || item.filterKey === 'non-active'
+				? { status: '' }
+				: {}),
 		});
 
 		setFilterFormState({
