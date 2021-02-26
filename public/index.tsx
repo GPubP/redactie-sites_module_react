@@ -66,7 +66,7 @@ const SiteDetailComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) =>
 const DashboardWrapperComponent: FC<SitesRouteProps> = props => {
 	return (
 		<TenantContext.Provider value={{ tenantId: props.tenantId }}>
-			<Dashboard {...props}></Dashboard>
+			<Dashboard {...props} />
 		</TenantContext.Provider>
 	);
 };
