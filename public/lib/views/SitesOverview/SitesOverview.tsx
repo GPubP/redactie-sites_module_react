@@ -12,8 +12,11 @@ import {
 	AlertContainer,
 	DataLoader,
 	LoadingState,
+	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
+	SearchParams,
+	TableColumn,
 	useAPIQueryParams,
 	useNavigate,
 	useRoutes,
@@ -32,7 +35,6 @@ import {
 	useSitesLoadingStates,
 	useSitesPagination,
 } from '../../hooks';
-import { OrderBy, SearchParams } from '../../services/api';
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
@@ -40,7 +42,7 @@ import {
 	MODULE_PATHS,
 	SITES_INITIAL_FILTER_STATE,
 } from '../../sites.const';
-import { FilterItemSchema, SitesRouteProps } from '../../sites.types';
+import { OverviewFilterItem, SitesRouteProps } from '../../sites.types';
 
 import { SitesOverviewRowData } from './SitesOverview.types';
 
@@ -54,8 +56,8 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
 		SITES_INITIAL_FILTER_STATE
 	);
-	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
-	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort), [query.sort]);
+	const [filterItems, setFilterItems] = useState<OverviewFilterItem[]>([]);
+	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort ?? ''), [query.sort]);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		excludePaths: [...BREADCRUMB_OPTIONS.excludePaths, ...['/:tenantId/sites']],
@@ -101,7 +103,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 								},
 						  ])
 						: acc,
-				[] as FilterItemSchema[]
+				[] as OverviewFilterItem[]
 			)
 		);
 	}, [filterFormState]);
@@ -175,12 +177,12 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			userIsMember: !!site.userIsMember,
 		}));
 
-		const sitesColumns = [
+		const sitesColumns: TableColumn<SitesOverviewRowData>[] = [
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_NAME),
 				value: 'name',
 				width: '50%',
-				component(name: string, { userIsMember, id, description }: SitesOverviewRowData) {
+				component(name: string, { userIsMember, id, description }) {
 					return (
 						<>
 							{userIsMember ? (
@@ -219,9 +221,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 				classList: ['u-text-right'],
 				disableSorting: true,
 				width: '20%',
-				component(value: unknown, rowData: unknown) {
-					const { id } = rowData as SitesOverviewRowData;
-
+				component(value, { id }) {
 					return (
 						<rolesRightsApi.components.SecurableRender
 							userSecurityRights={mySecurityrights as string[]}

@@ -1,6 +1,4 @@
-import { APIQueryParamsConfig } from '@redactie/utils';
-
-import { Tab } from './sites.types';
+import { APIQueryParamsConfig, ContextHeaderTab } from '@redactie/utils';
 
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId', '/:tenantId/sites/:siteId/bewerken'],
@@ -38,7 +36,7 @@ export const SITES_INITIAL_FILTER_STATE = {
 	name: '',
 };
 
-export const DETAIL_TABS: Tab[] = [{ name: 'Instellingen', target: '', active: true }];
+export const DETAIL_TABS: ContextHeaderTab[] = [{ name: 'Instellingen', target: '', active: true }];
 
 export const ALERT_CONTAINER_IDS = {
 	create: 'sites-create',

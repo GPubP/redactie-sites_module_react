@@ -8,12 +8,14 @@ import {
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import { FilterItemSchema } from '@redactie/roles-rights-module/dist/public/lib/views/SiteUsersOverview/SiteUsersOverview.types';
 import {
 	DataLoader,
 	LoadingState,
+	OrderBy,
 	parseOrderByToString,
 	parseStringToOrderBy,
+	SearchParams,
+	TableColumn,
 	useAPIQueryParams,
 	useNavigate,
 	useRoutes,
@@ -26,14 +28,13 @@ import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useRolesRightsApi, useSitesLoadingStates, useSitesPagination } from '../../hooks';
-import { OrderBy, SearchParams } from '../../services/api';
 import {
 	BREADCRUMB_OPTIONS,
 	DEFAULT_SITES_QUERY_PARAMS,
 	MODULE_PATHS,
 	SITES_INITIAL_FILTER_STATE,
 } from '../../sites.const';
-import { SitesRouteProps } from '../../sites.types';
+import { OverviewFilterItem, SitesRouteProps } from '../../sites.types';
 import { SitesOverviewRowData } from '../SitesOverview/SitesOverview.types';
 
 const Dashboard: FC<SitesRouteProps> = () => {
@@ -48,8 +49,8 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
 		SITES_INITIAL_FILTER_STATE
 	);
-	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
-	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort), [query.sort]);
+	const [filterItems, setFilterItems] = useState<OverviewFilterItem[]>([]);
+	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort ?? ''), [query.sort]);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [sitesPagination] = useSitesPagination(query as SearchParams);
@@ -91,7 +92,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 								},
 						  ])
 						: acc,
-				[] as FilterItemSchema[]
+				[] as OverviewFilterItem[]
 			)
 		);
 	}, [filterFormState]);
@@ -161,12 +162,12 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			userIsMember: !!site.userIsMember,
 		}));
 
-		const sitesColumns = [
+		const sitesColumns: TableColumn<SitesOverviewRowData>[] = [
 			{
 				label: t(CORE_TRANSLATIONS.TABLE_NAME),
 				value: 'name',
 				width: '70%',
-				component(name: string, { userIsMember, id, description }: SitesOverviewRowData) {
+				component(name: string, { userIsMember, id, description }) {
 					return (
 						<>
 							{userIsMember ? (

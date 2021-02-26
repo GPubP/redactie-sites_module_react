@@ -1,4 +1,6 @@
-import apiService, { parseSearchParams } from '../api/api.service';
+import { parseSearchParams } from '@redactie/utils';
+
+import apiService from '../api/api.service';
 
 import {
 	CreateSitePayload,
