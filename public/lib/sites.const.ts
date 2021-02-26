@@ -1,5 +1,7 @@
 import { APIQueryParamsConfig } from '@redactie/utils';
 
+import { Tab } from './sites.types';
+
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId', '/:tenantId/sites/:siteId/bewerken'],
 };
@@ -40,6 +42,8 @@ export const SITES_INITIAL_FILTER_STATE = {
 	name: '',
 	status: '',
 };
+
+export const DETAIL_TABS: Tab[] = [{ name: 'Instellingen', target: '', active: true }];
 
 export const ALERT_CONTAINER_IDS = {
 	create: 'sites-create',

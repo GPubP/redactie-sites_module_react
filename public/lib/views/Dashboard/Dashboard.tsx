@@ -12,6 +12,8 @@ import { FilterItemSchema } from '@redactie/roles-rights-module/dist/public/lib/
 import {
 	DataLoader,
 	LoadingState,
+	parseOrderByToString,
+	parseStringToOrderBy,
 	useAPIQueryParams,
 	useNavigate,
 	useRoutes,
@@ -26,7 +28,6 @@ import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useRolesRightsApi, useSitesLoadingStates, useSitesPagination } from '../../hooks';
 import { OrderBy, SearchParams } from '../../services/api';
-import { parseOrderBy, parseOrderByString } from '../../services/helpers';
 import {
 	BREADCRUMB_OPTIONS,
 	DEFAULT_SITES_QUERY_PARAMS,
@@ -44,12 +45,12 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	const routes = useRoutes();
 	const [query, setQuery] = useAPIQueryParams({
 		...DEFAULT_SITES_QUERY_PARAMS,
-	});
+	}, false);
 	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
 		SITES_INITIAL_FILTER_STATE
 	);
 	const [filterItems, setFilterItems] = useState<FilterItemSchema[]>([]);
-	const sitesActiveSorting = useMemo(() => parseOrderByString(query.sort), [query.sort]);
+	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort), [query.sort]);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
 	const [sitesPagination] = useSitesPagination(query as SearchParams);
@@ -118,7 +119,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	const handleOrderBy = (orderBy: OrderBy): void => {
 		setQuery({
 			...query,
-			sort: parseOrderBy({
+			sort: parseOrderByToString({
 				...orderBy,
 				key: `${orderBy.key === 'active' ? 'meta' : 'data'}.${orderBy.key}`,
 			}),
@@ -243,7 +244,9 @@ const Dashboard: FC<SitesRouteProps> = () => {
 					activeSorting={sitesActiveSorting}
 					totalValues={sitesPagination?.total ?? 0}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
-				></PaginatedTable>
+					loadDataMessage="Sites ophalen"
+					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
+				/>
 			</>
 		);
 	};
