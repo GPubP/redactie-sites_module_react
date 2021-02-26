@@ -3,6 +3,7 @@ export interface SearchParams {
 	pagesize: number;
 	sort?: string;
 	search?: string;
+	status?: string;
 }
 
 export interface OrderBy {

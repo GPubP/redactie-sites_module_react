@@ -15,6 +15,10 @@ export const DEFAULT_SITES_QUERY_PARAMS: APIQueryParamsConfig = {
 		defaultValue: '',
 		type: 'string',
 	},
+	status: {
+		defaultValue: '',
+		type: 'string',
+	},
 	sparse: {
 		defaultValue: true,
 		type: 'boolean',
@@ -36,6 +40,7 @@ export const MODULE_API_NAME = 'sites-module';
 
 export const SITES_INITIAL_FILTER_STATE = {
 	name: '',
+	status: '',
 };
 
 export const DETAIL_TABS: Tab[] = [{ name: 'Instellingen', target: '', active: true }];
