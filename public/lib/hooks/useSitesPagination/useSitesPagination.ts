@@ -1,11 +1,10 @@
 import { PaginationResponse } from '@datorama/akita';
-import { usePrevious } from '@redactie/utils';
+import { SearchParams, usePrevious } from '@redactie/utils';
 import { equals } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
 import { combineLatest, Subject } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 
-import { SearchParams } from '../../services/api';
 import { SiteResponse } from '../../services/sites';
 import { sitesFacade, sitesPaginator } from '../../store/sites';
 
@@ -73,7 +72,7 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 			sitesSearchParams.page !== prevSitesSearchParams?.page &&
 			sitesPaginator.currentPage !== sitesSearchParams.page
 		) {
-			sitesPaginator.setPage(sitesSearchParams.page);
+			sitesPaginator.setPage(sitesSearchParams.page ?? 1);
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps

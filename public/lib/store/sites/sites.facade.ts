@@ -71,8 +71,8 @@ export class SitesFacade extends BaseEntityFacade<SitesStore, SitesApiService, S
 					});
 
 					return {
-						perPage: parseInt(response._page.size, 10),
-						currentPage: parseInt(response._page.number, 10),
+						perPage: response._page.size,
+						currentPage: response._page.number,
 						lastPage: response._page.totalPages,
 						total: response._page.totalElements,
 						data: response._embedded,

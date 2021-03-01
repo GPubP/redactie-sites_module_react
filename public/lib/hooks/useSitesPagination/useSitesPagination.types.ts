@@ -1,6 +1,6 @@
 import { PaginationResponse } from '@datorama/akita';
+import { SearchParams } from '@redactie/utils';
 
-import { SearchParams } from '../../services/api';
 import { SiteResponse } from '../../services/sites';
 
 export type UseSitesPagination = (

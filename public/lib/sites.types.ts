@@ -1,4 +1,5 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
+import { FilterItem } from '@redactie/utils';
 
 import { UseSite } from './hooks/useSite';
 import { UseSites } from './hooks/useSites/useSites.types';
@@ -47,19 +48,16 @@ export interface SitesModuleAPI {
 	};
 }
 
-// Acpaas UI Component types
-
-export interface Tab {
-	name: string;
-	target: string | null;
-	active: boolean;
-	disabled?: boolean;
-}
-
-export interface FilterItemSchema {
-	key?: string;
-	value: string;
-	valuePrefix?: string;
+export interface OverviewFilterItem extends FilterItem {
 	filterKey: string;
 	formvalue?: any;
+}
+
+export interface SitesOverviewRowData {
+	id: string;
+	name: string;
+	active: boolean;
+	description: string;
+	userIsMember: boolean;
+	navigateToEdit?: () => void;
 }

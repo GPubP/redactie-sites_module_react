@@ -1,9 +1,6 @@
-import { SearchParams } from '../api';
+import { EmbeddedResponse, Page, SearchParams } from '@redactie/utils';
 
-export interface SitesResponse {
-	_embedded: SiteResponse[];
-	_page: SitesMetaResponse;
-}
+export type SitesResponse = EmbeddedResponse<SiteResponse>;
 
 export interface SiteResponse {
 	uuid: string;
@@ -23,12 +20,7 @@ export interface SiteResponse {
 	userIsMember?: boolean;
 }
 
-export interface SitesMetaResponse {
-	size: string;
-	totalElements: number;
-	totalPages: number;
-	number: string;
-}
+export type SitesMetaResponse = Page;
 
 export interface GetSitePayload {
 	id: string;

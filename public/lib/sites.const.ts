@@ -1,16 +1,10 @@
-import { APIQueryParamsConfig } from '@redactie/utils';
-
-import { Tab } from './sites.types';
+import { ContextHeaderTab } from '@redactie/utils';
 
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId', '/:tenantId/sites/:siteId/bewerken'],
 };
 
-export const DEFAULT_SITES_QUERY_PARAMS: APIQueryParamsConfig = {
-	sort: {
-		defaultValue: 'data.name',
-		type: 'string',
-	},
+export const OVERVIEW_QUERY_PARAMS_CONIG = {
 	search: {
 		defaultValue: '',
 		type: 'string',
@@ -23,7 +17,7 @@ export const DEFAULT_SITES_QUERY_PARAMS: APIQueryParamsConfig = {
 		defaultValue: true,
 		type: 'boolean',
 	},
-};
+} as const;
 
 export const TENANT_ROOT = '/:tenantId';
 
@@ -38,12 +32,7 @@ export const MODULE_PATHS = {
 
 export const MODULE_API_NAME = 'sites-module';
 
-export const SITES_INITIAL_FILTER_STATE = {
-	name: '',
-	status: '',
-};
-
-export const DETAIL_TABS: Tab[] = [{ name: 'Instellingen', target: '', active: true }];
+export const DETAIL_TABS: ContextHeaderTab[] = [{ name: 'Instellingen', target: '', active: true }];
 
 export const ALERT_CONTAINER_IDS = {
 	create: 'sites-create',
