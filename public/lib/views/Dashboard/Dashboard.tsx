@@ -20,14 +20,14 @@ import {
 } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { FilterForm, FilterFormState } from '../../components/FilterForm';
+import { FilterForm, FilterFormState, FilterFormStatus } from '../../components/FilterForm';
 import { STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { generateSitesFilters } from '../../helpers';
 import { useRolesRightsApi, useSitesLoadingStates, useSitesPagination } from '../../hooks';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS, OVERVIEW_QUERY_PARAMS_CONIG } from '../../sites.const';
-import { SitesOverviewRowData, SitesRouteProps } from '../../sites.types';
+import { OverviewFilterItem, SitesOverviewRowData, SitesRouteProps } from '../../sites.types';
 
 import { DASHBOARD_COLUMNS } from './Dashboard.const';
 
@@ -81,30 +81,35 @@ const Dashboard: FC<SitesRouteProps> = () => {
 
 	const deleteAllFilters = (): void => {
 		setQuery({
+			page: 1,
 			search: undefined,
-			status: undefined,
+			active: undefined,
 		});
 	};
 
 	const onSubmit = (filterValue: FilterFormState): void => {
 		setQuery({
-			search: filterValue.name,
-			status: filterValue.status,
+			page: 1,
+			search: filterValue.name || undefined,
+			active: filterValue.status ? filterValue.status === FilterFormStatus.Active : undefined,
 		});
 	};
 
-	const deleteFilter = (item: any): void => {
+	const deleteFilter = (item: OverviewFilterItem): void => {
 		setQuery({
-			...(item.filterKey === 'name' ? { search: '' } : {}),
-			...(item.filterKey === 'active' || item.filterKey === 'non-active'
-				? { status: '' }
-				: {}),
+			page: 1,
+			[item.filterKey]: undefined,
 		});
 	};
 
 	const filterFormState = {
 		name: query.search ?? '',
-		status: query.status ?? '',
+		status:
+			typeof query.active === 'boolean'
+				? query.active
+					? FilterFormStatus.Active
+					: FilterFormStatus.NonActive
+				: '',
 	};
 	const activeSorting = parseStringToOrderBy(query.sort ?? '');
 	const activeFilters = generateSitesFilters(STATUS_OPTIONS(t), filterFormState);

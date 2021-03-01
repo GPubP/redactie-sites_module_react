@@ -11,3 +11,8 @@ export interface FilterFormProps {
 	deleteActiveFilter: (item: any) => void;
 	activeFilters: Array<object>;
 }
+
+export enum FilterFormStatus {
+	Active = 'active',
+	NonActive = 'non-active',
+}

@@ -21,7 +21,7 @@ import {
 } from '@redactie/utils';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { FilterForm, FilterFormState } from '../../components/FilterForm';
+import { FilterForm, FilterFormState, FilterFormStatus } from '../../components/FilterForm';
 import { STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
@@ -96,15 +96,15 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 		setQuery({
 			page: 1,
 			search: undefined,
-			status: undefined,
+			active: undefined,
 		});
 	};
 
 	const onSubmit = (filterValue: FilterFormState): void => {
 		setQuery({
 			page: 1,
-			search: filterValue.name ?? '',
-			status: filterValue.status ?? '',
+			search: filterValue.name || undefined,
+			active: filterValue.status ? filterValue.status === FilterFormStatus.Active : undefined,
 		});
 	};
 
@@ -117,7 +117,12 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 
 	const filterFormState: FilterFormState = {
 		name: query.search ?? '',
-		status: query.status ?? '',
+		status:
+			typeof query.active === 'boolean'
+				? query.active
+					? FilterFormStatus.Active
+					: FilterFormStatus.NonActive
+				: '',
 	};
 	const activeSorting = parseStringToOrderBy(query.sort ?? '');
 	const activeFilters = generateSitesFilters(STATUS_OPTIONS(t), filterFormState);
