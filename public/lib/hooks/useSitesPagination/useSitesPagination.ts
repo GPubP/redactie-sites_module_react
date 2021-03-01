@@ -60,6 +60,7 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 		if (
 			sitesSearchParams.sort !== prevSitesSearchParams?.sort ||
 			sitesSearchParams.search !== prevSitesSearchParams?.search ||
+			sitesSearchParams.status !== prevSitesSearchParams?.status ||
 			clearCache
 		) {
 			sitesPaginator.clearCache();
@@ -81,6 +82,7 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 		sitesSearchParams,
 		sitesSearchParams.page,
 		sitesSearchParams.search,
+		sitesSearchParams.status,
 		sitesSearchParams.sort,
 	]);
 

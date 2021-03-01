@@ -52,3 +52,12 @@ export interface OverviewFilterItem extends FilterItem {
 	filterKey: string;
 	formvalue?: any;
 }
+
+export interface SitesOverviewRowData {
+	id: string;
+	name: string;
+	active: boolean;
+	description: string;
+	userIsMember: boolean;
+	navigateToEdit?: () => void;
+}

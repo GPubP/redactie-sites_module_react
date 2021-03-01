@@ -1,11 +1,11 @@
-import { TextField } from '@acpaas-ui/react-components';
+import { Select, TextField } from '@acpaas-ui/react-components';
 import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
 import { Field, Formik } from 'formik';
 import React, { FC } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 
-import { FILTER_FORM_VALIDATION_SCHEMA } from './FilterForm.const';
+import { FILTER_FORM_VALIDATION_SCHEMA, STATUS_OPTIONS } from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';
 
 const FilterForm: FC<FilterFormProps> = ({
@@ -26,7 +26,7 @@ const FilterForm: FC<FilterFormProps> = ({
 	return (
 		<>
 			<Formik
-				enableReinitialize={true}
+				enableReinitialize
 				initialValues={initialState}
 				onSubmit={onSubmit}
 				validationSchema={FILTER_FORM_VALIDATION_SCHEMA}
@@ -44,7 +44,7 @@ const FilterForm: FC<FilterFormProps> = ({
 							onFilterRemove={deleteActiveFilter}
 						>
 							<FilterBody>
-								<div className="col-md col-sm-12">
+								<div className="col-xs-12 col-md-6 u-margin-bottom">
 									<Field
 										as={TextField}
 										label="Naam"
@@ -52,6 +52,15 @@ const FilterForm: FC<FilterFormProps> = ({
 										required
 										placeholder="Zoeken op naam"
 										iconright="search"
+									/>
+								</div>
+								<div className="col-xs-12 col-md-6 sm:u-margin-bottom">
+									<Field
+										as={Select}
+										label="Status"
+										name="status"
+										options={STATUS_OPTIONS(t)}
+										placeholder="Status"
 									/>
 								</div>
 							</FilterBody>

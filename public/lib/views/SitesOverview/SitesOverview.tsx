@@ -1,10 +1,9 @@
-import { Link as AUILink, Button } from '@acpaas-ui/react-components';
+import { Button } from '@acpaas-ui/react-components';
 import {
 	Container,
 	ContextHeader,
 	ContextHeaderActionsSection,
 	ContextHeaderTopSection,
-	EllipsisWithTooltip,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
@@ -16,19 +15,17 @@ import {
 	parseOrderByToString,
 	parseStringToOrderBy,
 	SearchParams,
-	TableColumn,
 	useAPIQueryParams,
 	useNavigate,
 	useRoutes,
 } from '@redactie/utils';
-import { clone } from 'ramda';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 
-import { SiteStatus } from '../../components';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
+import { STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import { generateSitesFilters } from '../../helpers';
 import {
 	useHomeBreadcrumb,
 	useRolesRightsApi,
@@ -38,13 +35,12 @@ import {
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
-	DEFAULT_SITES_QUERY_PARAMS,
 	MODULE_PATHS,
-	SITES_INITIAL_FILTER_STATE,
+	OVERVIEW_QUERY_PARAMS_CONIG,
 } from '../../sites.const';
-import { OverviewFilterItem, SitesRouteProps } from '../../sites.types';
+import { OverviewFilterItem, SitesOverviewRowData, SitesRouteProps } from '../../sites.types';
 
-import { SitesOverviewRowData } from './SitesOverview.types';
+import { SITES_OVERVIEW_COLUMNS } from './SitesOverview.const';
 
 const SitesOverview: FC<SitesRouteProps> = () => {
 	/**
@@ -52,12 +48,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	 */
 	const { navigate } = useNavigate();
 	const routes = useRoutes();
-	const [query, setQuery] = useAPIQueryParams(clone(DEFAULT_SITES_QUERY_PARAMS));
-	const [filterFormState, setFilterFormState] = useState<FilterFormState>(
-		SITES_INITIAL_FILTER_STATE
-	);
-	const [filterItems, setFilterItems] = useState<OverviewFilterItem[]>([]);
-	const sitesActiveSorting = useMemo(() => parseStringToOrderBy(query.sort ?? ''), [query.sort]);
+	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONIG);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		excludePaths: [...BREADCRUMB_OPTIONS.excludePaths, ...['/:tenantId/sites']],
@@ -85,42 +76,15 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 		}
 	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading, sitesPagination]);
 
-	useEffect(() => {
-		setFilterFormState({
-			name: query.search || '',
-		});
-	}, [query.search]);
-
-	useEffect(() => {
-		setFilterItems(
-			Object.keys(filterFormState).reduce(
-				(acc, key) =>
-					filterFormState[key]
-						? acc.concat([
-								{
-									filterKey: key,
-									value: filterFormState[key] as string,
-								},
-						  ])
-						: acc,
-				[] as OverviewFilterItem[]
-			)
-		);
-	}, [filterFormState]);
-
 	/**
-	 * Functions
+	 * Methods
 	 */
-	const handlePageChange = (pageNumber: number): void => {
-		setQuery({
-			...query,
-			page: pageNumber,
-		});
+	const handlePageChange = (page: number): void => {
+		setQuery({ page });
 	};
 
 	const handleOrderBy = (orderBy: OrderBy): void => {
 		setQuery({
-			...query,
 			sort: parseOrderByToString({
 				...orderBy,
 				key: `${orderBy.key === 'active' ? 'meta' : 'data'}.${orderBy.key}`,
@@ -130,40 +94,33 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 
 	const deleteAllFilters = (): void => {
 		setQuery({
-			...query,
 			page: 1,
-			search: '',
-		});
-
-		setFilterFormState({
-			name: '',
+			search: undefined,
+			status: undefined,
 		});
 	};
 
 	const onSubmit = (filterValue: FilterFormState): void => {
 		setQuery({
-			...query,
 			page: 1,
-			search: filterValue.name || '',
-		});
-
-		setFilterFormState({
-			name: filterValue.name,
+			search: filterValue.name ?? '',
+			status: filterValue.status ?? '',
 		});
 	};
 
-	const deleteFilter = (item: any): void => {
+	const deleteFilter = (item: OverviewFilterItem): void => {
 		setQuery({
-			...query,
 			page: 1,
-			...(item.filterKey === 'name' ? { search: '' } : {}),
-		});
-
-		setFilterFormState({
-			...filterFormState,
-			[item.filterKey]: '',
+			[item.filterKey]: undefined,
 		});
 	};
+
+	const filterFormState: FilterFormState = {
+		name: query.search ?? '',
+		status: query.status ?? '',
+	};
+	const activeSorting = parseStringToOrderBy(query.sort ?? '');
+	const activeFilters = generateSitesFilters(STATUS_OPTIONS(t), filterFormState);
 
 	/**
 	 * Render
@@ -175,74 +132,11 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			active: site.meta.active,
 			description: site.data.description,
 			userIsMember: !!site.userIsMember,
+			navigateToEdit: () =>
+				navigate(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, {
+					siteId: site.uuid,
+				}),
 		}));
-
-		const sitesColumns: TableColumn<SitesOverviewRowData>[] = [
-			{
-				label: t(CORE_TRANSLATIONS.TABLE_NAME),
-				value: 'name',
-				width: '50%',
-				component(name: string, { userIsMember, id, description }) {
-					return (
-						<>
-							{userIsMember ? (
-								<AUILink to={`${id}/content`} component={Link}>
-									<EllipsisWithTooltip>{name}</EllipsisWithTooltip>
-								</AUILink>
-							) : (
-								<label>
-									<EllipsisWithTooltip>{name}</EllipsisWithTooltip>
-								</label>
-							)}
-							<p className="small">
-								{description ? (
-									<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
-								) : (
-									<span className="u-text-italic">
-										{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
-									</span>
-								)}
-							</p>
-						</>
-					);
-				},
-			},
-			{
-				label: t(CORE_TRANSLATIONS.TABLE_STATUS),
-				value: 'active',
-				width: '30%',
-				component(value: string) {
-					const isActive = !!value;
-					return <SiteStatus active={isActive} />;
-				},
-			},
-			{
-				label: '',
-				classList: ['u-text-right'],
-				disableSorting: true,
-				width: '20%',
-				component(value, { id }) {
-					return (
-						<rolesRightsApi.components.SecurableRender
-							userSecurityRights={mySecurityrights as string[]}
-							requiredSecurityRights={[RolesRightsConnector.securityRights.update]}
-						>
-							<Button
-								ariaLabel="Edit"
-								icon="edit"
-								onClick={() =>
-									navigate(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, {
-										siteId: id,
-									})
-								}
-								type="primary"
-								transparent
-							/>
-						</rolesRightsApi.components.SecurableRender>
-					);
-				},
-			},
-		];
 
 		return (
 			<>
@@ -252,14 +146,14 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 						onCancel={deleteAllFilters}
 						onSubmit={onSubmit}
 						deleteActiveFilter={deleteFilter}
-						activeFilters={filterItems}
+						activeFilters={activeFilters}
 					/>
 				</div>
 				<PaginatedTable
 					fixed
 					className="u-margin-top"
 					tableClassName="a-table--fixed--xs"
-					columns={sitesColumns}
+					columns={SITES_OVERVIEW_COLUMNS(t, rolesRightsApi, mySecurityrights)}
 					rows={sitesRows}
 					currentPage={sitesPagination?.currentPage ?? 1}
 					itemsPerPage={query.pagesize}
@@ -267,7 +161,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					orderBy={handleOrderBy}
 					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 					loadDataMessage="Sites ophalen"
-					activeSorting={sitesActiveSorting}
+					activeSorting={activeSorting}
 					totalValues={sitesPagination?.total ?? 0}
 					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
 				/>

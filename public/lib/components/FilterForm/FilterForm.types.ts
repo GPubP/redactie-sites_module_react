@@ -1,6 +1,7 @@
 export interface FilterFormState {
 	[a: string]: unknown;
 	name: string;
+	status: string;
 }
 
 export interface FilterFormProps {
