@@ -1,48 +1,50 @@
 import { PaginationResponse } from '@datorama/akita';
-import { SearchParams, usePrevious } from '@redactie/utils';
+import { SearchParams, useObservable, usePrevious } from '@redactie/utils';
 import { equals } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
 import { combineLatest, Subject } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
 
 import { SiteResponse } from '../../services/sites';
-import { sitesFacade, sitesPaginator } from '../../store/sites';
+import { sitesFacade, sitesListPaginator } from '../../store/sites';
 
-import { UseSitesPagination } from './useSitesPagination.types';
+import { UsePaginatedSites } from './usePaginatedSites.types';
 const subject = new Subject<SearchParams>();
 const searchParamsObservable = subject.asObservable();
 
-const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = false) => {
+const usePaginatedSites: UsePaginatedSites = (sitesSearchParams, clearCache = false) => {
 	const isRefreshingPage = useRef(false);
 	const [pagination, setPagination] = useState<PaginationResponse<SiteResponse> | null>(null);
 	const prevSitesSearchParams = usePrevious<SearchParams>(sitesSearchParams);
+	const loading = useObservable(sitesFacade.listIsFetching$, true);
+	const error = useObservable(sitesFacade.listError$, null);
 
 	useEffect(() => {
-		const s = combineLatest(sitesPaginator.pageChanges, searchParamsObservable)
+		const s = combineLatest(sitesListPaginator.pageChanges, searchParamsObservable)
 			.pipe(
 				filter(([page, searchParams]) => page === searchParams.page),
 				tap(() => {
 					if (!isRefreshingPage.current) {
 						// Don't show a loading indicator when we refresh the current page
-						sitesFacade.setIsFetching(true);
+						sitesFacade.setListIsFetching(true);
 					}
 				}),
 				switchMap(([, searchParams]) =>
-					sitesPaginator.getPage(() => sitesFacade.getSitesPaginated(searchParams))
+					sitesListPaginator.getPage(() => sitesFacade.getSitesPaginated(searchParams))
 				)
 			)
 			.subscribe(result => {
 				isRefreshingPage.current = false;
 				if (result) {
 					setPagination(result);
-					sitesFacade.setIsFetching(false);
+					sitesFacade.setListIsFetching(false);
 					// NOTE: This is a hack!
 					// The paginator class is not bound to the store data.
 					// Updating an item in store will not change the data in the paginator
 					// We need to refresh the current page to get the updated data
 					// We are still updating the data when we are refreshing the page
 					// Therefore we need to set the isUpdating prop to false when we fetched the data from the server
-					sitesFacade.setIsUpdating(false);
+					// newSitesFacade.setIsUpdating(false);
 				}
 			});
 
@@ -63,16 +65,16 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 			sitesSearchParams.status !== prevSitesSearchParams?.status ||
 			clearCache
 		) {
-			sitesPaginator.clearCache();
+			sitesListPaginator.clearCache();
 		}
 
 		subject.next(sitesSearchParams);
 
 		if (
 			sitesSearchParams.page !== prevSitesSearchParams?.page &&
-			sitesPaginator.currentPage !== sitesSearchParams.page
+			sitesListPaginator.currentPage !== sitesSearchParams.page
 		) {
-			sitesPaginator.setPage(sitesSearchParams.page ?? 1);
+			sitesListPaginator.setPage(sitesSearchParams.page ?? 1);
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -86,20 +88,22 @@ const useSitesPagination: UseSitesPagination = (sitesSearchParams, clearCache = 
 		sitesSearchParams.sort,
 	]);
 
-	return [
+	return {
+		loading,
 		pagination,
-		() => {
+		refreshCurrentPage: () => {
 			// NOTE: This is a hack!
 			// The paginator class is not bound to the store data.
 			// Updating an item in store will not change the data in the paginator
 			// We need to refresh the current page to get the updated data
 			// We are still updating the data when we are refreshing the page
 			// Therefore we need to set the isUpdating prop to true
-			sitesFacade.setIsUpdating(true);
+			// sitesFacade.setIsUpdating(true);
 			isRefreshingPage.current = true;
-			sitesPaginator.refreshCurrentPage();
+			sitesListPaginator.refreshCurrentPage();
 		},
-	];
+		error,
+	};
 };
 
-export default useSitesPagination;
+export default usePaginatedSites;
