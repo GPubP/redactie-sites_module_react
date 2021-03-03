@@ -38,13 +38,6 @@ const usePaginatedSites: UsePaginatedSites = (sitesSearchParams, clearCache = fa
 				if (result) {
 					setPagination(result);
 					sitesFacade.setListIsFetching(false);
-					// NOTE: This is a hack!
-					// The paginator class is not bound to the store data.
-					// Updating an item in store will not change the data in the paginator
-					// We need to refresh the current page to get the updated data
-					// We are still updating the data when we are refreshing the page
-					// Therefore we need to set the isUpdating prop to false when we fetched the data from the server
-					// newSitesFacade.setIsUpdating(false);
 				}
 			});
 
@@ -92,13 +85,6 @@ const usePaginatedSites: UsePaginatedSites = (sitesSearchParams, clearCache = fa
 		loading,
 		pagination,
 		refreshCurrentPage: () => {
-			// NOTE: This is a hack!
-			// The paginator class is not bound to the store data.
-			// Updating an item in store will not change the data in the paginator
-			// We need to refresh the current page to get the updated data
-			// We are still updating the data when we are refreshing the page
-			// Therefore we need to set the isUpdating prop to true
-			// sitesFacade.setIsUpdating(true);
 			isRefreshingPage.current = true;
 			sitesListPaginator.refreshCurrentPage();
 		},

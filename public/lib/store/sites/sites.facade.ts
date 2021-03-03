@@ -114,12 +114,17 @@ export class SitesFacade {
 		return this.detailQuery.selectEntity(siteId);
 	}
 
-	public selectSiteUIState(siteId?: string): Observable<SiteDetailUIModel> {
-		return this.detailQuery.ui.selectEntity(siteId);
-	}
+	public selectSiteUIState<T extends string | string[]>(
+		siteIds?: T
+	): T extends string ? Observable<SiteDetailUIModel> : Observable<SiteDetailUIModel[]>;
+	public selectSiteUIState(
+		siteIds: string | string[]
+	): Observable<SiteDetailUIModel> | Observable<SiteDetailUIModel[]> {
+		if (typeof siteIds === 'string') {
+			return this.detailQuery.ui.selectEntity(siteIds);
+		}
 
-	public getSiteUIState(siteId: string): SiteDetailUIModel | null {
-		return this.detailQuery.ui.getEntity(siteId);
+		return this.detailQuery.ui.selectMany(siteIds);
 	}
 
 	public hasSite(siteId: string): boolean {
@@ -146,7 +151,7 @@ export class SitesFacade {
 			})
 			.catch(error => {
 				showAlert(options.alertContainerId, 'error', alertMessages.fetchOne.error);
-				this.detailStore.ui.update(payload.id, {
+				this.detailStore.ui.upsert(payload.id, {
 					error,
 					isFetching: false,
 				});
@@ -234,13 +239,13 @@ export class SitesFacade {
 			.updateSiteActivation(payload)
 			.then(response => {
 				this.detailStore.update(response.uuid, response);
-				this.detailStore.ui.update({
+				this.detailStore.ui.update(response.uuid, {
 					isActivating: false,
 				});
 				this.listPaginator.clearCache();
 			})
 			.catch(error => {
-				this.detailStore.ui.update({
+				this.detailStore.ui.update(payload.id, {
 					error,
 					isActivating: false,
 				});

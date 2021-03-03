@@ -1,7 +1,7 @@
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { FilterItem } from '@redactie/utils';
 
-import { UseSitesUIStates } from './hooks';
+import { useSitesUIStates } from './hooks';
 import { UsePaginatedSites } from './hooks/usePaginatedSites';
 import { UseSite } from './hooks/useSite';
 import { Routes } from './services/routes';
@@ -38,7 +38,7 @@ export interface SitesModuleAPI {
 	hooks: {
 		useSite: UseSite;
 		usePaginatedSites: UsePaginatedSites;
-		useSitesUIStates: UseSitesUIStates;
+		useSitesUIStates: typeof useSitesUIStates;
 	};
 	config: {
 		ALERT_CONTAINER_IDS: typeof ALERT_CONTAINER_IDS;
