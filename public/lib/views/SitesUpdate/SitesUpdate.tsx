@@ -8,7 +8,6 @@ import {
 	AlertContainer,
 	DataLoader,
 	LeavePrompt,
-	LoadingState,
 	useDetectValueChanges,
 	useNavigate,
 	useRoutes,
@@ -19,7 +18,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { useHomeBreadcrumb, useSite, useSitesLoadingStates } from '../../hooks';
+import { useHomeBreadcrumb, useSite } from '../../hooks';
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
@@ -37,13 +36,12 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	/**
 	 * Hooks
 	 */
-	const [loadingState, site] = useSite(siteId);
-	const sitesLoadingStates = useSitesLoadingStates();
+	const [site, siteUI] = useSite(siteId);
 	const [t] = useCoreTranslation();
-	const isFetching = loadingState === LoadingState.Loading;
-	const isUpdating = sitesLoadingStates.isUpdating === LoadingState.Loading;
-	const isActiveLoading = sitesLoadingStates.isActivating === LoadingState.Loading;
-	const isArchivedLoading = sitesLoadingStates.isArchiving === LoadingState.Loading;
+	const isFetching = !!siteUI?.isFetching;
+	const isUpdating = !!siteUI?.isUpdating;
+	const isActiveLoading = !!siteUI?.isActivating;
+	const isArchivedLoading = !!siteUI?.isArchiving;
 	const [initialFormValue, setInitialFormValue] = useState<SitesDetailFormState | null>(null);
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(initialFormValue);
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(
@@ -172,7 +170,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 					toastClassName="u-margin-bottom"
 					containerId={ALERT_CONTAINER_IDS.fetchOne}
 				/>
-				<DataLoader loadingState={loadingState} render={renderSitesUpdate} />
+				<DataLoader loadingState={isFetching} render={renderSitesUpdate} />
 			</Container>
 		</>
 	);

@@ -25,7 +25,7 @@ import { STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { generateSitesFilters } from '../../helpers';
-import { useRolesRightsApi, useSitesLoadingStates, useSitesPagination } from '../../hooks';
+import { usePaginatedSites, useRolesRightsApi } from '../../hooks';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS, OVERVIEW_QUERY_PARAMS_CONIG } from '../../sites.const';
 import { OverviewFilterItem, SitesOverviewRowData, SitesRouteProps } from '../../sites.types';
 
@@ -41,8 +41,9 @@ const Dashboard: FC<SitesRouteProps> = () => {
 	const [query, setQuery] = useAPIQueryParams(OVERVIEW_QUERY_PARAMS_CONIG);
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], BREADCRUMB_OPTIONS);
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [sitesPagination] = useSitesPagination(query as SearchParams);
-	const sitesLoadingStates = useSitesLoadingStates();
+	const { pagination: sitesPagination, loading: sitesLoading } = usePaginatedSites(
+		query as SearchParams
+	);
 	const rolesRightsApi = useRolesRightsApi();
 	const [
 		mySecurityRightsLoading,
@@ -52,15 +53,14 @@ const Dashboard: FC<SitesRouteProps> = () => {
 
 	useEffect(() => {
 		if (
-			(sitesLoadingStates.isFetching === LoadingState.Loaded ||
-				sitesLoadingStates.isFetching === LoadingState.Error) &&
+			!sitesLoading &&
 			(mySecurityRightsLoading === LoadingState.Loaded ||
 				mySecurityRightsLoading === LoadingState.Error) &&
 			sitesPagination
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading, sitesPagination]);
+	}, [mySecurityRightsLoading, sitesLoading, sitesPagination]);
 
 	/**
 	 * Methods
@@ -144,7 +144,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 					orderBy={handleOrderBy}
 					activeSorting={activeSorting}
 					totalValues={sitesPagination?.total ?? 0}
-					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
+					loading={sitesLoading}
 					loadDataMessage="Sites ophalen"
 					noDataMessage={t(CORE_TRANSLATIONS['TABLE_NO-RESULT'])}
 				/>

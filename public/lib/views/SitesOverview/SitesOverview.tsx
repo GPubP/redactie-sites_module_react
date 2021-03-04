@@ -26,12 +26,7 @@ import { STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { generateSitesFilters } from '../../helpers';
-import {
-	useHomeBreadcrumb,
-	useRolesRightsApi,
-	useSitesLoadingStates,
-	useSitesPagination,
-} from '../../hooks';
+import { useHomeBreadcrumb, usePaginatedSites, useRolesRightsApi } from '../../hooks';
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
@@ -54,9 +49,10 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 		excludePaths: [...BREADCRUMB_OPTIONS.excludePaths, ...['/:tenantId/sites']],
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
-	const sitesLoadingStates = useSitesLoadingStates();
 	const [initialLoading, setInitialLoading] = useState(LoadingState.Loading);
-	const [sitesPagination] = useSitesPagination(query as SearchParams);
+	const { pagination: sitesPagination, loading: sitesLoading } = usePaginatedSites(
+		query as SearchParams
+	);
 	const rolesRightsApi = useRolesRightsApi();
 	const [
 		mySecurityRightsLoading,
@@ -66,15 +62,14 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 
 	useEffect(() => {
 		if (
-			(sitesLoadingStates.isFetching === LoadingState.Loaded ||
-				sitesLoadingStates.isFetching === LoadingState.Error) &&
+			!sitesLoading &&
 			(mySecurityRightsLoading === LoadingState.Loaded ||
 				mySecurityRightsLoading === LoadingState.Error) &&
 			sitesPagination
 		) {
 			setInitialLoading(LoadingState.Loaded);
 		}
-	}, [sitesLoadingStates.isFetching, mySecurityRightsLoading, sitesPagination]);
+	}, [mySecurityRightsLoading, sitesPagination, sitesLoading]);
 
 	/**
 	 * Methods
@@ -163,7 +158,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 					loadDataMessage="Sites ophalen"
 					activeSorting={activeSorting}
 					totalValues={sitesPagination?.total ?? 0}
-					loading={sitesLoadingStates.isFetching === LoadingState.Loading}
+					loading={sitesLoading}
 				/>
 			</>
 		);

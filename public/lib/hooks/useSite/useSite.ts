@@ -1,13 +1,12 @@
-import { LoadingState, useObservable } from '@redactie/utils';
 import { useEffect, useState } from 'react';
 
-import { SiteModel } from '../../store/sites';
-import { sitesFacade } from '../../store/sites/sites.facade';
+import { SiteDetailModel, SiteDetailUIModel, sitesFacade } from '../../store/sites';
 
 import { UseSite } from './useSite.types';
 
 const useSite: UseSite = (siteId: string) => {
-	const [site, setSite] = useState<SiteModel>();
+	const [site, setSite] = useState<SiteDetailModel>();
+	const [siteUI, setSiteUI] = useState<SiteDetailUIModel>();
 
 	useEffect(() => {
 		if (!siteId) {
@@ -21,18 +20,15 @@ const useSite: UseSite = (siteId: string) => {
 		}
 
 		const siteSubscription = sitesFacade.selectSite(siteId).subscribe(setSite);
+		const siteUISubscription = sitesFacade.selectSiteUIState(siteId).subscribe(setSiteUI);
 
 		return () => {
 			siteSubscription.unsubscribe();
+			siteUISubscription.unsubscribe();
 		};
 	}, [siteId]);
 
-	const loading = useObservable(sitesFacade.isFetchingOne$, null);
-	const error = useObservable(sitesFacade.error$, null);
-
-	const loadingState = error ? LoadingState.Error : loading || LoadingState.Loading;
-
-	return [loadingState, site];
+	return [site, siteUI];
 };
 
 export default useSite;

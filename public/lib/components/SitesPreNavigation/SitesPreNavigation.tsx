@@ -17,7 +17,7 @@ const SitesPreNavigation: FC = () => {
 		exact: false,
 	});
 	const { siteId, tenantId } = (match?.params as { siteId: string; tenantId: string }) ?? {};
-	const [, site] = useSite(siteId);
+	const [site] = useSite(siteId);
 
 	if (!match || !site) {
 		return null;

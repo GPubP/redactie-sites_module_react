@@ -1,6 +1,6 @@
 import { sitesApiService } from '../services/sites';
 import { SitesModuleAPI } from '../sites.types';
-import { sitesFacade, sitesQuery } from '../store/sites';
+import { sitesFacade } from '../store/sites';
 
 export const store: SitesModuleAPI['store'] = {
 	sites: {
@@ -10,6 +10,5 @@ export const store: SitesModuleAPI['store'] = {
 			getSitesPaginated: sitesFacade.getSitesPaginated.bind(sitesFacade),
 			updateSite: sitesFacade.updateSite.bind(sitesFacade),
 		},
-		query: sitesQuery,
 	},
 };

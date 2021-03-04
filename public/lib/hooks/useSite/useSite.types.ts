@@ -1,5 +1,5 @@
-import { LoadingState } from '@redactie/utils';
+import { SiteDetailModel, SiteDetailUIModel } from '../../store/sites';
 
-import { SiteResponse } from '../../services/sites/sites.service.types';
-
-export type UseSite = (siteId: string) => [LoadingState, SiteResponse | undefined];
+export type UseSite = (
+	siteId: string
+) => [SiteDetailModel | undefined, SiteDetailUIModel | undefined];
