@@ -20,7 +20,7 @@ export const generateSitesFilters = (
 		...(status
 			? [
 					{
-						filterKey: 'active',
+						filterKey: 'status',
 						valuePrefix: 'Status',
 						value: statusOptions.find(option => option.value === status)?.label || '',
 					},

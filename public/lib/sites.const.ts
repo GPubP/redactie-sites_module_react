@@ -8,8 +8,8 @@ export const OVERVIEW_QUERY_PARAMS_CONIG = {
 	search: {
 		type: 'string',
 	},
-	active: {
-		type: 'boolean',
+	status: {
+		type: 'string',
 	},
 	sparse: {
 		defaultValue: true,
