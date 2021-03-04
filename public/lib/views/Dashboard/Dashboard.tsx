@@ -81,6 +81,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 
 	const deleteAllFilters = (): void => {
 		setQuery({
+			page: 1,
 			search: undefined,
 			status: undefined,
 		});
@@ -88,8 +89,9 @@ const Dashboard: FC<SitesRouteProps> = () => {
 
 	const onSubmit = (filterValue: FilterFormState): void => {
 		setQuery({
-			search: filterValue.name,
-			status: filterValue.status,
+			page: 1,
+			search: filterValue.name || undefined,
+			status: filterValue.status || undefined,
 		});
 	};
 

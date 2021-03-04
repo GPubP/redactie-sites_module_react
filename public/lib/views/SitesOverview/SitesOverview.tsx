@@ -98,8 +98,8 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 	const onSubmit = (filterValue: FilterFormState): void => {
 		setQuery({
 			page: 1,
-			search: filterValue.name ?? '',
-			status: filterValue.status ?? '',
+			search: filterValue.name || undefined,
+			status: filterValue.status || undefined,
 		});
 	};
 

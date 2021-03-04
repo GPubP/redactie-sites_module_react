@@ -6,11 +6,9 @@ export const BREADCRUMB_OPTIONS = {
 
 export const OVERVIEW_QUERY_PARAMS_CONIG = {
 	search: {
-		defaultValue: '',
 		type: 'string',
 	},
 	status: {
-		defaultValue: '',
 		type: 'string',
 	},
 	sparse: {
