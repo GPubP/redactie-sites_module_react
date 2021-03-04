@@ -1,6 +1,6 @@
 import { PaginationResponse } from '@datorama/akita';
 import { SearchParams, useObservable, usePrevious } from '@redactie/utils';
-import { equals } from 'ramda';
+import { equals, omit } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
 import { combineLatest, Subject } from 'rxjs';
 import { filter, switchMap, tap } from 'rxjs/operators';
@@ -53,9 +53,7 @@ const usePaginatedSites: UsePaginatedSites = (sitesSearchParams, clearCache = fa
 		}
 
 		if (
-			sitesSearchParams.sort !== prevSitesSearchParams?.sort ||
-			sitesSearchParams.search !== prevSitesSearchParams?.search ||
-			sitesSearchParams.status !== prevSitesSearchParams?.status ||
+			!equals(omit(['page'], sitesSearchParams), omit(['page'], prevSitesSearchParams)) ||
 			clearCache
 		) {
 			sitesListPaginator.clearCache();
@@ -69,17 +67,7 @@ const usePaginatedSites: UsePaginatedSites = (sitesSearchParams, clearCache = fa
 		) {
 			sitesListPaginator.setPage(sitesSearchParams.page ?? 1);
 		}
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [
-		clearCache,
-		prevSitesSearchParams,
-		sitesSearchParams,
-		sitesSearchParams.page,
-		sitesSearchParams.search,
-		sitesSearchParams.status,
-		sitesSearchParams.sort,
-	]);
+	}, [clearCache, prevSitesSearchParams, sitesSearchParams]);
 
 	return {
 		loading,
