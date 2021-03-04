@@ -7,7 +7,6 @@ import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	AlertContainer,
 	LeavePrompt,
-	LoadingState,
 	useDetectValueChanges,
 	useNavigate,
 	useRoutes,
@@ -17,7 +16,7 @@ import { Link } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { useHomeBreadcrumb, useSitesLoadingStates } from '../../hooks';
+import { useHomeBreadcrumb, useSitesUIStates } from '../../hooks';
 import { SiteResponse } from '../../services/sites';
 import {
 	ALERT_CONTAINER_IDS,
@@ -41,7 +40,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		...BREADCRUMB_OPTIONS,
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
-	const sitesLoadingStates = useSitesLoadingStates();
+	const [siteListUIState] = useSitesUIStates();
 	const [formValue, setFormValue] = useState<SitesDetailFormState>(INITIAL_DETAIL_FORM_STATE());
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(!!formValue, formValue);
 
@@ -93,7 +92,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 					isChanged={isChanged}
 					onChange={setFormValue}
 					initialState={formValue}
-					loading={sitesLoadingStates.isCreating === LoadingState.Loading}
+					loading={siteListUIState.isCreating}
 					onCancel={navigateToOverview}
 					onSubmit={onSubmit}
 				>
