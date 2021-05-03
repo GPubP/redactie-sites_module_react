@@ -68,6 +68,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				url: site.data.url,
 				contentTypes: site.data.contentTypes,
 			});
+			resetDetectValueChanges();
 		}
 	}, [site]);
 
