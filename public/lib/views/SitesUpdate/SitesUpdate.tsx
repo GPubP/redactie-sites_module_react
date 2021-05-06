@@ -71,7 +71,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		}
 	}, [site]);
 
-	const pageTitle = `'${site?.data?.name ? `'${site?.data?.name}'` : 'Site'}' ${t(
+	const pageTitle = `${site?.data?.name ? `'${site?.data?.name}'` : 'Site'} ${t(
 		CORE_TRANSLATIONS.ROUTING_UPDATE
 	)}`;
 
