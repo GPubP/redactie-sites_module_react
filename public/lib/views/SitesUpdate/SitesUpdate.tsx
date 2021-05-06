@@ -45,7 +45,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	const [initialFormValue, setInitialFormValue] = useState<SitesDetailFormState | null>(null);
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(initialFormValue);
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(
-		!isFetching && !isUpdating,
+		!isFetching && !isUpdating && !!site,
 		formValue || initialFormValue
 	);
 
@@ -68,7 +68,6 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				url: site.data.url,
 				contentTypes: site.data.contentTypes,
 			});
-			resetDetectValueChanges();
 		}
 	}, [site]);
 
