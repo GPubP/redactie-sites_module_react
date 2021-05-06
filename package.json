@@ -1,6 +1,6 @@
 {
   "name": "@redactie/sites-module",
-  "version": "0.19.15",
+  "version": "0.19.16",
   "description": "redactie sites module",
   "main": "dist/redactie-sites-module.umd.js",
   "module": "dist/redactie-sites-module.umd.js",
