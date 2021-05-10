@@ -54,7 +54,7 @@ export interface SitesOverviewRowData {
 	id: string;
 	name: string;
 	active: boolean;
-	description: string;
+	url: string;
 	userIsMember: boolean;
 	navigateToEdit?: () => void;
 }

@@ -125,7 +125,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			id: site.uuid,
 			name: site.data.name,
 			active: site.meta.active,
-			description: site.data.description,
+			url: site.data.url,
 			userIsMember: !!site.userIsMember,
 			navigateToEdit: () =>
 				navigate(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, {
