@@ -14,7 +14,7 @@ export const DASHBOARD_COLUMNS = (t: TranslateFunc): TableColumn<SitesOverviewRo
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'name',
 		width: '70%',
-		component(name: string, { userIsMember, id, description }) {
+		component(name: string, { userIsMember, id, url }) {
 			return (
 				<>
 					{userIsMember ? (
@@ -27,8 +27,8 @@ export const DASHBOARD_COLUMNS = (t: TranslateFunc): TableColumn<SitesOverviewRo
 						</label>
 					)}
 					<p className="small">
-						{description ? (
-							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+						{url ? (
+							<EllipsisWithTooltip>{url}</EllipsisWithTooltip>
 						) : (
 							<span className="u-text-italic">
 								{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}

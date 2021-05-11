@@ -20,7 +20,7 @@ export const SITES_OVERVIEW_COLUMNS = (
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'name',
 		width: '50%',
-		component(name: string, { userIsMember, id, description }) {
+		component(name: string, { userIsMember, id, url }) {
 			return (
 				<>
 					{userIsMember ? (
@@ -33,8 +33,8 @@ export const SITES_OVERVIEW_COLUMNS = (
 						</label>
 					)}
 					<p className="small">
-						{description ? (
-							<EllipsisWithTooltip>{description}</EllipsisWithTooltip>
+						{url ? (
+							<EllipsisWithTooltip>{url}</EllipsisWithTooltip>
 						) : (
 							<span className="u-text-italic">
 								{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
