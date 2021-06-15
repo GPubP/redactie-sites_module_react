@@ -70,7 +70,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 					<Button
 						{...getLoadingStateBtnProps(activeLoading)}
 						onClick={onActiveToggle}
-						className="u-margin-top u-margin-right"
+						className="u-margin-top u-margin-right-xs"
 						type="primary"
 					>
 						{active ? t('BUTTON_DEACTIVATE') : t('BUTTON_ACTIVATE')}
