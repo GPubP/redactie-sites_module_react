@@ -1,6 +1,6 @@
 import { Select, TextField } from '@acpaas-ui/react-components';
 import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
-import { Field, Formik } from 'formik';
+import { Field, Form, Formik } from 'formik';
 import React, { FC } from 'react';
 
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
@@ -24,15 +24,15 @@ const FilterForm: FC<FilterFormProps> = ({
 	 * Render
 	 */
 	return (
-		<>
-			<Formik
-				enableReinitialize
-				initialValues={initialState}
-				onSubmit={onSubmit}
-				validationSchema={FILTER_FORM_VALIDATION_SCHEMA}
-			>
-				{({ submitForm }) => {
-					return (
+		<Formik
+			enableReinitialize
+			initialValues={initialState}
+			onSubmit={onSubmit}
+			validationSchema={FILTER_FORM_VALIDATION_SCHEMA}
+		>
+			{({ submitForm }) => {
+				return (
+					<Form>
 						<Filter
 							title={t(CORE_TRANSLATIONS.FILTER_TITLE)}
 							noFilterText="Geen filters beschikbaar"
@@ -65,10 +65,10 @@ const FilterForm: FC<FilterFormProps> = ({
 								</div>
 							</FilterBody>
 						</Filter>
-					);
-				}}
-			</Formik>
-		</>
+					</Form>
+				);
+			}}
+		</Formik>
 	);
 };
 
