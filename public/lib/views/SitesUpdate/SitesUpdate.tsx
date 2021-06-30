@@ -17,7 +17,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { useHomeBreadcrumb, useSite } from '../../hooks';
+import { useHomeBreadcrumb, useOnNextRender, useSite } from '../../hooks';
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
@@ -41,7 +41,6 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	const isUpdating = !!siteUI?.isUpdating;
 	const isActiveLoading = !!siteUI?.isActivating;
 	const isArchivedLoading = !!siteUI?.isArchiving;
-	const [forceNavigateToOverview, setForceNavigateToOverview] = useState<boolean>(false);
 	const [initialFormValue, setInitialFormValue] = useState<SitesDetailFormState | null>(null);
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(initialFormValue);
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(
@@ -54,15 +53,11 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
 	const { generatePath, navigate } = useNavigate();
-
 	const navigateToOverview = useCallback(
 		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
 		[navigate]
 	);
-
-	useEffect(() => {
-		forceNavigateToOverview && navigateToOverview();
-	}, [forceNavigateToOverview]); // eslint-disable-line
+	const forceNavigateToOverview = useOnNextRender(() => navigateToOverview());
 
 	useEffect(() => {
 		if (site) {
@@ -96,7 +91,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			})
 			.then(() => {
 				resetDetectValueChanges();
-				setForceNavigateToOverview(true);
+				forceNavigateToOverview();
 			});
 	};
 
