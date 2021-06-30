@@ -12,7 +12,6 @@ import {
 	useNavigate,
 	useRoutes,
 } from '@redactie/utils';
-import { FormikProps } from 'formik';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
@@ -42,23 +41,28 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	const isUpdating = !!siteUI?.isUpdating;
 	const isActiveLoading = !!siteUI?.isActivating;
 	const isArchivedLoading = !!siteUI?.isArchiving;
+	const [forceNavigateToOverview, setForceNavigateToOverview] = useState<boolean>(false);
 	const [initialFormValue, setInitialFormValue] = useState<SitesDetailFormState | null>(null);
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(initialFormValue);
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(
-		!isFetching && !isUpdating && !!site,
+		!isFetching && !isUpdating && (!!formValue || !!initialFormValue),
 		formValue || initialFormValue
 	);
-
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
 	const { generatePath, navigate } = useNavigate();
+
 	const navigateToOverview = useCallback(
 		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
 		[navigate]
 	);
+
+	useEffect(() => {
+		forceNavigateToOverview && navigateToOverview();
+	}, [forceNavigateToOverview]); // eslint-disable-line
 
 	useEffect(() => {
 		if (site) {
@@ -90,12 +94,15 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				id: siteId,
 				body: request,
 			})
-			.then(() => resetDetectValueChanges());
+			.then(() => {
+				resetDetectValueChanges();
+				setForceNavigateToOverview(true);
+			});
 	};
 
-	const onCancel = (resetForm: FormikProps<SitesDetailFormState>['resetForm']): void => {
-		resetForm();
+	const onCancel = (): void => {
 		resetDetectValueChanges();
+		navigateToOverview();
 	};
 
 	const onActiveToggle = (): void => {
@@ -135,9 +142,8 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			>
 				{({ submitForm }) => (
 					<LeavePrompt
-						shouldBlockNavigationOnConfirm
 						confirmText="Bewaar"
-						when={isChanged}
+						when={isChanged && !forceNavigateToOverview}
 						onConfirm={submitForm}
 					/>
 				)}
