@@ -82,14 +82,14 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	/**
 	 * Methods
 	 */
-	const onSubmit = ({ name, contentTypes, url }: SitesDetailFormState): void => {
+	const onSubmit = async ({ name, contentTypes, url }: SitesDetailFormState): Promise<void> => {
 		const request = { name, description: name, contentTypes, url };
 
 		if (!siteId) {
 			return;
 		}
 
-		sitesFacade
+		await sitesFacade
 			.updateSite({
 				id: siteId,
 				body: request,
