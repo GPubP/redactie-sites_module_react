@@ -10,6 +10,7 @@ import {
 	LeavePrompt,
 	useDetectValueChanges,
 	useNavigate,
+	useOnNextRender,
 	useRoutes,
 } from '@redactie/utils';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
@@ -17,7 +18,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { useHomeBreadcrumb, useOnNextRender, useSite } from '../../hooks';
+import { useHomeBreadcrumb, useSite } from '../../hooks';
 import {
 	ALERT_CONTAINER_IDS,
 	BREADCRUMB_OPTIONS,
@@ -59,6 +60,8 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	);
 	const forceNavigateToOverview = useOnNextRender(() => navigateToOverview());
 
+	console.log('forceNavigateToOverview', forceNavigateToOverview);
+
 	useEffect(() => {
 		if (site) {
 			setInitialFormValue({
@@ -96,7 +99,6 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	};
 
 	const onCancel = (): void => {
-		resetDetectValueChanges();
 		navigateToOverview();
 	};
 
@@ -136,11 +138,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				onChange={setFormValue}
 			>
 				{({ submitForm }) => (
-					<LeavePrompt
-						confirmText="Bewaar"
-						when={isChanged && !forceNavigateToOverview}
-						onConfirm={submitForm}
-					/>
+					<LeavePrompt confirmText="Bewaar" when={isChanged} onConfirm={submitForm} />
 				)}
 			</SitesDetailForm>
 		);
