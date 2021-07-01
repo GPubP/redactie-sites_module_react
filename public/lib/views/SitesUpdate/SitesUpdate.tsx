@@ -10,9 +10,9 @@ import {
 	LeavePrompt,
 	useDetectValueChanges,
 	useNavigate,
+	useOnNextRender,
 	useRoutes,
 } from '@redactie/utils';
-import { FormikProps } from 'formik';
 import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
@@ -45,10 +45,9 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	const [initialFormValue, setInitialFormValue] = useState<SitesDetailFormState | null>(null);
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(initialFormValue);
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(
-		!isFetching && !isUpdating && !!site,
+		!isFetching && !isUpdating && (!!formValue || !!initialFormValue),
 		formValue || initialFormValue
 	);
-
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
@@ -59,6 +58,9 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
 		[navigate]
 	);
+	const forceNavigateToOverview = useOnNextRender(() => navigateToOverview());
+
+	console.log('forceNavigateToOverview', forceNavigateToOverview);
 
 	useEffect(() => {
 		if (site) {
@@ -78,24 +80,26 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	/**
 	 * Methods
 	 */
-	const onSubmit = ({ name, contentTypes, url }: SitesDetailFormState): void => {
+	const onSubmit = async ({ name, contentTypes, url }: SitesDetailFormState): Promise<void> => {
 		const request = { name, description: name, contentTypes, url };
 
 		if (!siteId) {
 			return;
 		}
 
-		sitesFacade
+		await sitesFacade
 			.updateSite({
 				id: siteId,
 				body: request,
 			})
-			.then(() => resetDetectValueChanges());
+			.then(() => {
+				resetDetectValueChanges();
+				forceNavigateToOverview();
+			});
 	};
 
-	const onCancel = (resetForm: FormikProps<SitesDetailFormState>['resetForm']): void => {
-		resetForm();
-		resetDetectValueChanges();
+	const onCancel = (): void => {
+		navigateToOverview();
 	};
 
 	const onActiveToggle = (): void => {
@@ -134,12 +138,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				onChange={setFormValue}
 			>
 				{({ submitForm }) => (
-					<LeavePrompt
-						shouldBlockNavigationOnConfirm
-						confirmText="Bewaar"
-						when={isChanged}
-						onConfirm={submitForm}
-					/>
+					<LeavePrompt confirmText="Bewaar" when={isChanged} onConfirm={submitForm} />
 				)}
 			</SitesDetailForm>
 		);
