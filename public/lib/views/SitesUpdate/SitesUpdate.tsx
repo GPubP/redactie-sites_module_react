@@ -19,14 +19,9 @@ import { Link, useParams } from 'react-router-dom';
 import { SitesDetailForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSite } from '../../hooks';
-import {
-	ALERT_CONTAINER_IDS,
-	BREADCRUMB_OPTIONS,
-	DETAIL_TABS,
-	MODULE_PATHS,
-} from '../../sites.const';
+import { BREADCRUMB_OPTIONS, DETAIL_TABS, MODULE_PATHS } from '../../sites.const';
 import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
-import { sitesFacade } from '../../store/sites';
+import { SITES_ALERT_CONTAINER_IDS, sitesFacade } from '../../store/sites';
 
 import { BADGES } from './SitesUpdate.const';
 
@@ -59,8 +54,6 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		[navigate]
 	);
 	const forceNavigateToOverview = useOnNextRender(() => navigateToOverview());
-
-	console.log('forceNavigateToOverview', forceNavigateToOverview);
 
 	useEffect(() => {
 		if (site) {
@@ -161,11 +154,11 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			<Container>
 				<AlertContainer
 					toastClassName="u-margin-bottom"
-					containerId={ALERT_CONTAINER_IDS.update}
+					containerId={SITES_ALERT_CONTAINER_IDS.update}
 				/>
 				<AlertContainer
 					toastClassName="u-margin-bottom"
-					containerId={ALERT_CONTAINER_IDS.fetchOne}
+					containerId={SITES_ALERT_CONTAINER_IDS.fetchOne}
 				/>
 				<DataLoader loadingState={isFetching} render={renderSitesUpdate} />
 			</Container>

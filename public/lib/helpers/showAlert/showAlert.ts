@@ -8,6 +8,7 @@ export const showAlert = (
 	if (!alertProps || !containerId) {
 		return;
 	}
+
 	const alertType = type === 'error' ? 'danger' : type;
 	const alertOptions = { containerId };
 

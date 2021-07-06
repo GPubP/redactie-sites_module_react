@@ -27,13 +27,9 @@ import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { generateSitesFilters } from '../../helpers';
 import { useHomeBreadcrumb, usePaginatedSites, useRolesRightsApi } from '../../hooks';
-import {
-	ALERT_CONTAINER_IDS,
-	BREADCRUMB_OPTIONS,
-	MODULE_PATHS,
-	OVERVIEW_QUERY_PARAMS_CONIG,
-} from '../../sites.const';
+import { BREADCRUMB_OPTIONS, MODULE_PATHS, OVERVIEW_QUERY_PARAMS_CONIG } from '../../sites.const';
 import { OverviewFilterItem, SitesOverviewRowData, SitesRouteProps } from '../../sites.types';
+import { SITES_ALERT_CONTAINER_IDS } from '../../store/sites/sites.const';
 
 import { SITES_OVERVIEW_COLUMNS } from './SitesOverview.const';
 
@@ -185,7 +181,11 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			<Container>
 				<AlertContainer
 					toastClassName="u-margin-bottom"
-					containerId={ALERT_CONTAINER_IDS.fetch}
+					containerId={SITES_ALERT_CONTAINER_IDS.update}
+				/>
+				<AlertContainer
+					toastClassName="u-margin-bottom"
+					containerId={SITES_ALERT_CONTAINER_IDS.fetch}
 				/>
 				<DataLoader
 					loadingState={initialLoading}
