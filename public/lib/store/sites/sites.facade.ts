@@ -177,7 +177,6 @@ export class SitesFacade {
 				});
 				this.detailStore.upsert(site.uuid, site);
 				this.listPaginator.clearCache();
-
 				// NOTE!: Wait till the update container exists
 				// The update container does not exist on the create page
 				// A success message is shown to the user after the system has navigated to the detail page
@@ -219,18 +218,7 @@ export class SitesFacade {
 				});
 				this.listPaginator.clearCache();
 
-				// NOTE!: Wait till the update container exists
-				// The update container does not exist on the create page
-				// A success message is shown to the user after the system has navigated to the detail page
-				setTimeout(
-					() =>
-						showAlert(
-							options.alertContainerId,
-							'success',
-							alertMessages.update.success
-						),
-					300
-				);
+				showAlert(options.alertContainerId, 'success', alertMessages.update.success);
 
 				return response;
 			})
@@ -240,8 +228,6 @@ export class SitesFacade {
 					error,
 				});
 				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
-
-				throw error;
 			});
 	}
 
