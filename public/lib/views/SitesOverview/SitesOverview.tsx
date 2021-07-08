@@ -27,13 +27,13 @@ import { RolesRightsConnector } from '../../connectors/rolesRights';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { generateSitesFilters } from '../../helpers';
 import { useHomeBreadcrumb, usePaginatedSites, useRolesRightsApi } from '../../hooks';
+import { BREADCRUMB_OPTIONS, MODULE_PATHS, OVERVIEW_QUERY_PARAMS_CONIG } from '../../sites.const';
 import {
 	ALERT_CONTAINER_IDS,
-	BREADCRUMB_OPTIONS,
-	MODULE_PATHS,
-	OVERVIEW_QUERY_PARAMS_CONIG,
-} from '../../sites.const';
-import { OverviewFilterItem, SitesOverviewRowData, SitesRouteProps } from '../../sites.types';
+	OverviewFilterItem,
+	SitesOverviewRowData,
+	SitesRouteProps,
+} from '../../sites.types';
 
 import { SITES_OVERVIEW_COLUMNS } from './SitesOverview.const';
 

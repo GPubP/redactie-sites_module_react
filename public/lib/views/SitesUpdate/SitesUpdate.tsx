@@ -1,70 +1,33 @@
-import {
-	Container,
-	ContextHeader,
-	ContextHeaderTopSection,
-} from '@acpaas-ui/react-editorial-components';
-import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
-import {
-	AlertContainer,
-	DataLoader,
-	LeavePrompt,
-	useDetectValueChanges,
-	useNavigate,
-	useOnNextRender,
-	useRoutes,
-} from '@redactie/utils';
-import React, { FC, ReactElement, useCallback, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { LeavePrompt, useDetectValueChanges, useNavigate } from '@redactie/utils';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 
 import { SitesDetailForm } from '../../components';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
-import { useHomeBreadcrumb, useSite } from '../../hooks';
-import {
-	ALERT_CONTAINER_IDS,
-	BREADCRUMB_OPTIONS,
-	DETAIL_TABS,
-	MODULE_PATHS,
-} from '../../sites.const';
-import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
+import { DETAIL_TAB_MAP, MODULE_PATHS } from '../../sites.const';
+import { SitesDetailFormState, SitesUpdateRouteProps } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
-import { BADGES } from './SitesUpdate.const';
-
-const SitesCreate: FC<SitesRouteProps> = () => {
-	const { siteId } = useParams<{ siteId: string }>();
-
+const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, siteUI }) => {
 	/**
 	 * Hooks
 	 */
-	const [site, siteUI] = useSite(siteId);
-	const [t] = useCoreTranslation();
-	const isFetching = !!siteUI?.isFetching;
 	const isUpdating = !!siteUI?.isUpdating;
 	const isActiveLoading = !!siteUI?.isActivating;
 	const isArchivedLoading = !!siteUI?.isArchiving;
-	const [initialFormValue, setInitialFormValue] = useState<SitesDetailFormState | null>(null);
-	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(initialFormValue);
-	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(
-		!isFetching && !isUpdating && (!!formValue || !!initialFormValue),
-		formValue || initialFormValue
-	);
-	const routes = useRoutes();
-	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
-		...BREADCRUMB_OPTIONS,
-		extraBreadcrumbs: [useHomeBreadcrumb()],
-	});
-	const { generatePath, navigate } = useNavigate();
+	const isFetching = !!siteUI?.isFetching;
+	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(null);
+	const { navigate } = useNavigate();
 	const navigateToOverview = useCallback(
 		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
 		[navigate]
 	);
-	const forceNavigateToOverview = useOnNextRender(() => navigateToOverview());
-
-	console.log('forceNavigateToOverview', forceNavigateToOverview);
+	const [hasChanges, resetChangeDetection] = useDetectValueChanges(
+		!isFetching && !!formValue,
+		formValue
+	);
 
 	useEffect(() => {
 		if (site) {
-			setInitialFormValue({
+			setFormValue({
 				uuid: site.uuid,
 				name: site.data.name,
 				url: site.data.url,
@@ -73,104 +36,54 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		}
 	}, [site]);
 
-	const pageTitle = `${site?.data?.name ? `'${site?.data?.name}'` : 'Site'} ${t(
-		CORE_TRANSLATIONS.ROUTING_UPDATE
-	)}`;
-
 	/**
 	 * Methods
 	 */
-	const onSubmit = async ({ name, contentTypes, url }: SitesDetailFormState): Promise<void> => {
-		const request = { name, description: name, contentTypes, url };
-
-		if (!siteId) {
-			return;
-		}
-
-		await sitesFacade
-			.updateSite({
-				id: siteId,
-				body: request,
-			})
-			.then(() => {
-				resetDetectValueChanges();
-				forceNavigateToOverview();
-			});
-	};
-
-	const onCancel = (): void => {
-		navigateToOverview();
-	};
 
 	const onActiveToggle = (): void => {
-		if (siteId && site) {
+		if (site) {
 			sitesFacade.updateSiteActivation({
-				id: siteId,
+				id: site.uuid,
 				activate: !site.meta.active,
 			});
 		}
 	};
 
 	const onArchive = (): void => {
-		sitesFacade.archiveSite(siteId).then(() => navigateToOverview());
+		sitesFacade.archiveSite(site.uuid).then(() => navigateToOverview());
 	};
 
 	/**
 	 * Render
 	 */
-	const renderSitesUpdate = (): ReactElement | null => {
-		if (!initialFormValue) {
-			return null;
-		}
+	if (!formValue) {
+		return null;
+	}
 
-		return (
+	return (
+		<>
 			<SitesDetailForm
 				active={site?.meta.active}
-				initialState={initialFormValue}
+				initialState={formValue}
 				activeLoading={isActiveLoading}
 				archiveLoading={isArchivedLoading}
 				loading={isUpdating}
-				isChanged={isChanged}
+				isChanged={hasChanges}
 				onCancel={onCancel}
-				onSubmit={onSubmit}
+				onSubmit={() => {
+					onSubmit(formValue as SitesDetailFormState, DETAIL_TAB_MAP.settings);
+					resetChangeDetection();
+				}}
 				onActiveToggle={onActiveToggle}
 				onArchive={onArchive}
 				onChange={setFormValue}
 			>
 				{({ submitForm }) => (
-					<LeavePrompt confirmText="Bewaar" when={isChanged} onConfirm={submitForm} />
+					<LeavePrompt confirmText="Bewaar" when={hasChanges} onConfirm={submitForm} />
 				)}
 			</SitesDetailForm>
-		);
-	};
-
-	return (
-		<>
-			<ContextHeader
-				linkProps={(props: any) => ({
-					...props,
-					to: generatePath(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, { siteId }),
-					component: Link,
-				})}
-				tabs={DETAIL_TABS}
-				title={pageTitle}
-				badges={BADGES}
-			>
-				<ContextHeaderTopSection>{breadcrumbs}</ContextHeaderTopSection>
-			</ContextHeader>
-			<Container>
-				<AlertContainer
-					toastClassName="u-margin-bottom"
-					containerId={ALERT_CONTAINER_IDS.update}
-				/>
-				<AlertContainer
-					toastClassName="u-margin-bottom"
-					containerId={ALERT_CONTAINER_IDS.fetchOne}
-				/>
-				<DataLoader loadingState={isFetching} render={renderSitesUpdate} />
-			</Container>
 		</>
 	);
 };
 
-export default SitesCreate;
+export default SitesUpdate;

@@ -9,6 +9,7 @@ export interface SiteResponse {
 		description: string;
 		contentTypes: string[];
 		url: string;
+		modulesConfig: ModuleSettings[];
 	};
 	meta: {
 		tenant: string;
@@ -41,4 +42,15 @@ export type GetSitesPayload = SearchParams;
 export interface UpdateSiteActivationPayload {
 	id: string;
 	activate: boolean;
+}
+
+export type ValidationSchema = Record<string, any>;
+
+export interface ModuleSettings {
+	uuid?: string;
+	label: string;
+	name: string;
+	module?: string;
+	config: Record<string, any>;
+	validationSchema?: ValidationSchema;
 }
