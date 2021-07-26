@@ -1,4 +1,4 @@
-import { ContextHeaderTab } from '@redactie/utils';
+import { ALERT_CONTAINER_IDS, Tab, TabTypes } from './sites.types';
 
 export const BREADCRUMB_OPTIONS = {
 	excludePaths: ['/', '/:tenantId', '/:tenantId/sites/:siteId/bewerken'],
@@ -26,15 +26,22 @@ export const MODULE_PATHS = {
 	create: '/aanmaken/instellingen',
 	detail: '/:siteId',
 	detailEdit: '/:siteId/bewerken/instellingen',
+	detailExternal: '/:siteId/bewerken/:tab',
 };
 
 export const MODULE_API_NAME = 'sites-module';
 
-export const DETAIL_TABS: ContextHeaderTab[] = [{ name: 'Instellingen', target: '', active: true }];
-
-export const ALERT_CONTAINER_IDS = {
-	create: 'sites-create',
-	update: 'sites-update',
-	fetch: 'sites-fetch',
-	fetchOne: 'sites-fetch-one',
+export const DETAIL_TAB_MAP: {
+	[key in 'settings']: Tab;
+} = {
+	settings: {
+		name: 'Instellingen',
+		target: 'instellingen',
+		type: TabTypes.INTERNAL,
+		active: true,
+		disabled: false,
+		containerId: ALERT_CONTAINER_IDS.update,
+	},
 };
+
+export const DETAIL_TABS: Tab[] = [DETAIL_TAB_MAP.settings];

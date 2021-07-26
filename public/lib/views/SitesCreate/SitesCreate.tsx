@@ -18,13 +18,8 @@ import { SitesDetailForm } from '../../components';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSitesUIStates } from '../../hooks';
 import { SiteResponse } from '../../services/sites';
-import {
-	ALERT_CONTAINER_IDS,
-	BREADCRUMB_OPTIONS,
-	DETAIL_TABS,
-	MODULE_PATHS,
-} from '../../sites.const';
-import { SitesDetailFormState, SitesRouteProps } from '../../sites.types';
+import { BREADCRUMB_OPTIONS, DETAIL_TABS, MODULE_PATHS } from '../../sites.const';
+import { ALERT_CONTAINER_IDS, SitesDetailFormState, SitesRouteProps } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
 import { INITIAL_DETAIL_FORM_STATE, SITES_CREATE_ALLOWED_PATHS } from './SitesCreate.const';

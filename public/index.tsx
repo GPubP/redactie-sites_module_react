@@ -11,6 +11,8 @@ import { routes } from './lib/services/routes/routes.class';
 import { MODULE_PATHS, TENANT_ROOT } from './lib/sites.const';
 import { SitesRouteProps } from './lib/sites.types';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
+import SitesDetail from './lib/views/SitesDetail/SitesDetail';
+import { SitesUpdateExternal } from './lib/views/SitesUpdateExternal';
 
 // akitaDevtools();
 
@@ -36,30 +38,6 @@ const SitesComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) => {
 				extraOptions={extraOptions}
 			/>
 		</TenantContext.Provider>
-	);
-};
-
-const SiteDetailComponent: FC<SitesRouteProps> = ({ route, match, tenantId }) => {
-	const guardsMeta = useMemo(
-		() => ({
-			tenantId,
-		}),
-		[tenantId]
-	);
-	const extraOptions = useMemo(
-		() => ({
-			basePath: match.url,
-			tenantId,
-		}),
-		[match.url, tenantId]
-	);
-
-	return (
-		<RenderChildRoutes
-			routes={route.routes}
-			guardsMeta={guardsMeta}
-			extraOptions={extraOptions}
-		/>
 	);
 };
 
@@ -101,6 +79,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 		includePaths: [`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.detail}`],
 		excludePaths: [
 			`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`,
+			`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.detailExternal}`,
 			`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.overview}`,
 			`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.create}`,
 		],
@@ -135,7 +114,7 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 			{
 				path: MODULE_PATHS.detail,
 				breadcrumb: false,
-				component: SiteDetailComponent,
+				component: SitesDetail,
 				guardOptions: {
 					guards: [
 						rolesRightsApi.guards.securityRightsTenantGuard([
@@ -148,6 +127,18 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 						path: MODULE_PATHS.detailEdit,
 						component: SitesUpdate,
 						breadcrumb: false,
+						guardOptions: {
+							guards: [
+								rolesRightsApi.guards.securityRightsTenantGuard([
+									RolesRightsConnector.securityRights.update,
+								]),
+							],
+						},
+					},
+					{
+						path: MODULE_PATHS.detailExternal,
+						breadcrumb: false,
+						component: SitesUpdateExternal,
 						guardOptions: {
 							guards: [
 								rolesRightsApi.guards.securityRightsTenantGuard([
