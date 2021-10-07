@@ -10,6 +10,7 @@ import {
 	DataLoader,
 	RenderChildRoutes,
 	useNavigate,
+	useOnNextRender,
 	useRoutes,
 	useTenantContext,
 } from '@redactie/utils';
@@ -54,6 +55,7 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
 		[navigate]
 	);
+	const forceNavigateToOverview = useOnNextRender(() => navigateToOverview());
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabsFacade();
 	const activeTabs = useActiveTabs(DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
@@ -77,6 +79,7 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 			name: tab.id,
 			label: activeExternalTab?.label,
 		};
+
 		moduleConfig.config = sectionData.config;
 		moduleConfig.validationSchema = sectionData.validationSchema;
 
@@ -127,10 +130,12 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 			return;
 		}
 
-		await sitesFacade.updateSite({
-			id: siteId,
-			body: request,
-		});
+		await sitesFacade
+			.updateSite({
+				id: siteId,
+				body: request,
+			})
+			.then(() => forceNavigateToOverview());
 	};
 
 	/**
@@ -141,7 +146,7 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 			site,
 			siteUI,
 			onSubmit,
-			onCancel: navigateToOverview,
+			onCancel: () => forceNavigateToOverview(),
 		};
 
 		return (

@@ -1,8 +1,8 @@
-import { LeavePrompt, useDetectValueChanges, useNavigate } from '@redactie/utils';
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import React, { FC, useEffect, useState } from 'react';
 
 import { SitesDetailForm } from '../../components';
-import { DETAIL_TAB_MAP, MODULE_PATHS } from '../../sites.const';
+import { DETAIL_TAB_MAP } from '../../sites.const';
 import { SitesDetailFormState, SitesUpdateRouteProps } from '../../sites.types';
 import { sitesFacade } from '../../store/sites';
 
@@ -15,25 +15,22 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 	const isArchivedLoading = !!siteUI?.isArchiving;
 	const isFetching = !!siteUI?.isFetching;
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(null);
-	const { navigate } = useNavigate();
-	const navigateToOverview = useCallback(
-		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
-		[navigate]
-	);
 	const [hasChanges, resetChangeDetection] = useDetectValueChanges(
 		!isFetching && !!formValue,
 		formValue
 	);
 
 	useEffect(() => {
-		if (site) {
-			setFormValue({
-				uuid: site.uuid,
-				name: site.data.name,
-				url: site.data.url,
-				contentTypes: site.data.contentTypes,
-			});
+		if (!site) {
+			return;
 		}
+
+		setFormValue({
+			uuid: site.uuid,
+			name: site.data.name,
+			url: site.data.url,
+			contentTypes: site.data.contentTypes,
+		});
 	}, [site]);
 
 	/**
@@ -50,7 +47,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 	};
 
 	const onArchive = (): void => {
-		sitesFacade.archiveSite(site.uuid).then(() => navigateToOverview());
+		sitesFacade.archiveSite(site.uuid).then(() => onCancel());
 	};
 
 	/**
