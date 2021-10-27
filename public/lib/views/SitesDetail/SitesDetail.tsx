@@ -55,7 +55,7 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 		() => navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`),
 		[navigate]
 	);
-	const forceNavigateToOverview = useOnNextRender(() => navigateToOverview());
+	const [forceNavigateToOverview] = useOnNextRender(() => navigateToOverview());
 	const [{ all: externalTabs, active: activeExternalTab }] = useExternalTabsFacade();
 	const activeTabs = useActiveTabs(DETAIL_TABS, externalTabs, location.pathname);
 	const { tenantId } = useTenantContext();
