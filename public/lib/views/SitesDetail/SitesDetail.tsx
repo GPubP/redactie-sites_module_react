@@ -75,7 +75,7 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 	): any => {
 		const oldModulesConfig = site?.data.modulesConfig || [];
 		const moduleConfigIndex = (oldModulesConfig || []).findIndex(c => c.name === tab.id);
-		const moduleConfig: ModuleSettings = oldModulesConfig[moduleConfigIndex] || {
+		const moduleConfig: ModuleSettings = { ...oldModulesConfig[moduleConfigIndex] } || {
 			name: tab.id,
 			label: activeExternalTab?.label,
 		};
