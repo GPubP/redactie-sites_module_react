@@ -14,7 +14,6 @@ import { SitesRouteProps } from './lib/sites.types';
 import { Dashboard, SitesCreate, SitesOverview, SitesUpdate } from './lib/views';
 import SitesDetail from './lib/views/SitesDetail/SitesDetail';
 import { SitesUpdateExternal } from './lib/views/SitesUpdateExternal';
-console.log('sites');
 
 // akitaDevtools();
 
