@@ -6,6 +6,7 @@ import React, { FC, useMemo } from 'react';
 
 import { registerSitesAPI } from './lib/api';
 import { SitesPreNavigation } from './lib/components';
+import { registerFields } from './lib/components/Fields';
 import { rolesRightsConnector, RolesRightsConnector } from './lib/connectors/rolesRights';
 import { routes } from './lib/services/routes/routes.class';
 import { MODULE_PATHS, TENANT_ROOT } from './lib/sites.const';
@@ -158,5 +159,6 @@ rolesRightsConnector.initialized$.subscribe(initializeModule);
 
 // API export
 registerSitesAPI();
+registerFields();
 
 export * from './lib/api/api.types';
