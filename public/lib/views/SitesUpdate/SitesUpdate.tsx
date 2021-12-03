@@ -76,7 +76,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 				onChange={setFormValue}
 			>
 				{({ submitForm }) => (
-					<LeavePrompt confirmText="Bewaar" when={hasChanges} onConfirm={submitForm} />
+					<LeavePrompt confirmText="Bewaren" when={hasChanges} onConfirm={submitForm} />
 				)}
 			</SitesDetailForm>
 		</>
