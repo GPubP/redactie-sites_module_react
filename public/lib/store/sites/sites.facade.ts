@@ -161,7 +161,7 @@ export class SitesFacade {
 	public createSite(
 		payload: CreateSitePayload,
 		options: CreateSitePayloadOptions = {
-			successAlertContainerId: SITES_ALERT_CONTAINER_IDS.create,
+			successAlertContainerId: SITES_ALERT_CONTAINER_IDS.update,
 			errorAlertContainerId: SITES_ALERT_CONTAINER_IDS.create,
 		}
 	): Promise<SiteResponse | undefined> {
