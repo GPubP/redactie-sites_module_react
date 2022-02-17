@@ -75,10 +75,14 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 	): any => {
 		const oldModulesConfig = site?.data.modulesConfig || [];
 		const moduleConfigIndex = (oldModulesConfig || []).findIndex(c => c.name === tab.id);
-		const moduleConfig: ModuleSettings = { ...oldModulesConfig[moduleConfigIndex] } || {
-			name: tab.id,
-			label: activeExternalTab?.label,
-		};
+		const moduleConfig: ModuleSettings | Partial<ModuleSettings> = oldModulesConfig[
+			moduleConfigIndex
+		]
+			? { ...oldModulesConfig[moduleConfigIndex] }
+			: {
+					name: tab.id,
+					label: activeExternalTab?.label,
+			  };
 
 		moduleConfig.config = sectionData.config;
 		moduleConfig.validationSchema = sectionData.validationSchema;
@@ -86,9 +90,9 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 		const newModulesConfig = [...oldModulesConfig];
 
 		if (moduleConfigIndex >= 0) {
-			newModulesConfig[moduleConfigIndex] = moduleConfig;
+			newModulesConfig[moduleConfigIndex] = moduleConfig as ModuleSettings;
 		} else {
-			newModulesConfig.push(moduleConfig);
+			newModulesConfig.push(moduleConfig as ModuleSettings);
 		}
 
 		return {
