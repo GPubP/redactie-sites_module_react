@@ -6,6 +6,7 @@ export type SiteDetailModel = SiteResponse;
 export interface SiteDetailUIModel extends CacheEntityUI {
 	isActivating: boolean;
 	isArchiving: boolean;
+	languageChanging?: string;
 }
 
 export type SitesDetailState = CacheEntityState<SiteDetailModel, string>;
