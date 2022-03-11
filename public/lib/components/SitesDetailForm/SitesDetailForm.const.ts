@@ -5,5 +5,5 @@ export const SITES_DETAIL_VALIDATION_SCHEMA = object().shape({
 	url: string()
 		.url('Gelieve een geldige url in te vullen')
 		.required('Url is verplicht'),
-	languages: array().min(1, 'Gelieve minsters één taal te kiezen'),
+	languages: array().min(1, 'Gelieve minstens één taal te kiezen'),
 });

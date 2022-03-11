@@ -16,7 +16,7 @@ export const SITE_LANGUAGE_COLUMNS = (
 	languageChanging: string | undefined,
 	onLanguageChange: Function,
 	site: SiteResponse
-): TableColumn[] => [
+): TableColumn<SiteResponse>[] => [
 	{
 		label: 'Naam',
 		value: 'name',
@@ -33,7 +33,7 @@ export const SITE_LANGUAGE_COLUMNS = (
 		label: '',
 		width: '20%',
 		classList: ['u-text-right'],
-		component: (_: string, { uuid }: any): React.ReactElement => {
+		component: (_: string, { uuid }): React.ReactElement => {
 			if (site.data.languages.includes(uuid)) {
 				return (
 					<Button
