@@ -122,6 +122,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 			name: site.data.name,
 			active: site.meta.active,
 			url: site.data.url,
+			languages: (site.data.languages as unknown) as { key: string }[],
 			userIsMember: !!site.userIsMember,
 			navigateToEdit: () =>
 				navigate(`${MODULE_PATHS.root}${MODULE_PATHS.detailEdit}`, {

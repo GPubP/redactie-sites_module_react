@@ -85,6 +85,7 @@ export interface SitesOverviewRowData {
 	name: string;
 	active: boolean;
 	url: string;
+	languages: { key: string }[];
 	userIsMember: boolean;
 	navigateToEdit?: () => void;
 }
