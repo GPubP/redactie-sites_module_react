@@ -6,6 +6,7 @@ import {
 	ContextHeaderTopSection,
 	PaginatedTable,
 } from '@acpaas-ui/react-editorial-components';
+import { LanguageModel } from '@redactie/language-module';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	DataLoader,
@@ -118,7 +119,7 @@ const Dashboard: FC<SitesRouteProps> = () => {
 			name: site.data.name,
 			active: site.meta.active,
 			url: site.data.url,
-			languages: (site.data.languages as unknown) as { key: string }[],
+			languages: site.data.languages as LanguageModel[],
 			userIsMember: !!site.userIsMember,
 		}));
 
