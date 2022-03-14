@@ -245,6 +245,41 @@ export class SitesFacade {
 			});
 	}
 
+	public updateSiteLanguages(
+		payload: UpdateSitePayload,
+		changedLanguageId: string,
+		options: UpdateSitePayloadOptions = {
+			alertContainerId: SITES_ALERT_CONTAINER_IDS.update,
+		}
+	): Promise<SiteResponse | void> {
+		const alertMessages = getAlertMessages(payload.body.name);
+		this.detailStore.ui.update(payload.id, {
+			languageChanging: changedLanguageId,
+		});
+
+		return this.service
+			.updateSite(payload)
+			.then(response => {
+				this.detailStore.upsert(response.uuid, response);
+				this.detailStore.ui.update(payload.id, {
+					languageChanging: undefined,
+					error: null,
+				});
+				this.listPaginator.clearCache();
+
+				return response;
+			})
+			.catch(error => {
+				this.detailStore.ui.update(payload.id, {
+					isUpdating: false,
+					error,
+				});
+				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
+
+				throw error;
+			});
+	}
+
 	public updateSiteActivation(payload: UpdateSiteActivationPayload): void {
 		this.detailStore.ui.update(payload.id, {
 			isActivating: true,

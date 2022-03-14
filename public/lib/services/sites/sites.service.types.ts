@@ -8,6 +8,7 @@ export interface SiteResponse {
 		name: string;
 		description: string;
 		contentTypes: string[];
+		languages: string[];
 		url: string;
 		modulesConfig: ModuleSettings[];
 	};

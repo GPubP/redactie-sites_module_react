@@ -5,6 +5,7 @@ export interface CreateSitePayload {
 	name: string;
 	description: string;
 	contentTypes: string[];
+	languages: string[];
 }
 
 export interface CreateSitePayloadOptions {

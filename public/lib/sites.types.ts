@@ -29,12 +29,14 @@ export interface SitesDetailFormState {
 	name: string;
 	url: string;
 	contentTypes: string[];
+	languages: string[];
 }
 
 export interface SitesDetailData {
 	name: string;
 	url: string;
 	contentTypes: string[];
+	languages: string[];
 	description: string;
 	modulesConfig: ModuleSettings[];
 }

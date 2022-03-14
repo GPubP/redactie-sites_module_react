@@ -6,15 +6,18 @@ import {
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	AlertContainer,
+	CheckboxList,
 	LeavePrompt,
 	useDetectValueChanges,
 	useNavigate,
 	useRoutes,
 } from '@redactie/utils';
-import React, { FC, useState } from 'react';
+import { Field } from 'formik';
+import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
+import languagesConnector from '../../connectors/languages';
 import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSitesUIStates } from '../../hooks';
 import { SiteResponse } from '../../services/sites';
@@ -38,6 +41,13 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	const [siteListUIState] = useSitesUIStates();
 	const [formValue, setFormValue] = useState<SitesDetailFormState>(INITIAL_DETAIL_FORM_STATE());
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(!!formValue, formValue);
+	const [, languages] = languagesConnector.hooks.useLanguages();
+
+	useEffect(() => {
+		languagesConnector.languagesFacade.getLanguages({
+			active: true,
+		});
+	}, []);
 
 	/**
 	 * Methods
@@ -46,8 +56,8 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		navigate(`${MODULE_PATHS.root}${MODULE_PATHS.overview}`);
 	};
 
-	const onSubmit = ({ name, contentTypes, url }: SitesDetailFormState): void => {
-		const request = { name, description: name, contentTypes, url };
+	const onSubmit = ({ name, contentTypes, url, languages }: SitesDetailFormState): void => {
+		const request = { name, description: name, contentTypes, url, languages };
 
 		sitesFacade
 			.createSite(request)
@@ -92,13 +102,26 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 					onSubmit={onSubmit}
 				>
 					{({ submitForm }) => (
-						<LeavePrompt
-							shouldBlockNavigationOnConfirm
-							when={isChanged}
-							allowedPaths={SITES_CREATE_ALLOWED_PATHS}
-							confirmText="Ja, bewaar en ga verder"
-							onConfirm={submitForm}
-						/>
+						<>
+							<Field
+								as={CheckboxList}
+								name="languages"
+								label="Talen"
+								description="Activeer minstens één taal voor deze website. Voeg extra talen toe in het menu"
+								options={(languages || [])?.map(language => ({
+									key: language.uuid,
+									value: language.uuid,
+									label: language.name,
+								}))}
+							/>
+							<LeavePrompt
+								shouldBlockNavigationOnConfirm
+								when={isChanged}
+								allowedPaths={SITES_CREATE_ALLOWED_PATHS}
+								confirmText="Ja, bewaar en ga verder"
+								onConfirm={submitForm}
+							/>
+						</>
 					)}
 				</SitesDetailForm>
 			</Container>

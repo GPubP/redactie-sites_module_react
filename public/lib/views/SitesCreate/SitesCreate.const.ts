@@ -5,6 +5,7 @@ export const INITIAL_DETAIL_FORM_STATE = (): SitesDetailFormState => ({
 	uuid: '',
 	name: '',
 	contentTypes: [],
+	languages: [],
 	url: '',
 });
 
