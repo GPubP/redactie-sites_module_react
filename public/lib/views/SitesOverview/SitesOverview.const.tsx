@@ -1,9 +1,10 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
+import { LanguageModel } from '@redactie/language-module';
 import { RolesRightsModuleAPI } from '@redactie/roles-rights-module';
 import { TranslateFunc } from '@redactie/translations-module';
 import { TableColumn } from '@redactie/utils';
-import { compose, prop, toUpper } from 'ramda';
+import { propOr } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -61,7 +62,7 @@ export const SITES_OVERVIEW_COLUMNS = (
 		width: '30%',
 		disableSorting: true,
 		component(_, { languages }) {
-			return <>{languages.map(prop('key')).join(', ')}</>;
+			return <>{(languages as LanguageModel[]).map(propOr(null, 'key')).join(', ')}</>;
 		},
 	},
 	{

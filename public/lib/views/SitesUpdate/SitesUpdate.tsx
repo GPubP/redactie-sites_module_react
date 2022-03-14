@@ -42,7 +42,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 			name: site.data.name,
 			url: site.data.url,
 			contentTypes: site.data.contentTypes,
-			languages: site.data.languages,
+			languages: site.data.languages as string[],
 		});
 	}, [site]);
 
@@ -72,8 +72,10 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 						...site.data,
 						languages:
 							operator === 'add'
-								? [...site.data.languages, uuid]
-								: site.data.languages.filter(languageId => languageId !== uuid),
+								? [...(site.data.languages as string[]), uuid]
+								: (site.data.languages as string[]).filter(
+										languageId => languageId !== uuid
+								  ),
 					},
 				},
 				uuid

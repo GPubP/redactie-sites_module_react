@@ -1,3 +1,4 @@
+import { LanguageModel } from '@redactie/language-module';
 import { EmbeddedResponse, Page, SearchParams } from '@redactie/utils';
 
 export type SitesResponse = EmbeddedResponse<SiteResponse>;
@@ -8,7 +9,7 @@ export interface SiteResponse {
 		name: string;
 		description: string;
 		contentTypes: string[];
-		languages: string[];
+		languages: string[] | LanguageModel[];
 		url: string;
 		modulesConfig: ModuleSettings[];
 	};

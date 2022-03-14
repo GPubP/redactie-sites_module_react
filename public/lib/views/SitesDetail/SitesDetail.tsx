@@ -121,6 +121,7 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 				description: name,
 				contentTypes,
 				url,
+				languages: [],
 			};
 		}
 
