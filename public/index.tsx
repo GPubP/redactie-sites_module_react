@@ -3,10 +3,12 @@ import Core from '@redactie/redactie-core';
 import { RolesRightsModuleAPI } from '@redactie/roles-rights-module';
 import { RenderChildRoutes, TenantContext } from '@redactie/utils';
 import React, { FC, useMemo } from 'react';
+import { forkJoin } from 'rxjs';
 
 import { registerSitesAPI } from './lib/api';
 import { SitesPreNavigation } from './lib/components';
 import { registerFields } from './lib/components/Fields';
+import languagesConnector from './lib/connectors/languages';
 import { rolesRightsConnector, RolesRightsConnector } from './lib/connectors/rolesRights';
 import { routes } from './lib/services/routes/routes.class';
 import { MODULE_PATHS, TENANT_ROOT } from './lib/sites.const';
@@ -155,7 +157,9 @@ const initializeModule = (rolesRightsApi: RolesRightsModuleAPI): void => {
 	);
 };
 
-rolesRightsConnector.initialized$.subscribe(initializeModule);
+forkJoin([rolesRightsConnector.initialized$, languagesConnector.initialized$]).subscribe(results =>
+	initializeModule(results[0])
+);
 
 // API export
 registerSitesAPI();
