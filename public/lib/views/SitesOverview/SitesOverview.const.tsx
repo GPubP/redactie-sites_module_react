@@ -1,8 +1,10 @@
 import { Link as AUILink, Button } from '@acpaas-ui/react-components';
 import { EllipsisWithTooltip } from '@acpaas-ui/react-editorial-components';
+import { LanguageModel } from '@redactie/language-module';
 import { RolesRightsModuleAPI } from '@redactie/roles-rights-module';
 import { TranslateFunc } from '@redactie/translations-module';
 import { TableColumn } from '@redactie/utils';
+import { propOr } from 'ramda';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -19,7 +21,7 @@ export const SITES_OVERVIEW_COLUMNS = (
 	{
 		label: t(CORE_TRANSLATIONS.TABLE_NAME),
 		value: 'name',
-		width: '50%',
+		width: '40%',
 		component(name: string, { userIsMember, id, url }) {
 			return (
 				<>
@@ -52,6 +54,15 @@ export const SITES_OVERVIEW_COLUMNS = (
 		component(value: string) {
 			const isActive = !!value;
 			return <SiteStatus active={isActive} />;
+		},
+	},
+	{
+		label: 'Talen',
+		value: 'languages',
+		width: '30%',
+		disableSorting: true,
+		component(_, { languages }) {
+			return <>{(languages as LanguageModel[]).map(propOr(null, 'key')).join(', ')}</>;
 		},
 	},
 	{

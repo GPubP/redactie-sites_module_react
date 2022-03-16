@@ -114,13 +114,14 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 		if (tab.type === TabTypes.EXTERNAL) {
 			body = upsertExternalToBody(site, sectionData as ExternalTabValue, tab);
 		} else {
-			const { name, contentTypes, url } = sectionData as SitesDetailFormState;
+			const { name, contentTypes, url, languages } = sectionData as SitesDetailFormState;
 			return {
 				...site.data,
 				name,
 				description: name,
 				contentTypes,
 				url,
+				languages,
 			};
 		}
 

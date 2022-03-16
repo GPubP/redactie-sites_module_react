@@ -1,3 +1,4 @@
+import { LanguageModel } from '@redactie/language-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { ContextHeaderTab, FilterItem } from '@redactie/utils';
 
@@ -85,6 +86,7 @@ export interface SitesOverviewRowData {
 	name: string;
 	active: boolean;
 	url: string;
+	languages: LanguageModel[];
 	userIsMember: boolean;
 	navigateToEdit?: () => void;
 }
