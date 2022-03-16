@@ -17,7 +17,7 @@ import {
 import React, { FC, ReactElement, useCallback, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import TranslationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSite } from '../../hooks';
 import useActiveTabs from '../../hooks/useActiveTabs/useActiveTabs';
 import { ModuleSettings } from '../../services/sites';
@@ -43,7 +43,7 @@ const SitesDetail: FC<SitesRouteProps> = ({ location, route }) => {
 	 * Hooks
 	 */
 	const [site, siteUI] = useSite(siteId);
-	const [t] = useCoreTranslation();
+	const [t] = TranslationsConnector.useCoreTranslation();
 	const isFetching = !!siteUI?.isFetching;
 	const routes = useRoutes();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {

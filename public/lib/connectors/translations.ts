@@ -1,17 +1,35 @@
 import Core from '@redactie/redactie-core';
-import { TranslationsAPI } from '@redactie/translations-module';
+import { TranslateFunc, TranslationsAPI } from '@redactie/translations-module';
 
-const translationsAPI = Core.modules.getModuleAPI<TranslationsAPI>('translations-module');
+class TranslationsConnector {
+	static apiName = 'translations-module';
 
-/**
- * Translations - useCoreTranslation
- *    => returns translate function or empty function returning an empty string if not available
- *
- * TODO: implement language based on currently set language (maybe this should be handled in the translations module)
- */
-export const useCoreTranslation = (): [(keys: string | string[]) => string] =>
-	translationsAPI?.core?.useTranslation
-		? translationsAPI.core.useTranslation('nl_BE')
-		: [() => 'TRANSLATIONS MODULE ERROR'];
+	private api: TranslationsAPI;
 
-export const CORE_TRANSLATIONS = translationsAPI?.core?.CORE_TRANSLATIONS || {};
+	public get core(): TranslationsAPI['core'] {
+		return this.api.core;
+	}
+
+	public get modules(): TranslationsAPI['modules'] {
+		return this.api.modules;
+	}
+
+	public get CORE_TRANSLATIONS(): TranslationsAPI['core']['CORE_TRANSLATIONS'] {
+		return this.core.CORE_TRANSLATIONS;
+	}
+
+	constructor() {
+		this.api = Core.modules.getModuleAPI<TranslationsAPI>(TranslationsConnector.apiName);
+	}
+
+	public useCoreTranslation(): [TranslateFunc] {
+		return this.core?.useTranslation
+			? this.core.useTranslation('nl_BE')
+			: [() => 'TRANSLATIONS MODULE ERROR'];
+	}
+}
+
+const translationsConnector = new TranslationsConnector();
+
+export const CORE_TRANSLATIONS = translationsConnector.CORE_TRANSLATIONS;
+export default translationsConnector;

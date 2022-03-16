@@ -12,7 +12,7 @@ import { CopyValue, ErrorMessage, FormikOnChangeHandler } from '@redactie/utils'
 import { Field, Formik } from 'formik';
 import React, { FC, ReactElement } from 'react';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import TranslationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { SitesDetailFormState } from '../../sites.types';
 import SitesStatus from '../SiteStatus/SiteStatus';
 
@@ -33,7 +33,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	onArchive = () => null,
 	onActiveToggle,
 }) => {
-	const [t] = useCoreTranslation();
+	const [t] = TranslationsConnector.useCoreTranslation();
 
 	const getLoadingStateBtnProps = (
 		loading: boolean,

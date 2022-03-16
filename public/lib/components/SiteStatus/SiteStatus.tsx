@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import TranslationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import Status from '../Status/Status';
 
 import { SitesStatusProps } from './SiteStatus.types';
 
 const SitesStatus: FC<SitesStatusProps> = ({ active = false }) => {
-	const [t] = useCoreTranslation();
+	const [t] = TranslationsConnector.useCoreTranslation();
 
 	return (
 		<>
