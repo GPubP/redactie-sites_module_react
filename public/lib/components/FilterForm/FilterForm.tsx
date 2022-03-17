@@ -3,7 +3,7 @@ import { Filter, FilterBody } from '@acpaas-ui/react-editorial-components';
 import { Field, Form, Formik } from 'formik';
 import React, { FC } from 'react';
 
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import TranslationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 
 import { FILTER_FORM_VALIDATION_SCHEMA, STATUS_OPTIONS } from './FilterForm.const';
 import { FilterFormProps } from './FilterForm.types';
@@ -18,7 +18,7 @@ const FilterForm: FC<FilterFormProps> = ({
 	/**
 	 * Hooks
 	 */
-	const [t] = useCoreTranslation();
+	const [t] = TranslationsConnector.useCoreTranslation();
 
 	/**
 	 * Render

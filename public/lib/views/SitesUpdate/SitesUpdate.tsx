@@ -24,7 +24,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 		!isFetching && !!formValue,
 		formValue
 	);
-	const [, languages] = languagesConnector.hooks.useLanguages();
+	const [, , , languages] = languagesConnector.hooks.useLanguages();
 
 	useEffect(() => {
 		languagesConnector.languagesFacade.getLanguages({

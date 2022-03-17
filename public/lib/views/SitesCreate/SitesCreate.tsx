@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import languagesConnector from '../../connectors/languages';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import TranslationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { useHomeBreadcrumb, useSitesUIStates } from '../../hooks';
 import { SiteResponse } from '../../services/sites';
 import { BREADCRUMB_OPTIONS, DETAIL_TABS, MODULE_PATHS } from '../../sites.const';
@@ -33,7 +33,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	 */
 	const routes = useRoutes();
 	const { generatePath, navigate } = useNavigate();
-	const [t] = useCoreTranslation();
+	const [t] = TranslationsConnector.useCoreTranslation();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		extraBreadcrumbs: [useHomeBreadcrumb()],
@@ -41,7 +41,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	const [siteListUIState] = useSitesUIStates();
 	const [formValue, setFormValue] = useState<SitesDetailFormState>(INITIAL_DETAIL_FORM_STATE());
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(!!formValue, formValue);
-	const [, languages] = languagesConnector.hooks.useLanguages();
+	const [, , , languages] = languagesConnector.hooks.useLanguages();
 
 	useEffect(() => {
 		languagesConnector.languagesFacade.getLanguages({

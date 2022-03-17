@@ -34,7 +34,7 @@ export const SITE_LANGUAGE_COLUMNS = (
 		width: '20%',
 		classList: ['u-text-right'],
 		component: (_: string, { uuid }): React.ReactElement => {
-			if (site.data.languages.includes(uuid)) {
+			if ((site.data.languages as string[]).includes(uuid)) {
 				return (
 					<Button
 						type="danger"

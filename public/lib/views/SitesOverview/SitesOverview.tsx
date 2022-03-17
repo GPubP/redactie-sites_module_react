@@ -25,7 +25,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { FilterForm, FilterFormState } from '../../components/FilterForm';
 import { STATUS_OPTIONS } from '../../components/FilterForm/FilterForm.const';
 import { RolesRightsConnector } from '../../connectors/rolesRights';
-import { CORE_TRANSLATIONS, useCoreTranslation } from '../../connectors/translations';
+import TranslationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { generateSitesFilters } from '../../helpers';
 import { useHomeBreadcrumb, usePaginatedSites, useRolesRightsApi } from '../../hooks';
 import { BREADCRUMB_OPTIONS, MODULE_PATHS, OVERVIEW_QUERY_PARAMS_CONIG } from '../../sites.const';
@@ -55,7 +55,7 @@ const SitesOverview: FC<SitesRouteProps> = () => {
 		mySecurityRightsLoading,
 		mySecurityrights,
 	] = rolesRightsApi.hooks.useMySecurityRightsForTenant(true);
-	const [t] = useCoreTranslation();
+	const [t] = TranslationsConnector.useCoreTranslation();
 
 	useEffect(() => {
 		if (
