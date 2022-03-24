@@ -51,7 +51,10 @@ export interface SitesModuleAPI {
 	store: {
 		sites: {
 			service: SitesApiService;
-			facade: Pick<SitesFacade, 'getSite' | 'getSitesPaginated' | 'updateSite'>;
+			facade: Pick<
+				SitesFacade,
+				'getSite' | 'getSitesPaginated' | 'updateSite' | 'selectSite' | 'hasSite'
+			>;
 		};
 	};
 	hooks: {
