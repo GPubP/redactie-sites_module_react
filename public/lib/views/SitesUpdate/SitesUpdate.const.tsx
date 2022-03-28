@@ -1,9 +1,11 @@
 /* eslint-disable react/display-name */
 import { Button } from '@acpaas-ui/react-components';
 import { TableColumn } from '@redactie/utils';
+import { FieldArrayRenderProps } from 'formik';
 import React from 'react';
 
 import { SiteResponse } from '../../services/sites';
+import { SitesDetailFormState } from '../../sites.types';
 
 export const BADGES = [
 	{
@@ -13,9 +15,8 @@ export const BADGES = [
 ];
 
 export const SITE_LANGUAGE_COLUMNS = (
-	languageChanging: string | undefined,
-	onLanguageChange: Function,
-	site: SiteResponse
+	arrayHelpers: FieldArrayRenderProps,
+	values: SitesDetailFormState
 ): TableColumn<SiteResponse>[] => [
 	{
 		label: 'Naam',
@@ -34,13 +35,15 @@ export const SITE_LANGUAGE_COLUMNS = (
 		width: '20%',
 		classList: ['u-text-right'],
 		component: (_: string, { uuid }): React.ReactElement => {
-			if ((site.data.languages as string[]).includes(uuid)) {
+			if (values.languages.includes(uuid)) {
 				return (
 					<Button
 						type="danger"
 						outline
-						onClick={() => onLanguageChange(uuid, 'remove')}
-						iconLeft={languageChanging === uuid ? 'circle-o-notch fa-spin' : null}
+						onClick={() => {
+							const idx = values?.languages?.indexOf(uuid);
+							arrayHelpers.remove(Number(idx));
+						}}
 					>
 						Deactiveren
 					</Button>
@@ -48,12 +51,7 @@ export const SITE_LANGUAGE_COLUMNS = (
 			}
 
 			return (
-				<Button
-					type="success"
-					outline
-					onClick={() => onLanguageChange(uuid, 'add')}
-					iconLeft={languageChanging === uuid ? 'circle-o-notch fa-spin' : null}
-				>
+				<Button type="success" outline onClick={() => arrayHelpers.push(uuid)}>
 					Activeren
 				</Button>
 			);

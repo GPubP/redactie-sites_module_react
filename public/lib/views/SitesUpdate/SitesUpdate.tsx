@@ -1,5 +1,6 @@
 import { Table } from '@acpaas-ui/react-editorial-components';
 import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import { FieldArray } from 'formik';
 import React, { FC, useEffect, useState } from 'react';
 
 import { SitesDetailForm } from '../../components';
@@ -15,7 +16,6 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 	 * Hooks
 	 */
 	const isUpdating = !!siteUI?.isUpdating;
-	const languageChanging = siteUI?.languageChanging;
 	const isActiveLoading = !!siteUI?.isActivating;
 	const isArchivedLoading = !!siteUI?.isArchiving;
 	const isFetching = !!siteUI?.isFetching;
@@ -63,26 +63,6 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 		sitesFacade.archiveSite(site.uuid).then(() => onCancel());
 	};
 
-	const onLanguageChange = (uuid: string, operator: 'add' | 'remove'): void => {
-		sitesFacade
-			.updateSiteLanguages(
-				{
-					id: site.uuid,
-					body: {
-						...site.data,
-						languages:
-							operator === 'add'
-								? [...(site.data.languages as string[]), uuid]
-								: (site.data.languages as string[]).filter(
-										languageId => languageId !== uuid
-								  ),
-					},
-				},
-				uuid
-			)
-			.then(() => resetChangeDetection());
-	};
-
 	/**
 	 * Render
 	 */
@@ -108,16 +88,17 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 				onArchive={onArchive}
 				onChange={setFormValue}
 			>
-				{({ submitForm }) => (
+				{({ submitForm, values }) => (
 					<>
-						<Table
-							className="u-margin-top"
-							columns={SITE_LANGUAGE_COLUMNS(
-								languageChanging,
-								onLanguageChange,
-								site
+						<FieldArray
+							name="languages"
+							render={arrayHelpers => (
+								<Table
+									className="u-margin-top"
+									columns={SITE_LANGUAGE_COLUMNS(arrayHelpers, values)}
+									rows={languages}
+								/>
 							)}
-							rows={languages}
 						/>
 						<LeavePrompt
 							confirmText="Bewaren"
