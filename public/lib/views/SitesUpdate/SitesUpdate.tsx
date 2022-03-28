@@ -2,6 +2,7 @@ import { Table } from '@acpaas-ui/react-editorial-components';
 import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import { FieldArray } from 'formik';
 import React, { FC, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import languagesConnector from '../../connectors/languages';
@@ -12,6 +13,7 @@ import { sitesFacade } from '../../store/sites';
 import { SITE_LANGUAGE_COLUMNS } from './SitesUpdate.const';
 
 const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, siteUI }) => {
+	const { siteId } = useParams<{ siteId: string }>();
 	/**
 	 * Hooks
 	 */
@@ -29,8 +31,11 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 	useEffect(() => {
 		languagesConnector.languagesFacade.getLanguages({
 			active: true,
+			includeContentOccurrences: true,
+			site: siteId,
+			sort: 'name',
 		});
-	}, []);
+	}, [siteId]);
 
 	useEffect(() => {
 		if (!site) {

@@ -26,8 +26,10 @@ export const SITE_LANGUAGE_COLUMNS = (
 	},
 	{
 		label: 'Aantal content items',
+		value: 'contentOccurrencesCount',
 		width: '50%',
-		component: (): React.ReactElement => <small>Geen items.</small>,
+		component: (value: number): React.ReactElement =>
+			value ? <>{value}</> : <small>Geen items.</small>,
 		disableSorting: true,
 	},
 	{
