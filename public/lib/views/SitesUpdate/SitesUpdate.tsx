@@ -1,6 +1,8 @@
 import { Table } from '@acpaas-ui/react-editorial-components';
-import { LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import { DeletePrompt, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import { FieldArray } from 'formik';
 import React, { FC, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
 import languagesConnector from '../../connectors/languages';
@@ -11,15 +13,20 @@ import { sitesFacade } from '../../store/sites';
 import { SITE_LANGUAGE_COLUMNS } from './SitesUpdate.const';
 
 const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, siteUI }) => {
+	const { siteId } = useParams<{ siteId: string }>();
 	/**
 	 * Hooks
 	 */
 	const isUpdating = !!siteUI?.isUpdating;
-	const languageChanging = siteUI?.languageChanging;
 	const isActiveLoading = !!siteUI?.isActivating;
 	const isArchivedLoading = !!siteUI?.isArchiving;
 	const isFetching = !!siteUI?.isFetching;
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(null);
+	const [deactivateModalInfo, setDeactivateModalInfo] = useState<{
+		showModal: boolean;
+		contentOccurrences?: number;
+		languageId?: string;
+	}>();
 	const [hasChanges, resetChangeDetection] = useDetectValueChanges(
 		!isFetching && !!formValue,
 		formValue
@@ -29,8 +36,11 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 	useEffect(() => {
 		languagesConnector.languagesFacade.getLanguages({
 			active: true,
+			includeContentOccurrences: true,
+			site: siteId,
+			sort: 'name',
 		});
-	}, []);
+	}, [siteId]);
 
 	useEffect(() => {
 		if (!site) {
@@ -63,26 +73,6 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 		sitesFacade.archiveSite(site.uuid).then(() => onCancel());
 	};
 
-	const onLanguageChange = (uuid: string, operator: 'add' | 'remove'): void => {
-		sitesFacade
-			.updateSiteLanguages(
-				{
-					id: site.uuid,
-					body: {
-						...site.data,
-						languages:
-							operator === 'add'
-								? [...(site.data.languages as string[]), uuid]
-								: (site.data.languages as string[]).filter(
-										languageId => languageId !== uuid
-								  ),
-					},
-				},
-				uuid
-			)
-			.then(() => resetChangeDetection());
-	};
-
 	/**
 	 * Render
 	 */
@@ -108,16 +98,65 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 				onArchive={onArchive}
 				onChange={setFormValue}
 			>
-				{({ submitForm }) => (
+				{({ submitForm, values }) => (
 					<>
-						<Table
-							className="u-margin-top"
-							columns={SITE_LANGUAGE_COLUMNS(
-								languageChanging,
-								onLanguageChange,
-								site
+						<FieldArray
+							name="languages"
+							render={arrayHelpers => (
+								<>
+									<Table
+										className="u-margin-top"
+										columns={SITE_LANGUAGE_COLUMNS(
+											arrayHelpers,
+											values,
+											setDeactivateModalInfo
+										)}
+										rows={languages}
+									/>
+
+									<DeletePrompt
+										body={
+											deactivateModalInfo?.contentOccurrences ? (
+												<>
+													Er zijn binnen deze site{' '}
+													<b>{deactivateModalInfo?.contentOccurrences}</b>{' '}
+													content items die deze taal gebruiken. Als je
+													deze taal deactiveert zijn deze niet meer
+													beschikbaar in de redactie én de frontend.
+													Heractiveren van de taal zal de content items
+													opnieuw beschikbaar maken.
+												</>
+											) : (
+												<>
+													Er zijn binnen deze site geen content items die
+													deze taal gebruiken. Als je deze taal
+													deactiveert wordt deze niet meer aangeboden aan
+													de redacteurs.
+												</>
+											)
+										}
+										title="Bevestigen"
+										show={!!deactivateModalInfo?.showModal}
+										onCancel={() =>
+											setDeactivateModalInfo({ showModal: false })
+										}
+										confirmButtonIcon="check"
+										confirmButtonType="success"
+										onConfirm={() => {
+											if (!deactivateModalInfo?.languageId) {
+												return;
+											}
+
+											const idx = values?.languages?.indexOf(
+												deactivateModalInfo.languageId
+											);
+											arrayHelpers.remove(Number(idx));
+											setDeactivateModalInfo({ showModal: false });
+										}}
+										confirmText="Ja, ok"
+									/>
+								</>
 							)}
-							rows={languages}
 						/>
 						<LeavePrompt
 							confirmText="Bewaren"
