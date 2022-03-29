@@ -49,7 +49,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	const [t] = TranslationsConnector.useCoreTranslation();
 	const { siteId } = useParams<{ siteId: string }>();
 	const [activeLanguage, setActiveLanguage] = useState<Language | LanguageSchema>();
-	const [languages] = languagesConnector.hooks.useActiveLanguagesForSite(siteId);
+	const [loadingState, languages] = languagesConnector.hooks.useActiveLanguagesForSite(siteId);
 
 	useEffect(() => {
 		if (Array.isArray(languages) && !activeLanguage) {
@@ -167,6 +167,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 									</div>
 								</div>
 							</div>
+							{console.info(languages)}
 							<div className="row u-margin-bottom">
 								<div className="col-xs-12 col-md-8 row middle-xs">
 									<div className="col-xs-12 col-md-8">
