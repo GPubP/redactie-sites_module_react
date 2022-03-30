@@ -1,5 +1,7 @@
 import { SearchParams } from '@redactie/utils';
 
+import { AlertMessages } from './sites.alertMessages';
+
 // CREATE
 export interface CreateSitePayload {
 	name: string;
@@ -33,6 +35,8 @@ export interface UpdateSitePayload {
 
 export interface UpdateSitePayloadOptions {
 	alertContainerId: string;
+	alertType?: keyof AlertMessages;
+	alertName?: string;
 }
 
 // SITE ACTIVATION

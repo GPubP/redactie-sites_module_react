@@ -5,6 +5,7 @@ import { TableColumn } from '@redactie/utils';
 import { FieldArrayRenderProps } from 'formik';
 import React from 'react';
 
+import { SiteResponse } from '../../services/sites';
 import { SitesDetailFormState } from '../../sites.types';
 
 export const BADGES = [
@@ -15,8 +16,9 @@ export const BADGES = [
 ];
 
 export const SITE_LANGUAGE_COLUMNS = (
-	arrayHelpers: FieldArrayRenderProps,
-	values: SitesDetailFormState,
+	languageChanging: string | undefined,
+	onLanguageChange: Function,
+	site: SiteResponse,
 	setShowDeactivateModal: (languageId: {
 		showModal: boolean;
 		contentOccurrences: number;
@@ -48,11 +50,12 @@ export const SITE_LANGUAGE_COLUMNS = (
 		width: '20%',
 		classList: ['u-text-right'],
 		component: (_: string, { uuid, contentOccurrencesCount }): React.ReactElement => {
-			if (values.languages.includes(uuid)) {
+			if ((site.data.languages as string[]).includes(uuid)) {
 				return (
 					<Button
 						type="danger"
 						outline
+						iconLeft={languageChanging === uuid ? 'circle-o-notch fa-spin' : null}
 						onClick={() =>
 							setShowDeactivateModal({
 								showModal: true,
@@ -67,7 +70,12 @@ export const SITE_LANGUAGE_COLUMNS = (
 			}
 
 			return (
-				<Button type="success" outline onClick={() => arrayHelpers.push(uuid)}>
+				<Button
+					type="success"
+					outline
+					onClick={() => onLanguageChange(uuid, 'add')}
+					iconLeft={languageChanging === uuid ? 'circle-o-notch fa-spin' : null}
+				>
 					Activeren
 				</Button>
 			);
