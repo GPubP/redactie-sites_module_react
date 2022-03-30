@@ -1,4 +1,5 @@
 import { parseSearchParams } from '@redactie/utils';
+import { propOr } from 'ramda';
 
 import apiService from '../api/api.service';
 
@@ -30,7 +31,16 @@ export class SitesApiService {
 	}
 
 	public async updateSite({ body, id }: UpdateSitePayload): Promise<SiteResponse> {
-		return await apiService.put(`sites/${id}`, { json: body }).json();
+		return await apiService
+			.put(`sites/${id}`, {
+				json: {
+					...body,
+					languages: (body.languages || []).map(language =>
+						propOr(language, 'uuid')(language)
+					),
+				},
+			})
+			.json();
 	}
 
 	public async updateSiteActivation({
