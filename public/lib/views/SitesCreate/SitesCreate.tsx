@@ -111,7 +111,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 								options={(languages || [])?.map(language => ({
 									key: language.uuid,
 									value: language.uuid,
-									label: language.name,
+									label: `${language.name} (${language.key})`,
 								}))}
 							/>
 							<LeavePrompt
