@@ -135,7 +135,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	};
 
 	const renderForm = (): ReactElement | null => {
-		if (!activeLanguage) {
+		if (!languages) {
 			return null;
 		}
 
@@ -176,14 +176,26 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 								<div className="row u-margin-bottom">
 									<div className="col-xs-12 col-md-8 row middle-xs">
 										<div className="col-xs-12 col-md-8">
-											<FormikMultilanguageField
-												description="Locatie van de website."
-												asComponent={TextField}
-												label="URL"
-												name="url"
-												required
-											/>
-											{/* <ErrorMessage name="url" /> */}
+											{languages.length === 0 ? (
+												<>
+													<Field
+														description="Locatie van de website."
+														as={TextField}
+														label="URL"
+														name="url"
+														required
+													/>
+													<ErrorMessage name="url" />
+												</>
+											) : (
+												<FormikMultilanguageField
+													description="Locatie van de website."
+													asComponent={TextField}
+													label="URL"
+													name="url"
+													required
+												/>
+											)}
 										</div>
 									</div>
 								</div>
