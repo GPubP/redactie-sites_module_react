@@ -250,9 +250,11 @@ export class SitesFacade {
 		changedLanguageId: string,
 		options: UpdateSitePayloadOptions = {
 			alertContainerId: SITES_ALERT_CONTAINER_IDS.update,
+			alertType: 'update',
 		}
 	): Promise<SiteResponse | void> {
-		const alertMessages = getAlertMessages(payload.body.name);
+		const alertMessages = getAlertMessages(options.alertName || payload.body.name);
+
 		this.detailStore.ui.update(payload.id, {
 			languageChanging: changedLanguageId,
 		});
@@ -266,6 +268,11 @@ export class SitesFacade {
 					error: null,
 				});
 				this.listPaginator.clearCache();
+				showAlert(
+					options.alertContainerId,
+					'success',
+					alertMessages[options.alertType || 'update'].success
+				);
 
 				return response;
 			})
@@ -274,7 +281,11 @@ export class SitesFacade {
 					isUpdating: false,
 					error,
 				});
-				showAlert(options.alertContainerId, 'error', alertMessages.update.error);
+				showAlert(
+					options.alertContainerId,
+					'error',
+					alertMessages[options.alertType || 'update'].error
+				);
 
 				throw error;
 			});
