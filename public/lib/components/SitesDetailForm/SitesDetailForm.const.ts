@@ -10,16 +10,31 @@ export const SITES_DETAIL_VALIDATION_SCHEMA = (languages: LanguageSchema[]): any
 					return MultilanguageYup.object().validateMultiLanguage(
 						languages,
 						MultilanguageYup.string()
-							.url('Gelieve een geldige url in te vullen')
+							.matches(
+								new RegExp(
+									'^https?://(www.)?[a-zA-Z0-9_-]+(.[a-zA-Z]+)+((/)[w#]+)*(/w+?[a-zA-Z0-9_]+=w+(&[a-zA-Z0-9_]+=w+)*)?$'
+								),
+								'Gelieve een geldige url in te vullen'
+							)
 							.required('Url is verplicht')
 					); // schema for object
 				case 'string':
 					return MultilanguageYup.string()
-						.url('Gelieve een geldige url in te vullen')
+						.matches(
+							new RegExp(
+								'^https?://(www.)?[a-zA-Z0-9_-]+(.[a-zA-Z]+)+((/)[w#]+)*(/w+?[a-zA-Z0-9_]+=w+(&[a-zA-Z0-9_]+=w+)*)?$'
+							),
+							'Gelieve een geldige url in te vullen'
+						)
 						.required('Url is verplicht');
 				default:
 					return MultilanguageYup.string()
-						.url('Gelieve een geldige url in te vullen')
+						.matches(
+							new RegExp(
+								'^https?://(www.)?[a-zA-Z0-9_-]+(.[a-zA-Z]+)+((/)[w#]+)*(/w+?[a-zA-Z0-9_]+=w+(&[a-zA-Z0-9_]+=w+)*)?$'
+							),
+							'Gelieve een geldige url in te vullen'
+						)
 						.required('Url is verplicht');
 			}
 		}),
