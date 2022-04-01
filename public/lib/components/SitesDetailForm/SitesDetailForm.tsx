@@ -1,12 +1,4 @@
-import {
-	Button,
-	Card,
-	CardBody,
-	CardDescription,
-	CardTitle,
-	Modal,
-	TextField,
-} from '@acpaas-ui/react-components';
+import { Button, TextField } from '@acpaas-ui/react-components';
 import {
 	ActionBar,
 	ActionBarContentSection,
@@ -28,23 +20,18 @@ import { useParams } from 'react-router-dom';
 import languagesConnector from '../../connectors/languages';
 import TranslationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { SitesDetailFormState } from '../../sites.types';
-import SitesStatus from '../SiteStatus/SiteStatus';
 
 import { SITES_DETAIL_VALIDATION_SCHEMA } from './SitesDetailForm.const';
 import { SitesDetailFormChildrenFn, SitesDetailFormProps } from './SitesDetailForm.types';
 
 const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	initialState,
-	activeLoading = false,
-	archiveLoading = false,
-	active = false,
 	loading = false,
 	isChanged = false,
 	children,
 	onChange = () => null,
 	onCancel = () => null,
 	onSubmit = () => null,
-	onArchive = () => null,
 	onActiveToggle,
 }) => {
 	const [t] = TranslationsConnector.useCoreTranslation();
@@ -57,82 +44,6 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 			setActiveLanguage(languages.find(l => l.primary) || languages[0]);
 		}
 	}, [activeLanguage, languages]);
-
-	const getLoadingStateBtnProps = (
-		loading: boolean,
-		defaultIcon?: string
-	): { iconLeft: string; disabled: boolean } | null => {
-		if (loading) {
-			return {
-				iconLeft: 'circle-o-notch fa-spin',
-				disabled: true,
-			};
-		}
-
-		if (defaultIcon) {
-			return {
-				iconLeft: defaultIcon,
-				disabled: false,
-			};
-		}
-
-		return null;
-	};
-
-	const renderArchive = (): ReactElement => {
-		return (
-			<Card>
-				<CardBody>
-					<CardTitle>
-						Status: <SitesStatus active={!!active} />
-					</CardTitle>
-					<CardDescription>
-						Bepaal of deze site actief is of niet. Het gevolg hiervan is of de site en
-						zijn content en/of content types al dan niet beschikbaar zijn.
-					</CardDescription>
-					<Button
-						{...getLoadingStateBtnProps(activeLoading)}
-						onClick={onActiveToggle}
-						className="u-margin-top u-margin-right-xs"
-						type="primary"
-					>
-						{active ? t('BUTTON_DEACTIVATE') : t('BUTTON_ACTIVATE')}
-					</Button>
-
-					{/**
-					 * TODO: move this to editorial-ui with proper div class handling and also make buttons configurable
-					 */}
-					<div style={{ display: 'inline-block' }}>
-						<Modal
-							appElement="#root"
-							title="Ben je zeker dat je deze site wil archiveren?"
-							confirmText={t('MODAL_CONFIRM-ARCHIVE')}
-							denyText={t('MODAL_CANCEL')}
-							shouldCloseOnEsc={true}
-							shouldCloseOnOverlayClick={true}
-							onConfirm={onArchive}
-							triggerElm={
-								<Button
-									{...getLoadingStateBtnProps(archiveLoading, 'archive')}
-									onClick={onArchive}
-									className="u-margin-top"
-									type="danger"
-								>
-									{t('BUTTON_ARCHIVE')}
-								</Button>
-							}
-						>
-							<p>
-								De site archiveren betekent dat alle gegevens gekoppeld aan de site
-								ook gearchiveerd worden. Deze actie kan niet ongedaan gemaakt worden
-								zonder input van een systeem beheerder.
-							</p>
-						</Modal>
-					</div>
-				</CardBody>
-			</Card>
-		);
-	};
 
 	const renderForm = (): ReactElement | null => {
 		if (!languages) {
@@ -200,7 +111,17 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 										</div>
 									</div>
 								</div>
-								{onActiveToggle ? renderArchive() : null}
+								) : (
+									<div className="u-margin-bottom">
+										<FormikMultilanguageField
+											className="col-xs-12 col-md-6"
+											description="Locatie van de website."
+											asComponent={TextField}
+											label="URL"
+											name="url"
+											required
+										/>
+									</div>
 								{initialState.uuid && (
 									<div className="row u-margin-top">
 										<CopyValue
