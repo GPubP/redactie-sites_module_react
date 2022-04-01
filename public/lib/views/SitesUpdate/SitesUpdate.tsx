@@ -1,5 +1,5 @@
 import { Table } from '@acpaas-ui/react-editorial-components';
-import { DeletePrompt, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import { DeletePrompt, ErrorMessage, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -117,6 +117,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 				isChanged={hasChanges}
 				onCancel={onCancel}
 				onSubmit={() => {
+					console.log('ok?');
 					onSubmit(formValue as SitesDetailFormState, DETAIL_TAB_MAP.settings);
 					resetChangeDetection();
 				}}
@@ -136,6 +137,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 							)}
 							rows={languages}
 						/>
+						<ErrorMessage name="languages" />
 
 						<DeletePrompt
 							body={

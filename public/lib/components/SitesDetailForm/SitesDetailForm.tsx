@@ -149,7 +149,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 					enableReinitialize
 					initialValues={initialState}
 					onSubmit={onSubmit}
-					validationSchema={SITES_DETAIL_VALIDATION_SCHEMA}
+					validationSchema={SITES_DETAIL_VALIDATION_SCHEMA(languages)}
 				>
 					{formikProps => {
 						const { submitForm, resetForm } = formikProps;
@@ -162,8 +162,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 									<div className="col-xs-12 col-md-8 row middle-xs">
 										<div className="col-xs-12 col-md-8">
 											<Field
-												description="Geef de site een korte en duidelijke naam. Deze naam verschijnt
-									in de applicatie."
+												description="Geef de site een korte en duidelijke naam. Deze naam verschijnt in de applicatie."
 												as={TextField}
 												label="Naam"
 												name="name"
@@ -176,7 +175,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 								<div className="row u-margin-bottom">
 									<div className="col-xs-12 col-md-8 row middle-xs">
 										<div className="col-xs-12 col-md-8">
-											{languages.length === 0 ? (
+											{languages.length < 2 ? (
 												<>
 													<Field
 														description="Locatie van de website."
@@ -188,13 +187,15 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 													<ErrorMessage name="url" />
 												</>
 											) : (
-												<FormikMultilanguageField
-													description="Locatie van de website."
-													asComponent={TextField}
-													label="URL"
-													name="url"
-													required
-												/>
+												<>
+													<FormikMultilanguageField
+														description="Locatie van de website."
+														asComponent={TextField}
+														label="URL"
+														name="url"
+														required
+													/>
+												</>
 											)}
 										</div>
 									</div>
