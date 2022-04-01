@@ -117,6 +117,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 				isChanged={hasChanges}
 				onCancel={onCancel}
 				onSubmit={() => {
+					console.log('ok?');
 					onSubmit(formValue as SitesDetailFormState, DETAIL_TAB_MAP.settings);
 					resetChangeDetection();
 				}}
