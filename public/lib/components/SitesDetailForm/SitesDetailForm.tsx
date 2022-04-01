@@ -187,15 +187,13 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 													<ErrorMessage name="url" />
 												</>
 											) : (
-												<>
-													<FormikMultilanguageField
-														description="Locatie van de website."
-														asComponent={TextField}
-														label="URL"
-														name="url"
-														required
-													/>
-												</>
+												<FormikMultilanguageField
+													description="Locatie van de website."
+													asComponent={TextField}
+													label="URL"
+													name="url"
+													required
+												/>
 											)}
 										</div>
 									</div>
