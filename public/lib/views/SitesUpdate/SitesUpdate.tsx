@@ -3,7 +3,7 @@ import { DeletePrompt, ErrorMessage, LeavePrompt, useDetectValueChanges } from '
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { SitesDetailForm } from '../../components';
+import { ArchiveSite, SitesDetailForm } from '../../components';
 import languagesConnector from '../../connectors/languages';
 import { DETAIL_TAB_MAP } from '../../sites.const';
 import { SitesDetailFormState, SitesUpdateRouteProps } from '../../sites.types';
@@ -13,6 +13,7 @@ import { SITE_LANGUAGE_COLUMNS } from './SitesUpdate.const';
 
 const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, siteUI }) => {
 	const { siteId } = useParams<{ siteId: string }>();
+
 	/**
 	 * Hooks
 	 */
@@ -137,7 +138,13 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 							rows={languages}
 						/>
 						<ErrorMessage name="languages" />
-
+						<ArchiveSite
+							initialState={formValue}
+							active={site?.meta.active}
+							activeLoading={isActiveLoading}
+							archiveLoading={isArchivedLoading}
+							onArchive={onArchive}
+						/>
 						<DeletePrompt
 							body={
 								deactivateModalInfo?.contentOccurrences ? (
