@@ -88,7 +88,7 @@ export interface SitesOverviewRowData {
 	id: string;
 	name: string;
 	active: boolean;
-	url: string;
+	url: string | Record<string, string>;
 	languages: LanguageModel[];
 	userIsMember: boolean;
 	navigateToEdit?: () => void;

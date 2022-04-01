@@ -152,7 +152,8 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 					validationSchema={SITES_DETAIL_VALIDATION_SCHEMA(languages)}
 				>
 					{formikProps => {
-						const { submitForm, resetForm } = formikProps;
+						const { submitForm, resetForm, errors } = formikProps;
+						console.log(errors);
 						return (
 							<>
 								<FormikOnChangeHandler

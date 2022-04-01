@@ -2,11 +2,9 @@
 import { Button } from '@acpaas-ui/react-components';
 import { LanguageModel } from '@redactie/language-module';
 import { TableColumn } from '@redactie/utils';
-import { FieldArrayRenderProps } from 'formik';
 import React from 'react';
 
 import { SiteResponse } from '../../services/sites';
-import { SitesDetailFormState } from '../../sites.types';
 
 export const BADGES = [
 	{

@@ -36,7 +36,9 @@ export const SITES_OVERVIEW_COLUMNS = (
 					)}
 					<p className="small">
 						{url ? (
-							<EllipsisWithTooltip>{url}</EllipsisWithTooltip>
+							<EllipsisWithTooltip>
+								{typeof url === 'object' ? url.nl || url[Object.keys(url)[1]] : url}
+							</EllipsisWithTooltip>
 						) : (
 							<span className="u-text-italic">
 								{t(CORE_TRANSLATIONS['TABLE_NO-DESCRIPTION'])}
