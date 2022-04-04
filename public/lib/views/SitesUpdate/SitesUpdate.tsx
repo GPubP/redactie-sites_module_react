@@ -97,7 +97,15 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 					alertName: `${language?.name} (${language?.key})`,
 				}
 			)
-			.then(() => resetChangeDetection());
+			.then(() => {
+				resetChangeDetection();
+
+				languagesConnector.languagesFacade.getActiveLanguages({
+					pagesize: '-1',
+					includeSiteOccurrences: true,
+					sort: 'name',
+				});
+			});
 	};
 
 	/**
