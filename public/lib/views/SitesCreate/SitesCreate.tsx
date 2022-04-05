@@ -136,35 +136,31 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 						activeLanguages={activeLanguages}
 						activeLanguage={activeLanguage}
 					>
-						{({ submitForm, errors }) =>
-							(console.log(errors) as any) || (
-								<>
-									<FormikOnChangeHandler
-										onChange={({ languages }) =>
-											handleLanguageChange(languages)
-										}
-									/>
-									<Field
-										as={CheckboxList}
-										name="languages"
-										label="Talen"
-										description="Activeer minstens één taal voor deze website. Voeg extra talen toe in het menu"
-										options={(languages || [])?.map(language => ({
-											key: language.uuid,
-											value: language.uuid,
-											label: `${language.name} (${language.key})`,
-										}))}
-									/>
-									<LeavePrompt
-										shouldBlockNavigationOnConfirm
-										when={isChanged}
-										allowedPaths={SITES_CREATE_ALLOWED_PATHS}
-										confirmText="Ja, bewaar en ga verder"
-										onConfirm={submitForm}
-									/>
-								</>
-							)
-						}
+						{({ submitForm, errors }) => (
+							<>
+								<FormikOnChangeHandler
+									onChange={({ languages }) => handleLanguageChange(languages)}
+								/>
+								<Field
+									as={CheckboxList}
+									name="languages"
+									label="Talen"
+									description="Activeer minstens één taal voor deze website. Voeg extra talen toe in het menu"
+									options={(languages || [])?.map(language => ({
+										key: language.uuid,
+										value: language.uuid,
+										label: `${language.name} (${language.key})`,
+									}))}
+								/>
+								<LeavePrompt
+									shouldBlockNavigationOnConfirm
+									when={isChanged}
+									allowedPaths={SITES_CREATE_ALLOWED_PATHS}
+									confirmText="Ja, bewaar en ga verder"
+									onConfirm={submitForm}
+								/>
+							</>
+						)}
 					</SitesDetailForm>
 				</LanguageHeader>
 			</Container>
