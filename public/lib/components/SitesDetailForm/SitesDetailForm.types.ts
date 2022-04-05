@@ -1,4 +1,5 @@
-import { LanguageModel } from '@redactie/language-module';
+import { LanguageSchema } from '@redactie/language-module';
+import { Language, LoadingState } from '@redactie/utils';
 import { FormikHelpers, FormikProps } from 'formik';
 import { ReactNode } from 'react';
 
@@ -15,6 +16,9 @@ export interface SitesDetailFormProps {
 	archiveLoading?: boolean;
 	loading?: boolean;
 	isChanged?: boolean;
+	loadingState?: LoadingState;
+	activeLanguages?: LanguageSchema[] | null;
+	activeLanguage?: LanguageSchema | Language;
 	children?: SitesDetailFormChildrenFn;
 	onCancel?: (resetForm: FormikProps<SitesDetailFormState>['resetForm']) => void;
 	onSubmit?: (values: SitesDetailFormState, helpers: FormikHelpers<SitesDetailFormState>) => void;

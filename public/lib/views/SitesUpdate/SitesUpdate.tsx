@@ -1,5 +1,12 @@
-import { Table } from '@acpaas-ui/react-editorial-components';
-import { DeletePrompt, ErrorMessage, LeavePrompt, useDetectValueChanges } from '@redactie/utils';
+import { LanguageHeader, Table } from '@acpaas-ui/react-editorial-components';
+import { LanguageSchema } from '@redactie/language-module';
+import {
+	DeletePrompt,
+	ErrorMessage,
+	Language,
+	LeavePrompt,
+	useDetectValueChanges,
+} from '@redactie/utils';
 import React, { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -23,6 +30,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 	const isArchivedLoading = !!siteUI?.isArchiving;
 	const isFetching = !!siteUI?.isFetching;
 	const [formValue, setFormValue] = useState<SitesDetailFormState | null>(null);
+	const [activeLanguage, setActiveLanguage] = useState<Language | LanguageSchema>();
 	const [deactivateModalInfo, setDeactivateModalInfo] = useState<{
 		showModal: boolean;
 		contentOccurrences?: number;
@@ -33,6 +41,9 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 		formValue
 	);
 	const [, , , languages] = languagesConnector.hooks.useLanguages();
+	const [loadingState, activeLanguages] = languagesConnector.hooks.useActiveLanguagesForSite(
+		siteId
+	);
 
 	useEffect(() => {
 		languagesConnector.languagesFacade.getLanguages({
@@ -108,6 +119,12 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 			});
 	};
 
+	useEffect(() => {
+		if (Array.isArray(languages) && !activeLanguage) {
+			setActiveLanguage(languages.find(l => l.primary) || languages[0]);
+		}
+	}, [activeLanguage, languages]);
+
 	/**
 	 * Render
 	 */
@@ -117,84 +134,93 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 
 	return (
 		<>
-			<SitesDetailForm
-				active={site?.meta.active}
-				initialState={formValue}
-				activeLoading={isActiveLoading}
-				archiveLoading={isArchivedLoading}
-				loading={isUpdating}
-				isChanged={hasChanges}
-				onCancel={onCancel}
-				onSubmit={() => {
-					onSubmit(formValue as SitesDetailFormState, DETAIL_TAB_MAP.settings);
-					resetChangeDetection();
-				}}
-				onActiveToggle={onActiveToggle}
-				onArchive={onArchive}
-				onChange={setFormValue}
+			<LanguageHeader
+				languages={activeLanguages}
+				activeLanguage={activeLanguage}
+				onChangeLanguage={(language: string) => setActiveLanguage({ key: language })}
 			>
-				{({ submitForm }) => (
-					<>
-						<Table
-							className="u-margin-top"
-							columns={SITE_LANGUAGE_COLUMNS(
-								languageChanging,
-								onLanguageChange,
-								site,
-								setDeactivateModalInfo
-							)}
-							rows={languages}
-						/>
-						<ErrorMessage name="languages" />
-						<ArchiveSite
-							initialState={formValue}
-							active={site?.meta.active}
-							activeLoading={isActiveLoading}
-							archiveLoading={isArchivedLoading}
-							onArchive={onArchive}
-						/>
-						<DeletePrompt
-							body={
-								deactivateModalInfo?.contentOccurrences ? (
-									<>
-										Er zijn binnen deze site{' '}
-										<b>{deactivateModalInfo?.contentOccurrences}</b> content
-										items die deze taal gebruiken. Als je deze taal deactiveert
-										zijn deze niet meer beschikbaar in de redactie én de
-										frontend. Heractiveren van de taal zal de content items
-										opnieuw beschikbaar maken.
-									</>
-								) : (
-									<>
-										Er zijn binnen deze site geen content items die deze taal
-										gebruiken. Als je deze taal deactiveert wordt deze niet meer
-										aangeboden aan de redacteurs.
-									</>
-								)
-							}
-							title="Bevestigen"
-							show={!!deactivateModalInfo?.showModal}
-							onCancel={() => setDeactivateModalInfo({ showModal: false })}
-							confirmButtonIcon="check"
-							confirmButtonType="success"
-							onConfirm={() => {
-								if (!deactivateModalInfo?.languageId) {
-									return;
+				<SitesDetailForm
+					active={site?.meta.active}
+					initialState={formValue}
+					activeLanguage={activeLanguage}
+					activeLoading={isActiveLoading}
+					archiveLoading={isArchivedLoading}
+					loading={isUpdating}
+					isChanged={hasChanges}
+					activeLanguages={activeLanguages}
+					loadingState={loadingState}
+					onCancel={onCancel}
+					onSubmit={() => {
+						onSubmit(formValue as SitesDetailFormState, DETAIL_TAB_MAP.settings);
+						resetChangeDetection();
+					}}
+					onActiveToggle={onActiveToggle}
+					onArchive={onArchive}
+					onChange={setFormValue}
+				>
+					{({ submitForm }) => (
+						<>
+							<Table
+								className="u-margin-top"
+								columns={SITE_LANGUAGE_COLUMNS(
+									languageChanging,
+									onLanguageChange,
+									site,
+									setDeactivateModalInfo
+								)}
+								rows={languages}
+							/>
+							<ErrorMessage name="languages" />
+							<ArchiveSite
+								initialState={formValue}
+								active={site?.meta.active}
+								activeLoading={isActiveLoading}
+								archiveLoading={isArchivedLoading}
+								onArchive={onArchive}
+							/>
+							<DeletePrompt
+								body={
+									deactivateModalInfo?.contentOccurrences ? (
+										<>
+											Er zijn binnen deze site{' '}
+											<b>{deactivateModalInfo?.contentOccurrences}</b> content
+											items die deze taal gebruiken. Als je deze taal
+											deactiveert zijn deze niet meer beschikbaar in de
+											redactie én de frontend. Heractiveren van de taal zal de
+											content items opnieuw beschikbaar maken.
+										</>
+									) : (
+										<>
+											Er zijn binnen deze site geen content items die deze
+											taal gebruiken. Als je deze taal deactiveert wordt deze
+											niet meer aangeboden aan de redacteurs.
+										</>
+									)
 								}
+								title="Bevestigen"
+								show={!!deactivateModalInfo?.showModal}
+								onCancel={() => setDeactivateModalInfo({ showModal: false })}
+								confirmButtonIcon="check"
+								confirmButtonType="success"
+								onConfirm={() => {
+									if (!deactivateModalInfo?.languageId) {
+										return;
+									}
 
-								onLanguageChange(deactivateModalInfo.languageId, 'remove');
-								setDeactivateModalInfo({ showModal: false });
-							}}
-							confirmText="Ja, ok"
-						/>
-						<LeavePrompt
-							confirmText="Bewaren"
-							when={hasChanges}
-							onConfirm={submitForm}
-						/>
-					</>
-				)}
-			</SitesDetailForm>
+									onLanguageChange(deactivateModalInfo.languageId, 'remove');
+									setDeactivateModalInfo({ showModal: false });
+								}}
+								confirmText="Ja, ok"
+							/>
+							<LeavePrompt
+								confirmText="Bewaren"
+								when={hasChanges}
+								onConfirm={submitForm}
+							/>
+						</>
+					)}
+				</SitesDetailForm>
+			</LanguageHeader>
 		</>
 	);
 };
