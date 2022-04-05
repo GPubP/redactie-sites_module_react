@@ -120,10 +120,10 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 	};
 
 	useEffect(() => {
-		if (Array.isArray(languages) && !activeLanguage) {
-			setActiveLanguage(languages.find(l => l.primary) || languages[0]);
+		if (Array.isArray(activeLanguages) && !activeLanguage) {
+			setActiveLanguage(activeLanguages[0]);
 		}
-	}, [activeLanguage, languages]);
+	}, [activeLanguage, activeLanguages]);
 
 	/**
 	 * Render
