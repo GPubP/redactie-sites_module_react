@@ -2,11 +2,15 @@ import {
 	Container,
 	ContextHeader,
 	ContextHeaderTopSection,
+	LanguageHeader,
 } from '@acpaas-ui/react-editorial-components';
+import { LanguageSchema } from '@redactie/language-module';
 import { ModuleRouteConfig, useBreadcrumbs } from '@redactie/redactie-core';
 import {
 	AlertContainer,
 	CheckboxList,
+	FormikOnChangeHandler,
+	Language,
 	LeavePrompt,
 	useDetectValueChanges,
 	useNavigate,
@@ -34,11 +38,13 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	const routes = useRoutes();
 	const { generatePath, navigate } = useNavigate();
 	const [t] = TranslationsConnector.useCoreTranslation();
+	const [activeLanguage, setActiveLanguage] = useState<Language | LanguageSchema>();
 	const breadcrumbs = useBreadcrumbs(routes as ModuleRouteConfig[], {
 		...BREADCRUMB_OPTIONS,
 		extraBreadcrumbs: [useHomeBreadcrumb()],
 	});
 	const [siteListUIState] = useSitesUIStates();
+	const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
 	const [formValue, setFormValue] = useState<SitesDetailFormState>(INITIAL_DETAIL_FORM_STATE());
 	const [isChanged, resetDetectValueChanges] = useDetectValueChanges(!!formValue, formValue);
 	const [, , , languages] = languagesConnector.hooks.useLanguages();
@@ -73,6 +79,28 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			.catch(error => console.log(error));
 	};
 
+	useEffect(() => {
+		if (Array.isArray(languages) && !activeLanguage) {
+			const primaryLang = languages.find(l => l.primary) || languages[0];
+			setActiveLanguage(primaryLang);
+			setSelectedLanguages([primaryLang.uuid]);
+		}
+	}, [activeLanguage, languages]);
+
+	const activeLanguages: LanguageSchema[] = selectedLanguages.length
+		? (languages || [])?.filter(lang => selectedLanguages.includes(lang.uuid))
+		: languages?.length
+		? [languages.find(l => l.primary) || languages[0]]
+		: [];
+
+	const handleLanguageChange = (languages: string[]): void => {
+		setSelectedLanguages(languages);
+
+		if (!languages.includes((activeLanguage as LanguageSchema)?.uuid)) {
+			setActiveLanguage(activeLanguages[0]);
+		}
+	};
+
 	/**
 	 * Render
 	 */
@@ -93,37 +121,48 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				<div className="u-margin-bottom">
 					<AlertContainer containerId={ALERT_CONTAINER_IDS.create} />
 				</div>
-				<SitesDetailForm
-					isChanged={isChanged}
-					onChange={setFormValue}
-					initialState={formValue}
-					loading={siteListUIState.isCreating}
-					onCancel={navigateToOverview}
-					onSubmit={onSubmit}
+				<LanguageHeader
+					languages={activeLanguages}
+					activeLanguage={activeLanguage}
+					onChangeLanguage={(language: string) => setActiveLanguage({ key: language })}
 				>
-					{({ submitForm }) => (
-						<>
-							<Field
-								as={CheckboxList}
-								name="languages"
-								label="Talen"
-								description="Activeer minstens één taal voor deze website. Voeg extra talen toe in het menu"
-								options={(languages || [])?.map(language => ({
-									key: language.uuid,
-									value: language.uuid,
-									label: `${language.name} (${language.key})`,
-								}))}
-							/>
-							<LeavePrompt
-								shouldBlockNavigationOnConfirm
-								when={isChanged}
-								allowedPaths={SITES_CREATE_ALLOWED_PATHS}
-								confirmText="Ja, bewaar en ga verder"
-								onConfirm={submitForm}
-							/>
-						</>
-					)}
-				</SitesDetailForm>
+					<SitesDetailForm
+						isChanged={isChanged}
+						onChange={setFormValue}
+						initialState={formValue}
+						loading={siteListUIState.isCreating}
+						onCancel={navigateToOverview}
+						onSubmit={onSubmit}
+						activeLanguages={activeLanguages}
+						activeLanguage={activeLanguage}
+					>
+						{({ submitForm, errors }) => (
+							<>
+								<FormikOnChangeHandler
+									onChange={({ languages }) => handleLanguageChange(languages)}
+								/>
+								<Field
+									as={CheckboxList}
+									name="languages"
+									label="Talen"
+									description="Activeer minstens één taal voor deze website. Voeg extra talen toe in het menu"
+									options={(languages || [])?.map(language => ({
+										key: language.uuid,
+										value: language.uuid,
+										label: `${language.name} (${language.key})`,
+									}))}
+								/>
+								<LeavePrompt
+									shouldBlockNavigationOnConfirm
+									when={isChanged}
+									allowedPaths={SITES_CREATE_ALLOWED_PATHS}
+									confirmText="Ja, bewaar en ga verder"
+									onConfirm={submitForm}
+								/>
+							</>
+						)}
+					</SitesDetailForm>
+				</LanguageHeader>
 			</Container>
 		</>
 	);
