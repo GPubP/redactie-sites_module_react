@@ -14,8 +14,8 @@ import {
 	LoadingState,
 } from '@redactie/utils';
 import { Field, Formik, FormikErrors, FormikValues } from 'formik';
-import { pathOr } from 'ramda';
-import React, { FC, ReactElement, useContext } from 'react';
+import { equals, pathOr } from 'ramda';
+import React, { FC, ReactElement, useContext, useState } from 'react';
 
 import TranslationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { SitesDetailFormState } from '../../sites.types';
@@ -37,9 +37,15 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	activeLanguage,
 }) => {
 	const [t] = TranslationsConnector.useCoreTranslation();
+	const [formikErrors, setFormikErrors] = useState<FormikErrors<FormikValues>>({});
 	const { setErrors } = useContext(LanguageHeaderContext);
 
 	const handleOnError = (values: any, formErrors: FormikErrors<FormikValues>): void => {
+		if (equals(formErrors, formikErrors)) {
+			return;
+		}
+
+		setFormikErrors(formikErrors);
 		onChange(values as SitesDetailFormState);
 
 		const newErrors = handleMultilanguageFormErrors(formErrors, values);
