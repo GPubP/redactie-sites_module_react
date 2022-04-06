@@ -35,6 +35,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	activeLanguages,
 	onActiveToggle,
 	activeLanguage,
+	siteCreate = false,
 }) => {
 	const [t] = TranslationsConnector.useCoreTranslation();
 	const { setErrors } = useContext(LanguageHeaderContext);
@@ -81,21 +82,54 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 								</div>
 							</div>
 
-							<div className="u-margin-bottom">
-								<FormikMultilanguageField
-									className="col-xs-12 col-md-6"
-									description="Locatie van de website."
-									asComponent={TextField}
-									label="URL"
-									name="url"
-									required
-									state={
-										activeLanguage &&
-										pathOr(null, ['url', activeLanguage.key])(errors) &&
-										'error'
-									}
-								/>
-							</div>
+							{siteCreate ? (
+								<div className="u-margin-bottom">
+									<FormikMultilanguageField
+										className="u-w-50"
+										description="Locatie van de website."
+										asComponent={TextField}
+										label="URL"
+										name="url"
+										required
+										state={
+											activeLanguage &&
+											pathOr(null, ['url', activeLanguage.key])(errors) &&
+											'error'
+										}
+									/>
+								</div>
+							) : activeLanguages.length < 2 ? (
+								<div className="row u-margin-bottom">
+									<div className="col-xs-12 col-md-8 row middle-xs">
+										<div className="col-xs-12 col-md-8">
+											<Field
+												description="Locatie van de website."
+												as={TextField}
+												label="URL"
+												name="url"
+												required
+											/>
+											<ErrorMessage name="url" />
+										</div>
+									</div>
+								</div>
+							) : (
+								<div className="u-margin-bottom">
+									<FormikMultilanguageField
+										className="u-w-50"
+										description="Locatie van de website."
+										asComponent={TextField}
+										label="URL"
+										name="url"
+										required
+										state={
+											activeLanguage &&
+											pathOr(null, ['url', activeLanguage.key])(errors) &&
+											'error'
+										}
+									/>
+								</div>
+							)}
 
 							{initialState.uuid && (
 								<div className="row u-margin-top">
