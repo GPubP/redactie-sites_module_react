@@ -138,6 +138,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 				languages={activeLanguages}
 				activeLanguage={activeLanguage}
 				onChangeLanguage={(language: string) => setActiveLanguage({ key: language })}
+				isVisible={true}
 			>
 				<SitesDetailForm
 					active={site?.meta.active}
