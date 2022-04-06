@@ -17,7 +17,7 @@ import {
 	useRoutes,
 } from '@redactie/utils';
 import { Field } from 'formik';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { SitesDetailForm } from '../../components';
@@ -82,16 +82,30 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	useEffect(() => {
 		if (Array.isArray(languages) && !activeLanguage) {
 			const primaryLang = languages.find(l => l.primary) || languages[0];
+
 			setActiveLanguage(primaryLang);
 			setSelectedLanguages([primaryLang.uuid]);
 		}
 	}, [activeLanguage, languages]);
 
-	const activeLanguages: LanguageSchema[] = selectedLanguages.length
-		? (languages || [])?.filter(lang => selectedLanguages.includes(lang.uuid))
-		: languages?.length
-		? [languages.find(l => l.primary) || languages[0]]
-		: [];
+	const activeLanguages: LanguageSchema[] = useMemo(
+		() =>
+			selectedLanguages.length
+				? (languages || [])?.filter(lang => selectedLanguages.includes(lang.uuid))
+				: languages?.length
+				? [languages.find(l => l.primary) || languages[0]]
+				: [],
+		[languages, selectedLanguages]
+	);
+	const languageOptions = useMemo(
+		() =>
+			(languages || [])?.map(language => ({
+				key: language.uuid,
+				value: language.uuid,
+				label: `${language.name} (${language.key})`,
+			})),
+		[languages]
+	);
 
 	const handleLanguageChange = (languages: string[]): void => {
 		setSelectedLanguages(languages);
@@ -99,6 +113,12 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 		if (!languages.includes((activeLanguage as LanguageSchema)?.uuid)) {
 			setActiveLanguage(activeLanguages[0]);
 		}
+	};
+
+	const handleActiveLanguageChange = (languageKey: string): void => {
+		const language = activeLanguages.find(activeLanguage => activeLanguage.key === languageKey);
+
+		setActiveLanguage(language || { key: languageKey });
 	};
 
 	/**
@@ -124,7 +144,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 				<LanguageHeader
 					languages={activeLanguages}
 					activeLanguage={activeLanguage}
-					onChangeLanguage={(language: string) => setActiveLanguage({ key: language })}
+					onChangeLanguage={handleActiveLanguageChange}
 				>
 					<SitesDetailForm
 						isChanged={isChanged}
@@ -136,7 +156,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 						activeLanguages={activeLanguages}
 						activeLanguage={activeLanguage}
 					>
-						{({ submitForm, errors }) => (
+						{({ submitForm }) => (
 							<>
 								<FormikOnChangeHandler
 									onChange={({ languages }) => handleLanguageChange(languages)}
@@ -146,11 +166,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 									name="languages"
 									label="Talen"
 									description="Activeer minstens één taal voor deze website. Voeg extra talen toe in het menu"
-									options={(languages || [])?.map(language => ({
-										key: language.uuid,
-										value: language.uuid,
-										label: `${language.name} (${language.key})`,
-									}))}
+									options={languageOptions}
 								/>
 								<LeavePrompt
 									shouldBlockNavigationOnConfirm
