@@ -19,7 +19,6 @@ export interface SitesDetailFormProps {
 	loadingState?: LoadingState;
 	activeLanguages?: LanguageSchema[] | null;
 	activeLanguage?: LanguageSchema | Language;
-	siteCreate?: boolean;
 	children?: SitesDetailFormChildrenFn;
 	onCancel?: (resetForm: FormikProps<SitesDetailFormState>['resetForm']) => void;
 	onSubmit?: (values: SitesDetailFormState, helpers: FormikHelpers<SitesDetailFormState>) => void;
