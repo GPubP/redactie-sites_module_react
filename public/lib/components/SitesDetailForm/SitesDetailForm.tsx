@@ -89,7 +89,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 
 							<div className="u-margin-bottom">
 								<FormikMultilanguageField
-									className="col-xs-12 col-md-6"
+									className="u-w-50"
 									description="Locatie van de website."
 									asComponent={TextField}
 									label="URL"
