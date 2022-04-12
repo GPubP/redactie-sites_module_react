@@ -49,7 +49,6 @@ const FilterForm: FC<FilterFormProps> = ({
 										as={TextField}
 										label="Naam"
 										name="name"
-										required
 										placeholder="Zoeken op naam"
 										iconright="search"
 									/>
