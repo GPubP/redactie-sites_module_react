@@ -35,6 +35,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	activeLanguages,
 	onActiveToggle,
 	activeLanguage,
+	multiLang,
 }) => {
 	const [t] = TranslationsConnector.useCoreTranslation();
 	const [formikErrors, setFormikErrors] = useState<FormikErrors<FormikValues>>({});
@@ -94,6 +95,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 									asComponent={TextField}
 									label="URL"
 									name="url"
+									multiLang={multiLang}
 									required
 									state={
 										activeLanguage &&

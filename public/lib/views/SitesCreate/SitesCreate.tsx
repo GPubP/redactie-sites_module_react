@@ -155,6 +155,7 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 						onSubmit={onSubmit}
 						activeLanguages={activeLanguages}
 						activeLanguage={activeLanguage}
+						multiLang={activeLanguages && activeLanguages?.length > 1 && true}
 					>
 						{({ submitForm }) => (
 							<>

@@ -15,6 +15,7 @@ export interface SitesDetailFormProps {
 	activeLoading?: boolean;
 	archiveLoading?: boolean;
 	loading?: boolean;
+	multiLang?: boolean | null | undefined;
 	isChanged?: boolean;
 	loadingState?: LoadingState;
 	activeLanguages?: LanguageSchema[] | null;
