@@ -157,7 +157,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 					onActiveToggle={onActiveToggle}
 					onArchive={onArchive}
 					onChange={setFormValue}
-					multiLang={activeLanguages && activeLanguages?.length > 1 && true}
+					multiLang={(activeLanguages?.length ?? 0) > 1}
 				>
 					{({ submitForm }) => (
 						<>
