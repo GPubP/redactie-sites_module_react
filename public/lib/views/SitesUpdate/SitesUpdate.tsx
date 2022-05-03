@@ -87,6 +87,7 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 
 	const onLanguageChange = (uuid: string, operator: 'add' | 'remove'): void => {
 		const language = languages?.find(lang => lang.uuid === uuid);
+
 		sitesFacade
 			.updateSiteLanguages(
 				{
