@@ -85,8 +85,8 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 		sitesFacade.archiveSite(site.uuid).then(() => onCancel());
 	};
 
-	const onLanguageChange = (uuid: string, operator: 'add' | 'remove'): void => {
-		const language = languages?.find(lang => lang.uuid === uuid);
+	const onLanguageChange = (key: string, operator: 'add' | 'remove'): void => {
+		const language = languages?.find(lang => lang.key === key);
 
 		sitesFacade
 			.updateSiteLanguages(
@@ -96,13 +96,13 @@ const SitesUpdate: FC<SitesUpdateRouteProps> = ({ onCancel, onSubmit, site, site
 						...site.data,
 						languages:
 							operator === 'add'
-								? [...(site.data.languages as string[]), uuid]
+								? [...(site.data.languages as string[]), key]
 								: (site.data.languages as string[]).filter(
-										languageId => languageId !== uuid
+										languageId => languageId !== key
 								  ),
 					},
 				},
-				uuid,
+				key,
 				{
 					alertContainerId: SITES_ALERT_CONTAINER_IDS.update,
 					alertType: operator === 'add' ? 'activateLanguage' : 'deactivateLanguage',

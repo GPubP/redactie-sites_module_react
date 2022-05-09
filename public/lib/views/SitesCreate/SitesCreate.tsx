@@ -84,38 +84,41 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 			const primaryLang = languages.find(l => l.primary) || languages[0];
 
 			setActiveLanguage(primaryLang);
-			setSelectedLanguages([primaryLang.uuid]);
+			setSelectedLanguages([primaryLang.key]);
 		}
 	}, [activeLanguage, languages]);
 
 	const activeLanguages: LanguageSchema[] = useMemo(
 		() =>
 			selectedLanguages.length
-				? (languages || [])?.filter(lang => selectedLanguages.includes(lang.uuid))
+				? (languages || [])?.filter(lang => selectedLanguages.includes(lang.key))
 				: languages?.length
 				? [languages.find(l => l.primary) || languages[0]]
 				: [],
 		[languages, selectedLanguages]
 	);
+
 	const languageOptions = useMemo(
 		() =>
 			(languages || [])?.map(language => ({
-				key: language.uuid,
-				value: language.uuid,
+				key: language.key,
+				value: language.key,
 				label: `${language.name} (${language.key})`,
 			})),
 		[languages]
 	);
 
 	const handleLanguageChange = (languages: string[]): void => {
+		console.log('handleLanguageChange', languages);
 		setSelectedLanguages(languages);
 
-		if (!languages.includes((activeLanguage as LanguageSchema)?.uuid)) {
+		if (!languages.includes((activeLanguage as LanguageSchema)?.key)) {
 			setActiveLanguage(activeLanguages[0]);
 		}
 	};
 
 	const handleActiveLanguageChange = (languageKey: string): void => {
+		console.log('handleActiveLanguageChange', languageKey);
 		const language = activeLanguages.find(activeLanguage => activeLanguage.key === languageKey);
 
 		setActiveLanguage(language || { key: languageKey });
