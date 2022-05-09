@@ -109,7 +109,6 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	);
 
 	const handleLanguageChange = (languages: string[]): void => {
-		console.log('handleLanguageChange', languages);
 		setSelectedLanguages(languages);
 
 		if (!languages.includes((activeLanguage as LanguageSchema)?.key)) {
@@ -118,7 +117,6 @@ const SitesCreate: FC<SitesRouteProps> = () => {
 	};
 
 	const handleActiveLanguageChange = (languageKey: string): void => {
-		console.log('handleActiveLanguageChange', languageKey);
 		const language = activeLanguages.find(activeLanguage => activeLanguage.key === languageKey);
 
 		setActiveLanguage(language || { key: languageKey });
