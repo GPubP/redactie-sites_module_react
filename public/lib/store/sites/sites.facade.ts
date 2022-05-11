@@ -247,7 +247,7 @@ export class SitesFacade {
 
 	public updateSiteLanguages(
 		payload: UpdateSitePayload,
-		changedLanguageId: string,
+		changedLanguageKey: string,
 		options: UpdateSitePayloadOptions = {
 			alertContainerId: SITES_ALERT_CONTAINER_IDS.update,
 			alertType: 'update',
@@ -256,7 +256,7 @@ export class SitesFacade {
 		const alertMessages = getAlertMessages(options.alertName || payload.body.name);
 
 		this.detailStore.ui.update(payload.id, {
-			languageChanging: changedLanguageId,
+			languageChanging: changedLanguageKey,
 		});
 
 		return this.service

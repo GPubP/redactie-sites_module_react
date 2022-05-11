@@ -47,18 +47,18 @@ export const SITE_LANGUAGE_COLUMNS = (
 		label: '',
 		width: '20%',
 		classList: ['u-text-right'],
-		component: (_: string, { uuid, contentOccurrencesCount }): React.ReactElement => {
-			if ((site.data.languages as string[]).includes(uuid)) {
+		component: (_: string, { key, contentOccurrencesCount }): React.ReactElement => {
+			if ((site.data.languages as string[]).includes(key)) {
 				return (
 					<Button
 						type="danger"
 						outline
-						iconLeft={languageChanging === uuid ? 'circle-o-notch fa-spin' : null}
+						iconLeft={languageChanging === key ? 'circle-o-notch fa-spin' : null}
 						onClick={() =>
 							setShowDeactivateModal({
 								showModal: true,
 								contentOccurrences: contentOccurrencesCount,
-								languageId: uuid,
+								languageId: key,
 							})
 						}
 					>
@@ -71,8 +71,8 @@ export const SITE_LANGUAGE_COLUMNS = (
 				<Button
 					type="success"
 					outline
-					onClick={() => onLanguageChange(uuid, 'add')}
-					iconLeft={languageChanging === uuid ? 'circle-o-notch fa-spin' : null}
+					onClick={() => onLanguageChange(key, 'add')}
+					iconLeft={languageChanging === key ? 'circle-o-notch fa-spin' : null}
 				>
 					Activeren
 				</Button>
