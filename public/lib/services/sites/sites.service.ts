@@ -36,7 +36,7 @@ export class SitesApiService {
 				json: {
 					...body,
 					languages: (body.languages || []).map(language =>
-						propOr(language, 'uuid')(language)
+						propOr(language, 'key')(language)
 					),
 				},
 			})
