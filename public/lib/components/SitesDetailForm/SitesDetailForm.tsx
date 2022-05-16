@@ -4,6 +4,7 @@ import {
 	ActionBarContentSection,
 	LanguageHeaderContext,
 } from '@acpaas-ui/react-editorial-components';
+import { LanguageSchema } from '@redactie/language-module';
 import {
 	CopyValue,
 	DataLoader,
@@ -11,12 +12,15 @@ import {
 	FormikMultilanguageField,
 	FormikOnChangeHandler,
 	handleMultilanguageFormErrors,
+	Language,
 	LoadingState,
 } from '@redactie/utils';
 import { Field, Formik, FormikErrors, FormikValues } from 'formik';
 import { equals, pathOr } from 'ramda';
-import React, { FC, ReactElement, useContext, useState } from 'react';
+import React, { FC, ReactElement, useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
+import languagesConnector from '../../connectors/languages';
 import TranslationsConnector, { CORE_TRANSLATIONS } from '../../connectors/translations';
 import { SitesDetailFormState } from '../../sites.types';
 
@@ -34,12 +38,21 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 	loadingState,
 	activeLanguages,
 	onActiveToggle,
-	activeLanguage,
 	multiLang,
 }) => {
+	const { siteId } = useParams<{ siteId: string }>();
 	const [t] = TranslationsConnector.useCoreTranslation();
 	const [formikErrors, setFormikErrors] = useState<FormikErrors<FormikValues>>({});
-	const { setErrors } = useContext(LanguageHeaderContext);
+
+	const [, languages] = languagesConnector.hooks.useActiveLanguagesForSite(siteId);
+	const [primaryLanguage, setPrimaryLanguage] = useState<Language | LanguageSchema | any>();
+	const { setErrors, activeLanguage } = useContext(LanguageHeaderContext);
+
+	useEffect(() => {
+		if (Array.isArray(languages) && !primaryLanguage) {
+			setPrimaryLanguage(languages.find(l => l.primary) || languages[0]);
+		}
+	}, [primaryLanguage, languages]);
 
 	const handleOnError = (values: any, formErrors: FormikErrors<FormikValues>): void => {
 		if (equals(formErrors, formikErrors)) {
@@ -66,7 +79,7 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 				validationSchema={() => SITES_DETAIL_VALIDATION_SCHEMA(activeLanguages)}
 			>
 				{formikProps => {
-					const { submitForm, resetForm, errors } = formikProps;
+					const { submitForm, resetForm, errors, values } = formikProps;
 					return (
 						<>
 							<FormikOnChangeHandler
@@ -97,6 +110,13 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 										label="URL"
 										name="url"
 										multiLang={multiLang}
+										value={
+											values.url[activeLanguage?.key] === undefined
+												? (primaryLanguage.key &&
+														values.url[primaryLanguage?.key]) ||
+												  ''
+												: values.url[activeLanguage?.key]
+										}
 										required
 										state={
 											activeLanguage &&
