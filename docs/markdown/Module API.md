@@ -17,21 +17,21 @@
 
 ### config
 
-• `Const` **config**: [`SitesModuleAPI`](../wiki/index.SitesModuleAPI)[``"config"``]
+• `Const` **config**: [`SitesModuleConfigAPI`](../wiki/index.SitesModuleConfigAPI)
 
 #### Defined in
 
-public/lib/api/config.ts:3
+public/lib/api/config.ts:5
 
 ___
 
 ### hooks
 
-• `Const` **hooks**: [`SitesModuleAPI`](../wiki/index.SitesModuleAPI)[``"hooks"``]
+• `Const` **hooks**: [`SitesModuleHooksAPI`](../wiki/index.SitesModuleHooksAPI)
 
 #### Defined in
 
-public/lib/api/hooks.ts:4
+public/lib/api/hooks.ts:5
 
 ___
 
@@ -47,11 +47,11 @@ ___
 
 ### store
 
-• `Const` **store**: [`SitesModuleAPI`](../wiki/index.SitesModuleAPI)[``"store"``]
+• `Const` **store**: [`SitesModuleStoreAPI`](../wiki/index.SitesModuleStoreAPI)
 
 #### Defined in
 
-public/lib/api/store.ts:5
+public/lib/api/store.ts:6
 
 ## Functions
 

@@ -16,35 +16,21 @@
 
 ### config
 
-• **config**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `ALERT_CONTAINER_IDS` | typeof `ALERT_CONTAINER_IDS` |
+• **config**: [`SitesModuleConfigAPI`](../wiki/index.SitesModuleConfigAPI)
 
 #### Defined in
 
-public/lib/sites.types.ts:65
+public/lib/api/api.types.ts:48
 
 ___
 
 ### hooks
 
-• **hooks**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `usePaginatedSites` | `UsePaginatedSites` |
-| `useSite` | `UseSite` |
-| `useSitesUIStates` | <T\>(`siteIds?`: `T`) => `T` extends `string` ? [`SiteListUIModel`, `SiteDetailUIModel` \| `undefined`] : [`SiteListUIModel`, `Record`<`string`, `SiteDetailUIModel`\> \| `undefined`] |
+• **hooks**: [`SitesModuleHooksAPI`](../wiki/index.SitesModuleHooksAPI)
 
 #### Defined in
 
-public/lib/sites.types.ts:60
+public/lib/api/api.types.ts:47
 
 ___
 
@@ -69,7 +55,7 @@ ___
 
 #### Defined in
 
-public/lib/sites.types.ts:68
+public/lib/api/api.types.ts:49
 
 ___
 
@@ -79,22 +65,14 @@ ___
 
 #### Defined in
 
-public/lib/sites.types.ts:50
+public/lib/api/api.types.ts:45
 
 ___
 
 ### store
 
-• **store**: `Object`
-
-#### Type declaration
-
-| Name | Type |
-| :------ | :------ |
-| `sites` | { `facade`: `Pick`<`SitesFacade`, ``"getSite"`` \| ``"getSitesPaginated"`` \| ``"updateSite"`` \| ``"selectSite"`` \| ``"hasSite"``\> ; `service`: `SitesApiService`  } |
-| `sites.facade` | `Pick`<`SitesFacade`, ``"getSite"`` \| ``"getSitesPaginated"`` \| ``"updateSite"`` \| ``"selectSite"`` \| ``"hasSite"``\> |
-| `sites.service` | `SitesApiService` |
+• **store**: [`SitesModuleStoreAPI`](../wiki/index.SitesModuleStoreAPI)
 
 #### Defined in
 
-public/lib/sites.types.ts:51
+public/lib/api/api.types.ts:46

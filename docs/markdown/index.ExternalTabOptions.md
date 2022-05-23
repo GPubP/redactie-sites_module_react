@@ -26,7 +26,7 @@ ___
 
 ### containerId
 
-• **containerId**: `ALERT_CONTAINER_IDS`
+• **containerId**: [`ALERT_CONTAINER_IDS`](../wiki/index.ALERT_CONTAINER_IDS)
 
 #### Defined in
 

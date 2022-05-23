@@ -2,22 +2,12 @@ import { LanguageModel } from '@redactie/language-module';
 import { ModuleRouteConfig, RouteConfigComponentProps } from '@redactie/redactie-core';
 import { ContextHeaderTab, FilterItem } from '@redactie/utils';
 
-import { registerSiteUpdateTab } from './api/registerSiteUpdateTab';
-import { useSitesUIStates } from './hooks';
-import { UsePaginatedSites } from './hooks/usePaginatedSites';
-import { UseSite } from './hooks/useSite';
-import { Routes } from './services/routes';
-import { ModuleSettings, SitesApiService } from './services/sites';
-import { SiteDetailModel, SiteDetailUIModel, SitesFacade } from './store/sites';
+import { ALERT_CONTAINER_IDS } from './api/api.types';
+import { ModuleSettings } from './services/sites';
+import { SiteDetailModel, SiteDetailUIModel } from './store/sites';
 import { ExternalTabValue } from './views/SitesUpdateExternal';
-// Global types
 
-export enum ALERT_CONTAINER_IDS {
-	create = 'sites-create',
-	update = 'sites-update',
-	fetch = 'sites-fetch',
-	fetchOne = 'sites-fetch-one',
-}
+// Global types
 
 export interface SitesRouteProps extends RouteConfigComponentProps {
 	basePath: string;
@@ -44,28 +34,6 @@ export interface SitesDetailData {
 
 export interface DefaultComponentProps {
 	className?: string;
-}
-
-export interface SitesModuleAPI {
-	routes: Routes;
-	store: {
-		sites: {
-			service: SitesApiService;
-			facade: Pick<
-				SitesFacade,
-				'getSite' | 'getSitesPaginated' | 'updateSite' | 'selectSite' | 'hasSite'
-			>;
-		};
-	};
-	hooks: {
-		useSite: UseSite;
-		usePaginatedSites: UsePaginatedSites;
-		useSitesUIStates: typeof useSitesUIStates;
-	};
-	config: {
-		ALERT_CONTAINER_IDS: typeof ALERT_CONTAINER_IDS;
-	};
-	registerSiteUpdateTab: typeof registerSiteUpdateTab;
 }
 
 export interface OverviewFilterItem extends FilterItem {
@@ -107,3 +75,5 @@ export interface SitesUpdateRouteProps<Params = SitesUpdateRouteParams>
 	onSubmit: (data: SitesDetailFormState | ExternalTabValue, tab: Tab, cb?: () => void) => void;
 	readonly isChanged: boolean;
 }
+
+export * from './api/api.types';

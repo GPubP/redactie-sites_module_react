@@ -1,7 +1,8 @@
 import { usePaginatedSites, useSite, useSitesUIStates } from '../hooks';
-import { SitesModuleAPI } from '../sites.types';
 
-export const hooks: SitesModuleAPI['hooks'] = {
+import { SitesModuleHooksAPI } from './api.types';
+
+export const hooks: SitesModuleHooksAPI = {
 	useSite,
 	usePaginatedSites,
 	useSitesUIStates,

@@ -2,6 +2,10 @@
 
 ## Table of contents
 
+### Enumerations
+
+- [ALERT\_CONTAINER\_IDS](../wiki/index.ALERT_CONTAINER_IDS)
+
 ### Interfaces
 
 - [CreateSitePayload](../wiki/index.CreateSitePayload)
@@ -12,6 +16,9 @@
 - [SiteResponse](../wiki/index.SiteResponse)
 - [SitesListState](../wiki/index.SitesListState)
 - [SitesModuleAPI](../wiki/index.SitesModuleAPI)
+- [SitesModuleConfigAPI](../wiki/index.SitesModuleConfigAPI)
+- [SitesModuleHooksAPI](../wiki/index.SitesModuleHooksAPI)
+- [SitesModuleStoreAPI](../wiki/index.SitesModuleStoreAPI)
 - [UpdateSiteActivationPayload](../wiki/index.UpdateSiteActivationPayload)
 - [UpdateSitePayload](../wiki/index.UpdateSitePayload)
 
