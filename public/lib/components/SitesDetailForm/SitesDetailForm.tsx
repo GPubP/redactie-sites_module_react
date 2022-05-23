@@ -111,11 +111,11 @@ const SitesDetailForm: FC<SitesDetailFormProps> = ({
 										name="url"
 										multiLang={multiLang}
 										value={
-											values.url[activeLanguage?.key] === undefined
-												? (primaryLanguage.key &&
-														values.url[primaryLanguage?.key]) ||
+											values?.url?.[activeLanguage?.key] === undefined
+												? (primaryLanguage?.key &&
+														values?.url?.[primaryLanguage?.key]) ||
 												  ''
-												: values.url[activeLanguage?.key]
+												: values?.url?.[activeLanguage?.key]
 										}
 										required
 										state={
