@@ -1,8 +1,9 @@
 import { sitesApiService } from '../services/sites';
-import { SitesModuleAPI } from '../sites.types';
 import { sitesFacade } from '../store/sites';
 
-export const store: SitesModuleAPI['store'] = {
+import { SitesModuleStoreAPI } from './api.types';
+
+export const store: SitesModuleStoreAPI = {
 	sites: {
 		service: sitesApiService,
 		facade: {

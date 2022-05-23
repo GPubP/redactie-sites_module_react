@@ -1,5 +1,7 @@
-import { ALERT_CONTAINER_IDS, SitesModuleAPI } from '../sites.types';
+import { ALERT_CONTAINER_IDS } from '../sites.types';
 
-export const config: SitesModuleAPI['config'] = {
+import { SitesModuleConfigAPI } from './api.types';
+
+export const config: SitesModuleConfigAPI = {
 	ALERT_CONTAINER_IDS,
 };

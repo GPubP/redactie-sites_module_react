@@ -23,7 +23,7 @@ const SitesPreNavigation: FC = () => {
 		return null;
 	}
 
-	const path = generatePath(`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.detail}/content`, {
+	const path = generatePath(`${TENANT_ROOT}${MODULE_PATHS.root}${MODULE_PATHS.detail}/content` as string, {
 		tenantId,
 		siteId,
 	});
